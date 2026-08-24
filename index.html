@@ -46,11 +46,12 @@ content="website">
 <meta property="og:url"
 content="https://chortkeh1.github.io/">
 
+
 <style>
 
-/* =========================
-   تنظیمات عمومی
-========================= */
+/* =====================================================
+   GENERAL
+===================================================== */
 
 * {
     box-sizing: border-box;
@@ -62,9 +63,16 @@ html {
 
 body {
     margin: 0;
-    font-family: Tahoma, Arial, sans-serif;
+
+    font-family:
+        Tahoma,
+        Arial,
+        sans-serif;
+
     line-height: 1.9;
+
     background: #090909;
+
     color: #222;
 }
 
@@ -83,13 +91,15 @@ a {
 }
 
 
-/* =========================
-   Header
-========================= */
+/* =====================================================
+   HEADER
+===================================================== */
 
 header {
     position: sticky;
+
     top: 0;
+
     z-index: 100;
 
     background: #070707;
@@ -102,6 +112,7 @@ header {
 }
 
 .nav {
+
     min-height: 78px;
 
     display: flex;
@@ -113,9 +124,14 @@ header {
     gap: 18px;
 }
 
+
+/* LOGO */
+
 .logo {
-    height: 62px;
+
     width: 90px;
+
+    height: 62px;
 
     object-fit: contain;
 
@@ -124,7 +140,11 @@ header {
     border-radius: 7px;
 }
 
+
+/* BRAND */
+
 .brand {
+
     color: #d4af37;
 
     font-size: 24px;
@@ -139,16 +159,21 @@ header {
 }
 
 .brand small {
+
     display: block;
 
-    color: #ddd;
+    color: #eeeeee;
 
     font-size: 10px;
 
     font-weight: normal;
 }
 
+
+/* NAVIGATION */
+
 nav {
+
     display: flex;
 
     gap: 15px;
@@ -159,21 +184,24 @@ nav {
 }
 
 nav a {
-    color: #eee;
+
+    color: #eeeeee;
 
     font-size: 13px;
 }
 
 nav a:hover {
+
     color: #d4af37;
 }
 
 
-/* =========================
-   Buttons
-========================= */
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 .btn {
+
     display: inline-block;
 
     padding:
@@ -182,43 +210,53 @@ nav a:hover {
     border-radius: 6px;
 
     font-weight: bold;
+
+    cursor: pointer;
 }
 
 .btn-gold {
+
     background: #d4af37;
 
     color: #111;
 }
 
 .btn-outline {
+
     border:
         1px solid #d4af37;
 
     color: #d4af37;
+
+    background: transparent;
 }
 
 .btn-outline:hover {
+
     background: #d4af37;
 
     color: #111;
 }
 
 
-/* =========================
-   Hero
-========================= */
+/* =====================================================
+   HERO
+===================================================== */
 
 .hero {
+
     padding: 82px 0;
 
     color: #fff;
 
     background:
+
         radial-gradient(
             circle at 80% 20%,
             #d4af3730,
             transparent 35%
         ),
+
         linear-gradient(
             135deg,
             #050505,
@@ -230,6 +268,7 @@ nav a:hover {
 }
 
 .hero-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -241,6 +280,7 @@ nav a:hover {
 }
 
 .hero h1 {
+
     font-size: 42px;
 
     line-height: 1.55;
@@ -249,12 +289,14 @@ nav a:hover {
 }
 
 .hero p {
+
     font-size: 17px;
 
-    color: #ddd;
+    color: #eeeeee;
 }
 
 .actions {
+
     display: flex;
 
     gap: 12px;
@@ -265,11 +307,12 @@ nav a:hover {
 }
 
 
-/* =========================
-   Hero Card
-========================= */
+/* =====================================================
+   HERO CARD
+===================================================== */
 
 .hero-card {
+
     background: #151515;
 
     border:
@@ -281,60 +324,70 @@ nav a:hover {
 }
 
 .hero-card h2 {
+
     color: #d4af37;
 }
 
 .hero-card li {
+
     list-style: none;
 
-    color: #eee;
+    color: #eeeeee;
 
-    padding: 6px 0;
+    padding: 7px 0;
 
     border-bottom:
         1px solid #333;
 }
 
 
-/* =========================
-   Sections
-========================= */
+/* =====================================================
+   SECTIONS
+===================================================== */
 
 section {
+
     padding: 70px 0;
 }
 
 .light {
+
     background: #f5f3ee;
 }
 
 .dark {
+
     background: #101010;
 
     color: #fff;
 }
 
 .title {
+
     text-align: center;
 
     margin-bottom: 38px;
 }
 
 .title h2 {
+
     font-size: 30px;
 
     margin: 0;
 }
 
 .title p {
+
     color: #777;
 }
 
 .dark .title p {
-    color: #bbb;
+
+    color: #eeeeee;
 }
 
 .line {
+
     width: 60px;
 
     height: 3px;
@@ -345,11 +398,12 @@ section {
 }
 
 
-/* =========================
-   Cards
-========================= */
+/* =====================================================
+   CARDS
+===================================================== */
 
 .grid3 {
+
     display: grid;
 
     grid-template-columns:
@@ -359,6 +413,7 @@ section {
 }
 
 .card {
+
     background: #fff;
 
     border:
@@ -370,38 +425,45 @@ section {
 }
 
 .card h3 {
+
     color: #80651f;
 
     margin-top: 0;
 }
 
 .card p {
-    color: #555;
+
+    color: #444;
 
     font-size: 14px;
 }
 
 .dark .card {
+
     background: #181818;
 
     border-color: #3a3a3a;
 }
 
 .dark .card h3 {
+
     color: #d4af37;
 }
 
 .dark .card p {
-    color: #ccc;
+
+    color: #eeeeee;
 }
 
 
-/* =========================
-   Mining Section
-========================= */
+/* =====================================================
+   MINING
+===================================================== */
 
 .mining {
+
     background:
+
         linear-gradient(
             135deg,
             #080808,
@@ -412,6 +474,7 @@ section {
 }
 
 .box {
+
     border:
         1px solid #8d7025;
 
@@ -421,15 +484,17 @@ section {
 }
 
 .box > p {
-    color: #ddd;
+
+    color: #eeeeee;
 }
 
 
-/* =========================
-   Cities
-========================= */
+/* =====================================================
+   CITIES
+===================================================== */
 
 .cities {
+
     display: grid;
 
     grid-template-columns:
@@ -439,6 +504,7 @@ section {
 }
 
 .city {
+
     padding: 12px;
 
     text-align: center;
@@ -449,1749 +515,24 @@ section {
     background: #fff;
 
     border-radius: 6px;
+
+    color: #333;
 }
 
 .city:hover {
+
     border-color: #d4af37;
 
     color: #80651f;
 }
 
 
-/* =========================
-   Responsive
-========================= */
-
-@media(max-width:900px) {
-
-    .nav {
-        flex-direction: column;
-
-        padding: 12px 0;
-    }
-
-    .hero-grid,
-    .contact-grid,
-    .ceo-box {
-        grid-template-columns: 1fr;
-    }
-
-    .grid3 {
-        grid-template-columns:
-            1fr 1fr;
-    }
-
-    .cities {
-        grid-template-columns:
-            1fr 1fr;
-    }
-
-    .hero h1 {
-        font-size: 32px;
-    }
-
-    .foot {
-        grid-template-columns: 1fr;
-    }
-
-    .cta-in {
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-}
-
-@media(max-width:560px) {
-
-    .grid3 {
-        grid-template-columns: 1fr;
-    }
-
-    .hero h1 {
-        font-size: 28px;
-    }
-
-    .logo {
-        width: 80px;
-
-        height: 56px;
-    }
-
-    section {
-        padding: 55px 0;
-    }
-
-}
-
-</style>
-</head>
-
-<body>
-
-<!-- ==========================================
-     HEADER
-========================================== -->
-
-<header>
-
-    <div class="wrap nav">
-
-        <a class="brand" href="#">
-
-            <img
-                class="logo"
-                src="logo.jpg"
-                alt="لوگوی مؤسسه حسابداری و حسابرسی چرتکه"
-            >
-
-            <span>
-                چرتکه
-
-                <small>
-                    مؤسسه حسابداری و حسابرسی
-                </small>
-
-            </span>
-
-        </a>
-
-
-        <nav>
-
-            <a href="#services">
-                خدمات
-            </a>
-
-            <a href="#mining">
-                صنایع و معادن
-            </a>
-
-            <a href="#cities">
-                شهرستان‌ها
-            </a>
-
-            <a href="#software">
-                نرم‌افزار
-            </a>
-
-            <a href="#education">
-                آموزش
-            </a>
-
-            <a href="#knowledge">
-                مرکز دانش
-            </a>
-
-            <a href="#ceo">
-                مدیرعامل
-            </a>
-
-        </nav>
-
-
-        <a
-            class="btn btn-gold"
-            href="#contact"
-        >
-            تماس با ما
-        </a>
-
-    </div>
-
-</header>
-
-
-<!-- ==========================================
-     HERO / صفحه اول
-========================================== -->
-
-<section class="hero">
-
-    <div class="wrap hero-grid">
-
-
-        <!-- متن اصلی -->
-
-        <div>
-
-            <div class="gold">
-
-                خدمات حرفه‌ای مالی و حسابداری
-                در استان کرمان
-
-            </div>
-
-
-            <h1>
-
-                حسابداری و خدمات مالی
-
-                <br>
-
-                <span class="gold">
-
-                    برای کسب‌وکارهای کرمان
-
-                </span>
-
-            </h1>
-
-
-            <p>
-
-                مؤسسه حسابداری و حسابرسی چرتکه؛
-                همراه شرکت‌ها، صنایع، معادن،
-                کسب‌وکارها و مدیران استان کرمان
-                در حسابداری، حسابرسی، مالیات،
-                بیمه، آموزش و سیستم‌های مالی.
-
-            </p>
-
-
-            <div class="actions">
-
-                <a
-                    class="btn btn-gold"
-                    href="#contact"
-                >
-
-                    درخواست مشاوره
-
-                </a>
-
-
-                <a
-                    class="btn btn-outline"
-                    href="tel:+983432476021"
-                >
-
-                    034-32476021
-
-                </a>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- کارت معرفی -->
-
-        <div class="hero-card">
-
-            <h2>
-                چرا چرتکه؟
-            </h2>
-
-
-            <ul>
-
-                <li>
-                    ✓ خدمات جامع مالی و حسابداری
-                </li>
-
-                <li>
-                    ✓ تمرکز ویژه بر صنایع و معادن کرمان
-                </li>
-
-                <li>
-                    ✓ خدمات مالیاتی و بیمه‌ای
-                </li>
-
-                <li>
-                    ✓ آموزش حسابداری و نرم‌افزار
-                </li>
-
-                <li>
-                    ✓ فروش و استقرار نرم‌افزارهای سازمانی
-                </li>
-
-                <li>
-                    ✓ پوشش شهرستان‌های استان کرمان
-                </li>
-
-            </ul>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     خدمات
-========================================== -->
-
-<section
-    id="services"
-    class="light"
->
-
-    <div class="wrap">
-
-
-        <div class="title">
-
-            <h2>
-                خدمات تخصصی چرتکه
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                راهکارهای حرفه‌ای مالی،
-                حسابداری و مدیریتی
-            </p>
-
-        </div>
-
-
-        <div class="grid3">
-
-
-            <div class="card">
-
-                <h3>
-                    حسابداری
-                </h3>
-
-                <p>
-
-                    انجام و برون‌سپاری خدمات حسابداری،
-                    ثبت اسناد، گزارش‌های مالی،
-                    حقوق و دستمزد و گزارش‌های مدیریتی.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h3>
-                    حسابرسی
-                </h3>
-
-                <p>
-
-                    ارائه خدمات حسابرسی و بررسی
-                    سیستم‌ها و اطلاعات مالی
-                    شرکت‌ها و مجموعه‌های اقتصادی.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h3>
-                    خدمات مالیاتی
-                </h3>
-
-                <p>
-
-                    مشاوره مالیاتی، اظهارنامه،
-                    ارزش افزوده، سامانه مؤدیان
-                    و سایر تکالیف مالیاتی.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h3>
-                    بیمه و تأمین اجتماعی
-                </h3>
-
-                <p>
-
-                    خدمات و مشاوره بیمه‌ای،
-                    تهیه لیست‌ها و امور مرتبط
-                    با تأمین اجتماعی.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h3>
-                    مشاوره مالی
-                </h3>
-
-                <p>
-
-                    تحلیل اطلاعات مالی،
-                    کنترل هزینه‌ها،
-                    بودجه‌بندی و مشاوره
-                    تصمیم‌گیری مالی.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="card">
-
-                <h3>
-                    خدمات شرکت‌ها
-                </h3>
-
-                <p>
-
-                    راهکارهای مالی برای شرکت‌های
-                    صنعتی، معدنی، پیمانکاری،
-                    بازرگانی و خدماتی.
-
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-</section>
-<!-- ==========================================
-     صنایع و معادن کرمان
-========================================== -->
-
-<section
-    id="mining"
-    class="mining"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                خدمات حسابداری و مالی صنایع و معادن کرمان
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                راهکارهای تخصصی مالی برای شرکت‌های صنعتی،
-                معدنی و پیمانکاری استان کرمان
-            </p>
-
-        </div>
-
-
-        <div class="box">
-
-            <h3 class="gold">
-                حسابداری تخصصی شرکت‌های معدنی و صنعتی
-            </h3>
-
-            <p>
-
-                فعالیت‌های معدنی و صنعتی به دلیل حجم بالای
-                معاملات، سرمایه‌گذاری، هزینه‌های تولید،
-                حقوق و دستمزد، پیمانکاری و الزامات مالیاتی،
-                نیازمند سیستم مالی دقیق و کنترل‌شده هستند.
-
-            </p>
-
-            <p>
-
-                مؤسسه حسابداری و حسابرسی چرتکه با تمرکز بر
-                نیازهای مالی شرکت‌های صنعتی و معدنی استان
-                کرمان، خدمات حسابداری، مالیاتی، بیمه‌ای،
-                حسابرسی و مشاوره مالی را ارائه می‌دهد.
-
-            </p>
-
-
-            <div class="grid3">
-
-                <div class="card">
-
-                    <h3>
-                        حسابداری معادن
-                    </h3>
-
-                    <p>
-                        ثبت و کنترل عملیات مالی،
-                        هزینه‌های استخراج و تولید،
-                        بهای تمام‌شده و گزارش‌های مدیریتی
-                        شرکت‌های معدنی.
-                    </p>
-
-                </div>
-
-
-                <div class="card">
-
-                    <h3>
-                        حسابداری صنعتی
-                    </h3>
-
-                    <p>
-                        محاسبه بهای تمام‌شده،
-                        کنترل مواد و هزینه‌های تولید
-                        و تهیه گزارش‌های مالی و مدیریتی.
-                    </p>
-
-                </div>
-
-
-                <div class="card">
-
-                    <h3>
-                        خدمات مالیاتی
-                    </h3>
-
-                    <p>
-                        مشاوره و انجام امور مالیاتی
-                        شرکت‌های صنعتی، معدنی و پیمانکاری
-                        مطابق مقررات جاری.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     شهرستان‌های استان کرمان
-========================================== -->
-
-<section
-    id="cities"
-    class="light"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                خدمات حسابداری در شهرستان‌های استان کرمان
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                ارائه خدمات مالی، حسابداری و مالیاتی
-                برای شرکت‌ها و کسب‌وکارهای شهرستان‌های کرمان
-            </p>
-
-        </div>
-
-
-        <p style="text-align:center; max-width:850px; margin:0 auto 35px; color:#555;">
-
-            چرتکه خدمات حسابداری، مالیاتی، بیمه‌ای و
-            مشاوره مالی را برای شرکت‌ها و کسب‌وکارهای
-            سراسر استان کرمان ارائه می‌کند.
-
-        </p>
-
-
-        <div class="cities">
-
-
-            <a class="city" href="#contact">
-                کرمان
-            </a>
-
-            <a class="city" href="#contact">
-                سیرجان
-            </a>
-
-            <a class="city" href="#contact">
-                رفسنجان
-            </a>
-
-            <a class="city" href="#contact">
-                زرند
-            </a>
-
-            <a class="city" href="#contact">
-                شهربابک
-            </a>
-
-            <a class="city" href="#contact">
-                بم
-            </a>
-
-            <a class="city" href="#contact">
-                جیرفت
-            </a>
-
-            <a class="city" href="#contact">
-                کهنوج
-            </a>
-
-            <a class="city" href="#contact">
-                بردسیر
-            </a>
-
-            <a class="city" href="#contact">
-                بافت
-            </a>
-
-            <a class="city" href="#contact">
-                راور
-            </a>
-
-            <a class="city" href="#contact">
-                فهرج
-            </a>
-
-            <a class="city" href="#contact">
-                عنبرآباد
-            </a>
-
-            <a class="city" href="#contact">
-                منوجان
-            </a>
-
-            <a class="city" href="#contact">
-                قلعه‌گنج
-            </a>
-
-            <a class="city" href="#contact">
-                رودبار جنوب
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     نرم‌افزارهای مالی و سازمانی
-========================================== -->
-
-<section
-    id="software"
-    class="dark"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                نرم‌افزارهای حسابداری و سازمانی
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                انتخاب، استقرار و پشتیبانی سیستم‌های مالی
-                و مدیریتی برای کسب‌وکارها
-            </p>
-
-        </div>
-
-
-        <div class="grid3">
-
-
-            <div class="card">
-
-                <h3>
-                    نرم‌افزار حسابداری
-                </h3>
-
-                <p>
-
-                    راهکارهای نرم‌افزاری برای ثبت اسناد،
-                    حسابداری، دریافت و پرداخت،
-                    گزارش‌های مالی و مدیریت عملیات مالی.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    سیستم انبارداری
-                </h3>
-
-                <p>
-
-                    مدیریت موجودی کالا،
-                    ورود و خروج کالا،
-                    کنترل انبار و گزارش‌های مرتبط
-                    با عملیات بازرگانی و تولید.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    حضور و غیاب
-                </h3>
-
-                <p>
-
-                    راهکارهای مدیریت حضور و غیاب کارکنان
-                    و ارتباط اطلاعات کارکرد با سیستم
-                    حقوق و دستمزد.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    حقوق و دستمزد
-                </h3>
-
-                <p>
-
-                    مدیریت اطلاعات کارکنان،
-                    محاسبه حقوق و دستمزد،
-                    کسورات و تهیه گزارش‌های مورد نیاز.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    سیستم‌های سازمانی
-                </h3>
-
-                <p>
-
-                    راهکارهای یکپارچه برای مدیریت
-                    اطلاعات مالی، اداری و عملیاتی
-                    سازمان‌ها و شرکت‌ها.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    استقرار و آموزش
-                </h3>
-
-                <p>
-
-                    بررسی نیازهای مجموعه،
-                    انتخاب نرم‌افزار مناسب،
-                    استقرار و آموزش کاربران.
-
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     آموزش حسابداری
-========================================== -->
-
-<section
-    id="education"
-    class="light"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                آموزش حسابداری و امور مالی
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                آموزش کاربردی برای حسابداران،
-                مدیران و صاحبان کسب‌وکار
-            </p>
-
-        </div>
-
-
-        <div class="grid3">
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش حسابداری
-                </h3>
-
-                <p>
-
-                    آموزش مفاهیم و اصول حسابداری
-                    به‌صورت کاربردی برای ورود به بازار کار
-                    و ارتقای مهارت حسابداران.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش نرم‌افزار حسابداری
-                </h3>
-
-                <p>
-
-                    آموزش کار با نرم‌افزارهای حسابداری،
-                    ثبت اسناد، گزارش‌گیری و عملیات
-                    روزمره مالی.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش مالیاتی
-                </h3>
-
-                <p>
-
-                    آشنایی با تکالیف مالیاتی،
-                    اظهارنامه‌ها، ارزش افزوده،
-                    سامانه مؤدیان و الزامات قانونی.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش حقوق و دستمزد
-                </h3>
-
-                <p>
-
-                    آموزش محاسبه حقوق،
-                    بیمه، مالیات حقوق،
-                    مزایا و کسورات کارکنان.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش حسابداری صنعتی
-                </h3>
-
-                <p>
-
-                    آموزش مفاهیم بهای تمام‌شده،
-                    هزینه‌یابی و تحلیل اطلاعات مالی
-                    در واحدهای تولیدی و صنعتی.
-
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>
-                    آموزش مدیران
-                </h3>
-
-                <p>
-
-                    آموزش کاربردی برای مدیران و صاحبان
-                    کسب‌وکار جهت درک گزارش‌های مالی
-                    و تصمیم‌گیری بهتر.
-
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     مرکز دانش
-========================================== -->
-
-<section
-    id="knowledge"
-    class="dark"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                مرکز دانش حسابداری و مالی
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                مطالب آموزشی و کاربردی برای مدیران،
-                حسابداران و صاحبان کسب‌وکار
-            </p>
-
-        </div>
-
-
-        <div class="grid3">
-
-
-            <article class="card">
-
-                <h3>
-                    حسابداری
-                </h3>
-
-                <p>
-
-                    آموزش اصول حسابداری،
-                    ثبت اسناد، گزارش‌های مالی
-                    و نکات کاربردی برای حسابداران.
-
-                </p>
-
-            </article>
-
-
-            <article class="card">
-
-                <h3>
-                    مالیات
-                </h3>
-
-                <p>
-
-                    مطالب کاربردی درباره قوانین مالیاتی،
-                    اظهارنامه، ارزش افزوده و سامانه مؤدیان.
-
-                </p>
-
-            </article>
-
-
-            <article class="card">
-
-                <h3>
-                    بیمه
-                </h3>
-
-                <p>
-
-                    آموزش و مطالب کاربردی درباره
-                    بیمه کارکنان، لیست بیمه
-                    و تأمین اجتماعی.
-
-                </p>
-
-            </article>
-
-
-            <article class="card">
-
-                <h3>
-                    حسابرسی
-                </h3>
-
-                <p>
-
-                    آشنایی با مفاهیم حسابرسی،
-                    کنترل‌های داخلی و بررسی اطلاعات مالی.
-
-                </p>
-
-            </article>
-
-
-            <article class="card">
-
-                <h3>
-                    حسابداری صنعتی
-                </h3>
-
-                <p>
-
-                    مطالب آموزشی درباره بهای تمام‌شده،
-                    هزینه‌های تولید و تحلیل عملکرد مالی.
-
-                </p>
-
-            </article>
-
-
-            <article class="card">
-
-                <h3>
-                    مدیریت مالی
-                </h3>
-
-                <p>
-
-                    نکات کاربردی مدیریت مالی،
-                    کنترل هزینه‌ها، بودجه‌بندی
-                    و تصمیم‌گیری مالی.
-
-                </p>
-
-            </article>
-
-
-        </div>
-
-    </div>
-
-</section>
-<!-- ==========================================
-     CONTACT / تماس با ما
-========================================== -->
-
-<section
-    id="contact"
-    class="light"
->
-
-    <div class="wrap">
-
-        <div class="title">
-
-            <h2>
-                تماس با مؤسسه حسابداری و حسابرسی چرتکه
-            </h2>
-
-            <div class="line"></div>
-
-            <p>
-                برای دریافت مشاوره و اطلاعات بیشتر
-                با ما در ارتباط باشید.
-            </p>
-
-        </div>
-
-
-        <div class="contact-grid">
-
-
-            <!-- اطلاعات تماس -->
-
-            <div class="card">
-
-                <h3>
-                    اطلاعات تماس
-                </h3>
-
-                <p>
-
-                    <strong>
-                        مؤسسه حسابداری و حسابرسی چرتکه
-                    </strong>
-
-                </p>
-
-
-                <p>
-
-                    📍
-                    کرمان، بلوار جمهوری اسلامی،
-                    چهارراه امام جمعه
-
-                </p>
-
-
-                <p>
-
-                    📞
-                    <a
-                        href="tel:+983432476021"
-                        style="color:#80651f;font-weight:bold;"
-                    >
-                        034-32476021
-                    </a>
-
-                </p>
-
-
-                <p>
-
-                    📱
-                    شماره پیام‌رسان‌ها:
-
-                    <strong>
-                        09131989006
-                    </strong>
-
-                </p>
-
-
-                <div style="margin-top:20px;">
-
-                    <a
-                        class="btn btn-gold"
-                        href="tel:+983432476021"
-                    >
-                        تماس مستقیم
-                    </a>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- موقعیت مکانی -->
-
-            <div class="card">
-
-                <h3>
-                    موقعیت مؤسسه
-                </h3>
-
-
-                <p>
-
-                    برای مشاهده موقعیت دقیق مؤسسه
-                    یا دریافت مسیر، یکی از گزینه‌های
-                    زیر را انتخاب کنید.
-
-                </p>
-
-
-                <div
-                    style="
-                        display:flex;
-                        gap:10px;
-                        flex-wrap:wrap;
-                        margin-top:20px;
-                    "
-                >
-
-                    <a
-                        class="btn btn-gold"
-                        href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%DA%A9%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        📍 مشاهده در Google Maps
-                    </a>
-
-
-                    <a
-                        class="btn btn-outline"
-                        href="https://neshan.org/maps/places/38a2ed7c55820a9747ca0ca5b7e1dc87#c30.286-57.045-20z-0p"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        🧭 مسیریابی با نشان
-                    </a>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- پیام‌رسان‌ها -->
-
-        <div
-            class="box"
-            style="
-                margin-top:25px;
-                background:#fff;
-                color:#222;
-            "
-        >
-
-            <h3 style="color:#80651f;">
-
-                ارتباط در پیام‌رسان‌های ایرانی
-
-            </h3>
-
-
-            <p style="color:#555;">
-
-                برای ارتباط و دریافت اطلاعات،
-                می‌توانید از پیام‌رسان‌های زیر
-                با مؤسسه در تماس باشید.
-
-            </p>
-
-
-            <div
-                style="
-                    display:grid;
-                    grid-template-columns:
-                        repeat(4,1fr);
-                    gap:12px;
-                    margin-top:20px;
-                "
-            >
-
-
-                <a
-                    class="city"
-                    href="https://eitaa.com/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    ایتا
-                    <br>
-                    09131989006
-                </a>
-
-
-                <a
-                    class="city"
-                    href="https://ble.ir/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    بله
-                    <br>
-                    09131989006
-                </a>
-
-
-                <a
-                    class="city"
-                    href="https://splus.ir/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    سروش
-                    <br>
-                    09131989006
-                </a>
-
-
-                <a
-                    class="city"
-                    href="https://rubika.ir/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    روبیکا
-                    <br>
-                    09131989006
-                </a>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- فرم درخواست مشاوره -->
-
-        <div
-            class="box"
-            style="
-                margin-top:25px;
-                background:#101010;
-            "
-        >
-
-            <h3 class="gold">
-
-                درخواست مشاوره
-
-            </h3>
-
-
-            <p>
-
-                برای دریافت مشاوره،
-                اطلاعات خود را وارد کنید.
-                کارشناسان چرتکه در اولین فرصت
-                با شما تماس خواهند گرفت.
-
-            </p>
-
-
-            <form
-                action="#"
-                method="post"
-                style="
-                    display:grid;
-                    gap:15px;
-                    margin-top:20px;
-                "
-            >
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="نام و نام خانوادگی"
-                    required
-                    style="
-                        padding:13px;
-                        border-radius:6px;
-                        border:1px solid #555;
-                        font-family:inherit;
-                    "
-                >
-
-
-                <input
-                    type="tel"
-                    name="phone"
-                    placeholder="شماره تماس"
-                    required
-                    style="
-                        padding:13px;
-                        border-radius:6px;
-                        border:1px solid #555;
-                        font-family:inherit;
-                    "
-                >
-
-
-                <textarea
-                    name="message"
-                    rows="5"
-                    placeholder="موضوع درخواست یا توضیحات"
-                    style="
-                        padding:13px;
-                        border-radius:6px;
-                        border:1px solid #555;
-                        font-family:inherit;
-                    "
-                ></textarea>
-
-
-                <button
-                    type="submit"
-                    class="btn btn-gold"
-                    style="
-                        border:0;
-                        cursor:pointer;
-                        font-family:inherit;
-                    "
-                >
-                    ارسال درخواست مشاوره
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     FOOTER
-========================================== -->
-
-<footer
-    style="
-        background:#070707;
-        color:#ccc;
-        border-top:1px solid #8d7025;
-        padding:45px 0 20px;
-    "
->
-
-    <div class="wrap">
-
-
-        <div
-            class="foot"
-            style="
-                display:grid;
-                grid-template-columns:
-                    1.3fr 1fr 1fr;
-                gap:30px;
-            "
-        >
-
-
-            <!-- معرفی -->
-
-            <div>
-
-                <h3 class="gold">
-
-                    مؤسسه حسابداری و حسابرسی چرتکه
-
-                </h3>
-
-
-                <p>
-
-                    ارائه خدمات تخصصی حسابداری،
-                    حسابرسی، مالیاتی، بیمه،
-                    مشاوره مالی، آموزش و
-                    نرم‌افزارهای مالی و سازمانی
-                    در استان کرمان.
-
-                </p>
-
-
-                <p style="font-size:13px;color:#888;">
-
-                    همراه مطمئن کسب‌وکارها
-                    برای مدیریت بهتر امور مالی.
-
-                </p>
-
-            </div>
-
-
-
-            <!-- لینک‌های سایت -->
-
-            <div>
-
-                <h3 class="gold">
-                    دسترسی سریع
-                </h3>
-
-
-                <p>
-                    <a
-                        href="#services"
-                        style="color:#ccc;"
-                    >
-                        خدمات
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#mining"
-                        style="color:#ccc;"
-                    >
-                        صنایع و معادن
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#cities"
-                        style="color:#ccc;"
-                    >
-                        شهرستان‌ها
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#software"
-                        style="color:#ccc;"
-                    >
-                        نرم‌افزار
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#education"
-                        style="color:#ccc;"
-                    >
-                        آموزش
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#knowledge"
-                        style="color:#ccc;"
-                    >
-                        مرکز دانش
-                    </a>
-                </p>
-
-
-                <p>
-                    <a
-                        href="#contact"
-                        style="color:#ccc;"
-                    >
-                        تماس با ما
-                    </a>
-                </p>
-
-            </div>
-
-
-
-            <!-- تماس -->
-
-            <div>
-
-                <h3 class="gold">
-                    تماس با ما
-                </h3>
-
-
-                <p>
-
-                    📍 کرمان،
-                    بلوار جمهوری اسلامی،
-                    چهارراه امام جمعه
-
-                </p>
-
-
-                <p>
-
-                    📞
-
-                    <a
-                        href="tel:+983432476021"
-                        style="color:#ccc;"
-                    >
-                        034-32476021
-                    </a>
-
-                </p>
-
-
-                <p>
-
-                    📱
-
-                    09131989006
-
-                </p>
-
-
-                <p>
-
-                    <a
-                        href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%DA%A9%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
-                        target="_blank"
-                        rel="noopener"
-                        style="color:#d4af37;"
-                    >
-                        📍 Google Maps
-                    </a>
-
-                </p>
-
-
-                <p>
-
-                    <a
-                        href="https://neshan.org/maps/places/38a2ed7c55820a9747ca0ca5b7e1dc87#c30.286-57.045-20z-0p"
-                        target="_blank"
-                        rel="noopener"
-                        style="color:#d4af37;"
-                    >
-                        🧭 مسیریابی با نشان
-                    </a>
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <hr
-            style="
-                border:0;
-                border-top:1px solid #333;
-                margin:30px 0 20px;
-            "
-        >
-
-
-        <div
-            style="
-                text-align:center;
-                color:#888;
-                font-size:12px;
-            "
-        >
-
-            © 2026 مؤسسه حسابداری و حسابرسی چرتکه
-            — تمامی حقوق محفوظ است.
-
-        </div>
-
-    </div>
-
-</footer>
-/* ==========================================
-   VERSION 5
-   اصلاحات موبایل، فونت، لوگو و پیام‌رسان‌ها
-========================================== */
-
-
-/* ---------- Mobile Typography ---------- */
-
-@media(max-width:900px) {
-
-    body {
-        font-size: 16px;
-        line-height: 2;
-    }
-
-    .wrap {
-        width: 94%;
-    }
-
-    .hero p {
-        font-size: 17px;
-        line-height: 2;
-        color: #f0f0f0;
-    }
-
-    .hero-card li {
-        font-size: 16px;
-        color: #f2f2f2;
-    }
-
-    .card p {
-        font-size: 16px;
-        line-height: 2;
-        color: #444;
-    }
-
-    .dark .card p {
-        color: #eeeeee;
-    }
-
-    .dark .title p {
-        color: #eeeeee;
-    }
-
-    .mining .box > p {
-        color: #eeeeee;
-        font-size: 16px;
-    }
-
-}
-
-
-/* ---------- Mobile Logo ---------- */
-
-@media(max-width:560px) {
-
-    .logo {
-        width: 125px;
-        height: 82px;
-    }
-
-    .brand {
-        font-size: 25px;
-        gap: 14px;
-    }
-
-    .brand small {
-        font-size: 11px;
-    }
-
-    .nav {
-        gap: 10px;
-    }
-
-    nav {
-        gap: 12px;
-    }
-
-    nav a {
-        font-size: 15px;
-    }
-
-    .hero h1 {
-        font-size: 30px;
-        line-height: 1.7;
-    }
-
-    .hero p {
-        font-size: 17px;
-    }
-
-    section {
-        padding: 60px 0;
-    }
-
-    .title h2 {
-        font-size: 27px;
-    }
-
-    .title p {
-        font-size: 16px;
-    }
-
-}
-
-
-/* ---------- Contact ---------- */
+/* =====================================================
+   CONTACT
+===================================================== */
 
 .contact-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -2200,10 +541,40 @@ section {
     gap: 20px;
 }
 
+.contact-number {
 
-/* ---------- Messenger Box ---------- */
+    direction: ltr;
+
+    unicode-bidi: embed;
+
+    font-weight: bold;
+
+    color: #80651f;
+}
+
+
+/* =====================================================
+   MAP BUTTONS
+===================================================== */
+
+.map-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 20px;
+}
+
+
+/* =====================================================
+   MESSENGERS
+===================================================== */
 
 .messenger-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -2216,7 +587,7 @@ section {
 
 .messenger-item {
 
-    min-height: 105px;
+    min-height: 125px;
 
     display: flex;
 
@@ -2226,11 +597,12 @@ section {
 
     justify-content: center;
 
-    gap: 8px;
+    gap: 7px;
 
     background: #fff;
 
-    border: 1px solid #ddd;
+    border:
+        1px solid #ddd;
 
     border-radius: 12px;
 
@@ -2240,7 +612,6 @@ section {
         transform .2s ease,
         border-color .2s ease,
         box-shadow .2s ease;
-
 }
 
 .messenger-item:hover {
@@ -2251,17 +622,15 @@ section {
 
     box-shadow:
         0 5px 18px #0002;
-
 }
 
 .messenger-icon {
 
-    width: 48px;
+    width: 52px;
 
-    height: 48px;
+    height: 52px;
 
     display: block;
-
 }
 
 .messenger-number {
@@ -2270,64 +639,127 @@ section {
 
     direction: ltr;
 
-}
-
-
-/* ---------- Contact Numbers ---------- */
-
-.contact-number {
-
-    direction: ltr;
-
     unicode-bidi: embed;
-
-    font-weight: bold;
-
-    color: #80651f;
-
 }
 
 
-/* ---------- Dark Text Contrast ---------- */
+/* =====================================================
+   FOOTER
+===================================================== */
 
-.dark p,
-.dark li {
+footer {
 
-    color: #eeeeee;
+    background: #070707;
 
+    color: #ccc;
+
+    border-top:
+        1px solid #8d7025;
+
+    padding:
+        45px 0 20px;
 }
 
-.box > p {
+.foot {
 
-    color: #eeeeee;
+    display: grid;
 
-}
+    grid-template-columns:
+        1.3fr 1fr 1fr;
 
-
-/* ---------- Footer Links ---------- */
-
-footer p {
-
-    color: #dddddd;
-
-}
-
-footer a {
-
-    color: #eeeeee;
-
+    gap: 30px;
 }
 
 
-/* ---------- Mobile Contact ---------- */
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
 @media(max-width:900px) {
 
+    .nav {
+
+        flex-direction: column;
+
+        padding: 12px 0;
+    }
+
+
+    .hero-grid,
     .contact-grid {
 
         grid-template-columns: 1fr;
-
     }
+
+
+    .grid3 {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .cities {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .hero h1 {
+
+        font-size: 32px;
+    }
+
+
+    .foot {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    body {
+
+        font-size: 16px;
+
+        line-height: 2;
+    }
+
+
+    .hero p {
+
+        font-size: 17px;
+
+        line-height: 2;
+
+        color: #f0f0f0;
+    }
+
+
+    .hero-card li {
+
+        font-size: 16px;
+
+        color: #f2f2f2;
+    }
+
+
+    .card p {
+
+        font-size: 16px;
+
+        line-height: 2;
+
+        color: #444;
+    }
+
+
+    .dark .card p {
+
+        color: #eeeeee;
+    }
+
 
     .messenger-grid {
 
@@ -2335,49 +767,121 @@ footer a {
             repeat(2, 1fr);
 
         gap: 12px;
-
     }
-
-    .messenger-item {
-
-        min-height: 110px;
-
-    }
-
 }
 
 
-/* ---------- Small Mobile ---------- */
-
 @media(max-width:560px) {
+
+    .grid3 {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    /* لوگوی بزرگ‌تر در موبایل */
+
+    .logo {
+
+        width: 125px;
+
+        height: 82px;
+    }
+
+
+    .brand {
+
+        font-size: 25px;
+
+        gap: 14px;
+    }
+
+
+    .brand small {
+
+        font-size: 11px;
+    }
+
+
+    /* منوی خواناتر */
+
+    nav {
+
+        gap: 12px;
+    }
+
+    nav a {
+
+        font-size: 15px;
+
+        color: #f2f2f2;
+    }
+
+
+    /* Hero */
+
+    .hero h1 {
+
+        font-size: 30px;
+
+        line-height: 1.7;
+    }
+
+
+    .hero p {
+
+        font-size: 17px;
+
+        line-height: 2.1;
+    }
+
+
+    section {
+
+        padding: 60px 0;
+    }
+
+
+    .title h2 {
+
+        font-size: 27px;
+    }
+
+
+    .title p {
+
+        font-size: 16px;
+
+        color: #555;
+    }
+
+
+    .dark .title p {
+
+        color: #eeeeee;
+    }
+
 
     .messenger-grid {
 
         grid-template-columns:
             repeat(2, 1fr);
-
     }
+
 
     .messenger-icon {
 
         width: 52px;
 
         height: 52px;
-
     }
+
 
     .messenger-number {
 
         font-size: 12px;
-
     }
 
-}
-
-
-/* ---------- Buttons Mobile ---------- */
-
-@media(max-width:560px) {
 
     .btn {
 
@@ -2385,7 +889,1690 @@ footer a {
 
         padding:
             12px 18px;
-
     }
 
+
+    .contact-number {
+
+        font-size: 16px;
+    }
+
+
+    .map-buttons {
+
+        flex-direction: column;
+    }
+
+
+    .map-buttons .btn {
+
+        text-align: center;
+
+        width: 100%;
+    }
 }
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =================================================
+     HEADER
+================================================= -->
+
+<header>
+
+<div class="wrap nav">
+
+
+<a
+    class="brand"
+    href="#"
+>
+
+<img
+    class="logo"
+    src="logo.jpg"
+    alt="لوگوی مؤسسه حسابداری و حسابرسی چرتکه"
+>
+
+
+<span>
+
+چرتکه
+
+<small>
+مؤسسه حسابداری و حسابرسی
+</small>
+
+</span>
+
+</a>
+
+
+<nav>
+
+<a href="#services">
+خدمات
+</a>
+
+<a href="#mining">
+صنایع و معادن
+</a>
+
+<a href="#cities">
+شهرستان‌ها
+</a>
+
+<a href="#software">
+نرم‌افزار
+</a>
+
+<a href="#education">
+آموزش
+</a>
+
+<a href="#knowledge">
+مرکز دانش
+</a>
+
+</nav>
+
+
+<a
+    class="btn btn-gold"
+    href="#contact"
+>
+تماس با ما
+</a>
+
+
+</div>
+
+</header>
+
+
+
+<!-- =================================================
+     HERO
+================================================= -->
+
+<section class="hero">
+
+<div class="wrap hero-grid">
+
+
+<div>
+
+
+<div class="gold">
+
+خدمات حرفه‌ای مالی و حسابداری
+در استان کرمان
+
+</div>
+
+
+<h1>
+
+حسابداری و خدمات مالی
+
+<br>
+
+<span class="gold">
+
+برای کسب‌وکارهای کرمان
+
+</span>
+
+</h1>
+
+
+<p>
+
+مؤسسه حسابداری و حسابرسی چرتکه؛
+همراه شرکت‌ها، صنایع، معادن،
+کسب‌وکارها و مدیران استان کرمان
+در حسابداری، حسابرسی، مالیات،
+بیمه، آموزش و سیستم‌های مالی.
+
+</p>
+
+
+<div class="actions">
+
+
+<a
+    class="btn btn-gold"
+    href="#contact"
+>
+
+تماس با ما
+
+</a>
+
+
+<a
+    class="btn btn-outline"
+    href="tel:+989131989006"
+>
+
+09131989006
+
+</a>
+
+
+</div>
+
+</div>
+
+
+
+<div class="hero-card">
+
+
+<h2>
+
+چرا چرتکه؟
+
+</h2>
+
+
+<ul>
+
+<li>
+✓ خدمات جامع مالی و حسابداری
+</li>
+
+<li>
+✓ تمرکز ویژه بر صنایع و معادن کرمان
+</li>
+
+<li>
+✓ خدمات مالیاتی و بیمه‌ای
+</li>
+
+<li>
+✓ آموزش حسابداری و نرم‌افزار
+</li>
+
+<li>
+✓ فروش و استقرار نرم‌افزارهای سازمانی
+</li>
+
+<li>
+✓ پوشش شهرستان‌های استان کرمان
+</li>
+
+</ul>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     SERVICES
+================================================= -->
+
+<section
+    id="services"
+    class="light"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+خدمات تخصصی چرتکه
+</h2>
+
+<div class="line"></div>
+
+<p>
+راهکارهای حرفه‌ای مالی،
+حسابداری و مدیریتی
+</p>
+
+</div>
+
+
+<div class="grid3">
+
+
+<div class="card">
+
+<h3>
+حسابداری
+</h3>
+
+<p>
+
+انجام و برون‌سپاری خدمات حسابداری،
+ثبت اسناد، گزارش‌های مالی،
+حقوق و دستمزد و گزارش‌های مدیریتی.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+حسابرسی
+</h3>
+
+<p>
+
+ارائه خدمات حسابرسی و بررسی
+سیستم‌ها و اطلاعات مالی
+شرکت‌ها و مجموعه‌های اقتصادی.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+خدمات مالیاتی
+</h3>
+
+<p>
+
+مشاوره مالیاتی، اظهارنامه،
+ارزش افزوده، سامانه مؤدیان
+و سایر تکالیف مالیاتی.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+بیمه و تأمین اجتماعی
+</h3>
+
+<p>
+
+خدمات و مشاوره بیمه‌ای،
+تهیه لیست‌ها و امور مرتبط
+با تأمین اجتماعی.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+مشاوره مالی
+</h3>
+
+<p>
+
+تحلیل اطلاعات مالی،
+کنترل هزینه‌ها،
+بودجه‌بندی و مشاوره
+تصمیم‌گیری مالی.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+خدمات شرکت‌ها
+</h3>
+
+<p>
+
+راهکارهای مالی برای شرکت‌های
+صنعتی، معدنی، پیمانکاری،
+بازرگانی و خدماتی.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     MINING
+================================================= -->
+
+<section
+    id="mining"
+    class="mining"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+خدمات حسابداری و مالی صنایع و معادن کرمان
+</h2>
+
+<div class="line"></div>
+
+<p>
+راهکارهای تخصصی مالی برای شرکت‌های صنعتی،
+معدنی و پیمانکاری استان کرمان
+</p>
+
+</div>
+
+
+<div class="box">
+
+
+<h3 class="gold">
+حسابداری تخصصی شرکت‌های معدنی و صنعتی
+</h3>
+
+
+<p>
+
+فعالیت‌های معدنی و صنعتی به دلیل حجم بالای
+معاملات، سرمایه‌گذاری، هزینه‌های تولید،
+حقوق و دستمزد، پیمانکاری و الزامات مالیاتی،
+نیازمند سیستم مالی دقیق و کنترل‌شده هستند.
+
+</p>
+
+
+<p>
+
+مؤسسه حسابداری و حسابرسی چرتکه با تمرکز بر
+نیازهای مالی شرکت‌های صنعتی و معدنی استان
+کرمان، خدمات حسابداری، مالیاتی، بیمه‌ای،
+حسابرسی و مشاوره مالی را ارائه می‌دهد.
+
+</p>
+
+
+<div class="grid3">
+
+
+<div class="card">
+
+<h3>
+حسابداری معادن
+</h3>
+
+<p>
+ثبت و کنترل عملیات مالی،
+هزینه‌های استخراج و تولید،
+بهای تمام‌شده و گزارش‌های مدیریتی
+شرکت‌های معدنی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+حسابداری صنعتی
+</h3>
+
+<p>
+محاسبه بهای تمام‌شده،
+کنترل مواد و هزینه‌های تولید
+و تهیه گزارش‌های مالی و مدیریتی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+خدمات مالیاتی
+</h3>
+
+<p>
+مشاوره و انجام امور مالیاتی
+شرکت‌های صنعتی، معدنی و پیمانکاری
+مطابق مقررات جاری.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     CITIES
+================================================= -->
+
+<section
+    id="cities"
+    class="light"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+خدمات حسابداری در شهرستان‌های استان کرمان
+</h2>
+
+<div class="line"></div>
+
+<p>
+ارائه خدمات مالی، حسابداری و مالیاتی
+برای شرکت‌ها و کسب‌وکارهای شهرستان‌های کرمان
+</p>
+
+</div>
+
+
+<p
+style="
+text-align:center;
+max-width:850px;
+margin:0 auto 35px;
+color:#555;
+"
+>
+
+چرتکه خدمات حسابداری، مالیاتی، بیمه‌ای و
+مشاوره مالی را برای شرکت‌ها و کسب‌وکارهای
+سراسر استان کرمان ارائه می‌کند.
+
+</p>
+
+
+<div class="cities">
+
+
+<a class="city" href="#contact">
+کرمان
+</a>
+
+<a class="city" href="#contact">
+سیرجان
+</a>
+
+<a class="city" href="#contact">
+رفسنجان
+</a>
+
+<a class="city" href="#contact">
+زرند
+</a>
+
+<a class="city" href="#contact">
+شهربابک
+</a>
+
+<a class="city" href="#contact">
+بم
+</a>
+
+<a class="city" href="#contact">
+جیرفت
+</a>
+
+<a class="city" href="#contact">
+کهنوج
+</a>
+
+<a class="city" href="#contact">
+بردسیر
+</a>
+
+<a class="city" href="#contact">
+بافت
+</a>
+
+<a class="city" href="#contact">
+راور
+</a>
+
+<a class="city" href="#contact">
+فهرج
+</a>
+
+<a class="city" href="#contact">
+عنبرآباد
+</a>
+
+<a class="city" href="#contact">
+منوجان
+</a>
+
+<a class="city" href="#contact">
+قلعه‌گنج
+</a>
+
+<a class="city" href="#contact">
+رودبار جنوب
+</a>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     SOFTWARE
+================================================= -->
+
+<section
+    id="software"
+    class="dark"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+نرم‌افزارهای حسابداری و سازمانی
+</h2>
+
+<div class="line"></div>
+
+<p>
+انتخاب، استقرار و پشتیبانی سیستم‌های مالی
+و مدیریتی برای کسب‌وکارها
+</p>
+
+</div>
+
+
+<div class="grid3">
+
+
+<div class="card">
+
+<h3>
+نرم‌افزار حسابداری
+</h3>
+
+<p>
+راهکارهای نرم‌افزاری برای ثبت اسناد،
+حسابداری، دریافت و پرداخت،
+گزارش‌های مالی و مدیریت عملیات مالی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+سیستم انبارداری
+</h3>
+
+<p>
+مدیریت موجودی کالا،
+ورود و خروج کالا،
+کنترل انبار و گزارش‌های مرتبط
+با عملیات بازرگانی و تولید.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+حضور و غیاب
+</h3>
+
+<p>
+راهکارهای مدیریت حضور و غیاب کارکنان
+و ارتباط اطلاعات کارکرد با سیستم
+حقوق و دستمزد.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+حقوق و دستمزد
+</h3>
+
+<p>
+مدیریت اطلاعات کارکنان،
+محاسبه حقوق و دستمزد،
+کسورات و تهیه گزارش‌های مورد نیاز.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+سیستم‌های سازمانی
+</h3>
+
+<p>
+راهکارهای یکپارچه برای مدیریت
+اطلاعات مالی، اداری و عملیاتی
+سازمان‌ها و شرکت‌ها.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+استقرار و آموزش
+</h3>
+
+<p>
+بررسی نیازهای مجموعه،
+انتخاب نرم‌افزار مناسب،
+استقرار و آموزش کاربران.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     EDUCATION
+================================================= -->
+
+<section
+    id="education"
+    class="light"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+آموزش حسابداری و امور مالی
+</h2>
+
+<div class="line"></div>
+
+<p>
+آموزش کاربردی برای حسابداران،
+مدیران و صاحبان کسب‌وکار
+</p>
+
+</div>
+
+
+<div class="grid3">
+
+
+<div class="card">
+
+<h3>
+آموزش حسابداری
+</h3>
+
+<p>
+آموزش مفاهیم و اصول حسابداری
+به‌صورت کاربردی برای ورود به بازار کار
+و ارتقای مهارت حسابداران.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+آموزش نرم‌افزار حسابداری
+</h3>
+
+<p>
+آموزش کار با نرم‌افزارهای حسابداری،
+ثبت اسناد، گزارش‌گیری و عملیات
+روزمره مالی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+آموزش مالیاتی
+</h3>
+
+<p>
+آشنایی با تکالیف مالیاتی،
+اظهارنامه‌ها، ارزش افزوده،
+سامانه مؤدیان و الزامات قانونی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+آموزش حقوق و دستمزد
+</h3>
+
+<p>
+آموزش محاسبه حقوق،
+بیمه، مالیات حقوق،
+مزایا و کسورات کارکنان.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+آموزش حسابداری صنعتی
+</h3>
+
+<p>
+آموزش مفاهیم بهای تمام‌شده،
+هزینه‌یابی و تحلیل اطلاعات مالی
+در واحدهای تولیدی و صنعتی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+آموزش مدیران
+</h3>
+
+<p>
+آموزش کاربردی برای مدیران و صاحبان
+کسب‌وکار جهت درک گزارش‌های مالی
+و تصمیم‌گیری بهتر.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     KNOWLEDGE
+================================================= -->
+
+<section
+    id="knowledge"
+    class="dark"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+مرکز دانش حسابداری و مالی
+</h2>
+
+<div class="line"></div>
+
+<p>
+مطالب آموزشی و کاربردی برای مدیران،
+حسابداران و صاحبان کسب‌وکار
+</p>
+
+</div>
+
+
+<div class="grid3">
+
+
+<div class="card">
+
+<h3>
+حسابداری
+</h3>
+
+<p>
+آموزش اصول حسابداری،
+ثبت اسناد، گزارش‌های مالی
+و نکات کاربردی برای حسابداران.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+مالیات
+</h3>
+
+<p>
+مطالب کاربردی درباره قوانین مالیاتی،
+اظهارنامه، ارزش افزوده و سامانه مؤدیان.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+بیمه
+</h3>
+
+<p>
+آموزش و مطالب کاربردی درباره
+بیمه کارکنان، لیست بیمه
+و تأمین اجتماعی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+حسابرسی
+</h3>
+
+<p>
+آشنایی با مفاهیم حسابرسی،
+کنترل‌های داخلی و بررسی اطلاعات مالی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+حسابداری صنعتی
+</h3>
+
+<p>
+مطالب آموزشی درباره بهای تمام‌شده،
+هزینه‌های تولید و تحلیل عملکرد مالی.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+مدیریت مالی
+</h3>
+
+<p>
+نکات کاربردی مدیریت مالی،
+کنترل هزینه‌ها، بودجه‌بندی
+و تصمیم‌گیری مالی.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     CONTACT
+================================================= -->
+
+<section
+    id="contact"
+    class="light"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+تماس با مؤسسه حسابداری و حسابرسی چرتکه
+</h2>
+
+<div class="line"></div>
+
+<p>
+برای ارتباط با مؤسسه از راه‌های زیر استفاده کنید.
+</p>
+
+</div>
+
+
+<div class="contact-grid">
+
+
+<!-- اطلاعات تماس -->
+
+<div class="card">
+
+<h3>
+اطلاعات تماس
+</h3>
+
+
+<p>
+
+<strong>
+مؤسسه حسابداری و حسابرسی چرتکه
+</strong>
+
+</p>
+
+
+<p>
+
+📍
+
+<strong>
+
+کرمان -
+خیابان امام جمعه -
+نبش امام جمعه ۲ -
+طبقه بالای بانک سپه
+
+</strong>
+
+</p>
+
+
+<p>
+
+📞 تماس مستقیم:
+
+<a
+class="contact-number"
+href="tel:+989131989006"
+>
+
+09131989006
+
+</a>
+
+</p>
+
+
+<p>
+
+🛟 پشتیبانی ۲۴ ساعته:
+
+<a
+class="contact-number"
+href="tel:+989224417210"
+>
+
+09224417210
+
+</a>
+
+</p>
+
+
+<div class="map-buttons">
+
+
+<a
+class="btn btn-gold"
+href="tel:+989131989006"
+>
+
+📞 تماس مستقیم
+
+</a>
+
+
+<a
+class="btn btn-outline"
+href="https://wa.me/989131989006"
+target="_blank"
+rel="noopener"
+>
+
+WhatsApp
+
+</a>
+
+
+</div>
+
+</div>
+
+
+
+<!-- موقعیت -->
+
+<div class="card">
+
+<h3>
+موقعیت مؤسسه
+</h3>
+
+
+<p>
+
+آدرس دقیق مؤسسه را می‌توانید
+در Google Maps مشاهده کنید یا
+با استفاده از نشان مسیریابی کنید.
+
+</p>
+
+
+<p>
+
+📍
+
+<strong>
+
+کرمان -
+خیابان امام جمعه -
+نبش امام جمعه ۲ -
+طبقه بالای بانک سپه
+
+</strong>
+
+</p>
+
+
+<div class="map-buttons">
+
+
+<a
+class="btn btn-gold"
+href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%DA%A9%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+target="_blank"
+rel="noopener"
+>
+
+📍 Google Maps
+
+</a>
+
+
+<a
+class="btn btn-outline"
+href="https://neshan.org/maps/places/38a2ed7c55820a9747ca0ca5b7e1dc87#c30.286-57.045-20z-0p"
+target="_blank"
+rel="noopener"
+>
+
+🧭 مسیریابی با نشان
+
+</a>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =================================================
+     MESSENGERS
+================================================= -->
+
+<div
+class="box"
+style="
+margin-top:25px;
+background:#fff;
+color:#222;
+"
+>
+
+
+<h3 style="color:#80651f;">
+
+ارتباط در پیام‌رسان‌ها
+
+</h3>
+
+
+<p style="color:#555;">
+
+برای ارتباط سریع با مؤسسه،
+پیام‌رسان مورد نظر خود را انتخاب کنید.
+
+</p>
+
+
+<div class="messenger-grid">
+
+
+<!-- WHATSAPP -->
+
+<a
+class="messenger-item"
+href="https://wa.me/989131989006"
+target="_blank"
+rel="noopener"
+aria-label="ارتباط با چرتکه در واتساپ"
+>
+
+<svg
+class="messenger-icon"
+viewBox="0 0 48 48"
+>
+
+<circle
+cx="24"
+cy="24"
+r="22"
+fill="#25D366"
+/>
+
+<path
+fill="#fff"
+d="M34.6 13.4A14.9 14.9 0 0 0 24 9
+c-8.2 0-14.9 6.7-14.9 14.9
+0 2.6.7 5.2 2 7.4L9 39
+l7.9-2.1c2.2 1.2 4.6 1.8 7.1 1.8
+8.2 0 14.9-6.7 14.9-14.9
+0-4-1.6-7.7-4.3-10.4Z"
+/>
+
+</svg>
+
+<strong>
+واتساپ
+</strong>
+
+<span class="messenger-number">
+09131989006
+</span>
+
+</a>
+
+
+
+<!-- EITAA -->
+
+<a
+class="messenger-item"
+href="https://eitaa.com/09131989006"
+target="_blank"
+rel="noopener"
+aria-label="ارتباط با چرتکه در ایتا"
+>
+
+<svg
+class="messenger-icon"
+viewBox="0 0 48 48"
+>
+
+<circle
+cx="24"
+cy="24"
+r="22"
+fill="#19A7CE"
+/>
+
+<path
+fill="#fff"
+d="M13 16h22v4H13zm0 6h16v4H13zm0 6h22v4H13z"
+/>
+
+</svg>
+
+<strong>
+ایتا
+</strong>
+
+<span class="messenger-number">
+09131989006
+</span>
+
+</a>
+
+
+
+<!-- BALE -->
+
+<a
+class="messenger-item"
+href="https://ble.ir/09131989006"
+target="_blank"
+rel="noopener"
+aria-label="ارتباط با چرتکه در بله"
+>
+
+<svg
+class="messenger-icon"
+viewBox="0 0 48 48"
+>
+
+<circle
+cx="24"
+cy="24"
+r="22"
+fill="#20A4F3"
+/>
+
+<path
+fill="#fff"
+d="M12 16h24v15H23l-6 5v-5h-5z"
+/>
+
+</svg>
+
+<strong>
+بله
+</strong>
+
+<span class="messenger-number">
+09131989006
+</span>
+
+</a>
+
+
+
+<!-- SOROUSH -->
+
+<a
+class="messenger-item"
+href="https://splus.ir/09131989006"
+target="_blank"
+rel="noopener"
+aria-label="ارتباط با چرتکه در سروش"
+>
+
+<svg
+class="messenger-icon"
+viewBox="0 0 48 48"
+>
+
+<circle
+cx="24"
+cy="24"
+r="22"
+fill="#6A4BC3"
+/>
+
+<path
+fill="#fff"
+d="M15 15h18v18H15z"
+/>
+
+<circle
+cx="21"
+cy="24"
+r="2"
+fill="#6A4BC3"
+/>
+
+<circle
+cx="27"
+cy="24"
+r="2"
+fill="#6A4BC3"
+/>
+
+</svg>
+
+<strong>
+سروش
+</strong>
+
+<span class="messenger-number">
+09131989006
+</span>
+
+</a>
+
+
+
+<!-- RUBIKA -->
+
+<a
+class="messenger-item"
+href="https://rubika.ir/09131989006"
+target="_blank"
+rel="noopener"
+aria-label="ارتباط با چرتکه در روبیکا"
+>
+
+<svg
+class="messenger-icon"
+viewBox="0 0 48 48"
+>
+
+<circle
+cx="24"
+cy="24"
+r="22"
+fill="#E91E63"
+/>
+
+<path
+fill="#fff"
+d="M14 17h20v14H14z"
+/>
+
+<path
+fill="#E91E63"
+d="M20 20h8v8h-8z"
+/>
+
+</svg>
+
+<strong>
+روبیکا
+</strong>
+
+<span class="messenger-number">
+09131989006
+</span>
+
+</a>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =================================================
+     FOOTER
+================================================= -->
+
+<footer>
+
+<div class="wrap">
+
+
+<div class="foot">
+
+
+<div>
+
+<h3 class="gold">
+
+مؤسسه حسابداری و حسابرسی چرتکه
+
+</h3>
+
+
+<p>
+
+ارائه خدمات تخصصی حسابداری،
+حسابرسی، مالیاتی، بیمه،
+مشاوره مالی، آموزش و
+نرم‌افزارهای مالی و سازمانی
+در استان کرمان.
+
+</p>
+
+
+<p style="font-size:13px;color:#aaa;">
+
+همراه مطمئن کسب‌وکارها
+برای مدیریت بهتر امور مالی.
+
+</p>
+
+</div>
+
+
+
+<div>
+
+<h3 class="gold">
+دسترسی سریع
+</h3>
+
+
+<p>
+<a href="#services" style="color:#eee;">
+خدمات
+</a>
+</p>
+
+
+<p>
+<a href="#mining" style="color:#eee;">
+صنایع و معادن
+</a>
+</p>
+
+
+<p>
+<a href="#cities" style="color:#eee;">
+شهرستان‌ها
+</a>
+</p>
+
+
+<p>
+<a href="#software" style="color:#eee;">
+نرم‌افزار
+</a>
+</p>
+
+
+<p>
+<a href="#education" style="color:#eee;">
+آموزش
+</a>
+</p>
+
+
+<p>
+<a href="#knowledge" style="color:#eee;">
+مرکز دانش
+</a>
+</p>
+
+
+<p>
+<a href="#contact" style="color:#eee;">
+تماس با ما
+</a>
+</p>
+
+
+</div>
+
+
+
+<div>
+
+<h3 class="gold">
+تماس با ما
+</h3>
+
+
+<p>
+
+📍 کرمان -
+خیابان امام جمعه -
+نبش امام جمعه ۲ -
+طبقه بالای بانک سپه
+
+</p>
+
+
+<p>
+
+📞
+
+<a
+href="tel:+989131989006"
+style="color:#eee;"
+>
+
+09131989006
+
+</a>
+
+</p>
+
+
+<p>
+
+🛟
+
+<a
+href="tel:+989224417210"
+style="color:#eee;"
+>
+
+پشتیبانی ۲۴ ساعته:
+09224417210
+
+</a>
+
+</p>
+
+
+<p>
+
+<a
+href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%D9%83%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+target="_blank"
+rel="noopener"
+style="color:#d4af37;"
+>
+
+📍 Google Maps
+
+</a>
+
+</p>
+
+
+<p>
+
+<a
+href="https://neshan.org/maps/places/38a2ed7c55820a9747ca0ca5b7e1dc87#c30.286-57.045-20z-0p"
+target="_blank"
+rel="noopener"
+style="color:#d4af37;"
+>
+
+🧭 مسیریابی با نشان
+
+</a>
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+<hr
+style="
+border:0;
+border-top:1px solid #333;
+margin:30px 0 20px;
+"
+/>
+
+
+<div
+style="
+text-align:center;
+color:#aaa;
+font-size:12px;
+"
+>
+
+© 2026 مؤسسه حسابداری و حسابرسی چرتکه
+— تمامی حقوق محفوظ است.
+
+</div>
+
+
+</div>
+
+</footer>
+
+
+</body>
+
+</html>
