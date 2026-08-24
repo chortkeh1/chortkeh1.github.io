@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chortkeh1.github.io/sitemap.xml
