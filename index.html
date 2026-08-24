@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="fa" dir="rtl">
 
@@ -32,7 +33,7 @@ content="حسابداری کرمان,
 href="https://chortkeh1.github.io/">
 
 <meta name="theme-color"
-content="#080808">
+content="#202525">
 
 <meta property="og:title"
 content="مؤسسه حسابداری و حسابرسی چرتکه | کرمان">
@@ -50,6 +51,56 @@ content="https://chortkeh1.github.io/">
 <style>
 
 /* =====================================================
+   COLOR SYSTEM
+===================================================== */
+
+:root {
+
+    --charcoal:
+        #202525;
+
+    --charcoal-dark:
+        #171b1b;
+
+    --charcoal-light:
+        #2b3030;
+
+    --gold:
+        #c9a227;
+
+    --gold-light:
+        #e0be55;
+
+    --emerald:
+        #087f6c;
+
+    --emerald-light:
+        #12a58d;
+
+    --turquoise:
+        #19aeb0;
+
+    --turquoise-light:
+        #45c9c5;
+
+    --cream:
+        #f3f0e8;
+
+    --cream-light:
+        #faf9f5;
+
+    --text:
+        #292929;
+
+    --muted:
+        #666;
+
+    --white:
+        #f5f3ec;
+}
+
+
+/* =====================================================
    GENERAL
 ===================================================== */
 
@@ -62,6 +113,7 @@ html {
 }
 
 body {
+
     margin: 0;
 
     font-family:
@@ -71,9 +123,11 @@ body {
 
     line-height: 1.9;
 
-    background: #090909;
+    background:
+        var(--cream);
 
-    color: #222;
+    color:
+        var(--text);
 }
 
 a {
@@ -81,13 +135,27 @@ a {
 }
 
 .wrap {
+
     width: 92%;
+
     max-width: 1200px;
+
     margin: auto;
 }
 
 .gold {
-    color: #d4af37;
+    color:
+        var(--gold-light);
+}
+
+.emerald {
+    color:
+        var(--emerald-light);
+}
+
+.turquoise {
+    color:
+        var(--turquoise-light);
 }
 
 
@@ -96,103 +164,167 @@ a {
 ===================================================== */
 
 header {
+
     position: sticky;
 
     top: 0;
 
     z-index: 100;
 
-    background: #070707;
+    background:
+        linear-gradient(
+            135deg,
+            #1b2020,
+            #252b2b
+        );
 
     border-bottom:
-        1px solid #a88320;
+        2px solid var(--gold);
 
     box-shadow:
-        0 2px 15px #0008;
+        0 3px 18px #0005;
 }
 
 .nav {
 
-    min-height: 78px;
+    min-height:
+        92px;
 
     display: flex;
 
     align-items: center;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    gap: 18px;
+    gap: 22px;
 }
 
 
-/* LOGO */
+/* =====================================================
+   LOGO
+===================================================== */
 
 .logo {
 
-    width: 90px;
+    width:
+        118px;
 
-    height: 62px;
+    height:
+        78px;
 
-    object-fit: contain;
+    object-fit:
+        contain;
 
-    background: #000;
+    background:
+        #101414;
 
-    border-radius: 7px;
+    border-radius:
+        8px;
+
+    border:
+        1px solid #8f762d;
+
+    padding:
+        3px;
 }
 
 
-/* BRAND */
+/* =====================================================
+   BRAND
+===================================================== */
 
 .brand {
 
-    color: #d4af37;
+    color:
+        var(--gold-light);
 
-    font-size: 24px;
+    font-size:
+        28px;
 
-    font-weight: bold;
+    font-weight:
+        bold;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    gap: 12px;
+    gap:
+        15px;
+
+    white-space:
+        nowrap;
 }
 
 .brand small {
 
-    display: block;
+    display:
+        block;
 
-    color: #eeeeee;
+    color:
+        #d9dfdc;
 
-    font-size: 10px;
+    font-size:
+        12px;
 
-    font-weight: normal;
+    font-weight:
+        normal;
+
+    margin-top:
+        2px;
 }
 
 
-/* NAVIGATION */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 nav {
 
-    display: flex;
+    display:
+        flex;
 
-    gap: 15px;
+    gap:
+        18px;
 
-    flex-wrap: wrap;
+    flex-wrap:
+        wrap;
 
-    justify-content: center;
+    justify-content:
+        center;
 }
 
 nav a {
 
-    color: #eeeeee;
+    color:
+        #f0f2ee;
 
-    font-size: 13px;
+    font-size:
+        15px;
+
+    font-weight:
+        500;
+
+    padding:
+        5px 2px;
+
+    border-bottom:
+        2px solid transparent;
+
+    transition:
+        color .2s ease,
+        border-color .2s ease;
 }
 
 nav a:hover {
 
-    color: #d4af37;
+    color:
+        var(--turquoise-light);
+
+    border-bottom-color:
+        var(--turquoise);
 }
 
 
@@ -202,40 +334,62 @@ nav a:hover {
 
 .btn {
 
-    display: inline-block;
+    display:
+        inline-block;
 
     padding:
-        11px 20px;
+        11px 21px;
 
-    border-radius: 6px;
+    border-radius:
+        7px;
 
-    font-weight: bold;
+    font-weight:
+        bold;
 
-    cursor: pointer;
+    cursor:
+        pointer;
+
+    transition:
+        .2s ease;
 }
 
 .btn-gold {
 
-    background: #d4af37;
+    background:
+        var(--gold);
 
-    color: #111;
+    color:
+        #171717;
+}
+
+.btn-gold:hover {
+
+    background:
+        var(--gold-light);
+
+    transform:
+        translateY(-2px);
 }
 
 .btn-outline {
 
     border:
-        1px solid #d4af37;
+        1px solid var(--gold);
 
-    color: #d4af37;
+    color:
+        var(--gold-light);
 
-    background: transparent;
+    background:
+        transparent;
 }
 
 .btn-outline:hover {
 
-    background: #d4af37;
+    background:
+        var(--gold);
 
-    color: #111;
+    color:
+        #171717;
 }
 
 
@@ -245,65 +399,88 @@ nav a:hover {
 
 .hero {
 
-    padding: 82px 0;
+    padding:
+        88px 0;
 
-    color: #fff;
+    color:
+        var(--white);
 
     background:
 
         radial-gradient(
-            circle at 80% 20%,
-            #d4af3730,
-            transparent 35%
+            circle at 82% 20%,
+            #19aeb020,
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 15% 80%,
+            #087f6c20,
+            transparent 30%
         ),
 
         linear-gradient(
             135deg,
-            #050505,
-            #1a1a1a
+            #171b1b,
+            #293030
         );
 
     border-bottom:
-        1px solid #a88320;
+        1px solid #8b762e;
 }
 
 .hero-grid {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         1.2fr .8fr;
 
-    gap: 45px;
+    gap:
+        48px;
 
-    align-items: center;
+    align-items:
+        center;
 }
 
 .hero h1 {
 
-    font-size: 42px;
+    font-size:
+        44px;
 
-    line-height: 1.55;
+    line-height:
+        1.55;
 
-    margin: 12px 0;
+    margin:
+        12px 0;
 }
 
 .hero p {
 
-    font-size: 17px;
+    font-size:
+        18px;
 
-    color: #eeeeee;
+    color:
+        #edf1ed;
+
+    max-width:
+        720px;
 }
 
 .actions {
 
-    display: flex;
+    display:
+        flex;
 
-    gap: 12px;
+    gap:
+        12px;
 
-    flex-wrap: wrap;
+    flex-wrap:
+        wrap;
 
-    margin-top: 25px;
+    margin-top:
+        25px;
 }
 
 
@@ -313,31 +490,45 @@ nav a:hover {
 
 .hero-card {
 
-    background: #151515;
+    background:
+        linear-gradient(
+            145deg,
+            #293030,
+            #202525
+        );
 
     border:
-        1px solid #8d7025;
+        1px solid var(--emerald);
 
-    border-radius: 15px;
+    border-radius:
+        15px;
 
-    padding: 28px;
+    padding:
+        30px;
+
+    box-shadow:
+        0 10px 30px #0005;
 }
 
 .hero-card h2 {
 
-    color: #d4af37;
+    color:
+        var(--gold-light);
 }
 
 .hero-card li {
 
-    list-style: none;
+    list-style:
+        none;
 
-    color: #eeeeee;
+    color:
+        #eef1ed;
 
-    padding: 7px 0;
+    padding:
+        8px 0;
 
     border-bottom:
-        1px solid #333;
+        1px solid #3d4544;
 }
 
 
@@ -347,54 +538,76 @@ nav a:hover {
 
 section {
 
-    padding: 70px 0;
+    padding:
+        72px 0;
 }
 
 .light {
 
-    background: #f5f3ee;
+    background:
+        var(--cream);
 }
 
 .dark {
 
-    background: #101010;
+    background:
+        linear-gradient(
+            135deg,
+            #202525,
+            #293030
+        );
 
-    color: #fff;
+    color:
+        var(--white);
 }
 
 .title {
 
-    text-align: center;
+    text-align:
+        center;
 
-    margin-bottom: 38px;
+    margin-bottom:
+        40px;
 }
 
 .title h2 {
 
-    font-size: 30px;
+    font-size:
+        31px;
 
-    margin: 0;
+    margin:
+        0;
 }
 
 .title p {
 
-    color: #777;
+    color:
+        var(--muted);
 }
 
 .dark .title p {
 
-    color: #eeeeee;
+    color:
+        #e0e5e1;
 }
 
 .line {
 
-    width: 60px;
+    width:
+        65px;
 
-    height: 3px;
+    height:
+        3px;
 
-    background: #d4af37;
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            var(--turquoise)
+        );
 
-    margin: 12px auto;
+    margin:
+        12px auto;
 }
 
 
@@ -404,55 +617,91 @@ section {
 
 .grid3 {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 18px;
+    gap:
+        20px;
 }
 
 .card {
 
-    background: #fff;
+    background:
+        var(--cream-light);
 
     border:
-        1px solid #ddd;
+        1px solid #ddd8ca;
 
-    border-radius: 11px;
+    border-radius:
+        11px;
 
-    padding: 24px;
+    padding:
+        25px;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        var(--emerald);
+
+    box-shadow:
+        0 7px 20px #0001;
 }
 
 .card h3 {
 
-    color: #80651f;
+    color:
+        #79611d;
 
-    margin-top: 0;
+    margin-top:
+        0;
 }
 
 .card p {
 
-    color: #444;
+    color:
+        #444;
 
-    font-size: 14px;
+    font-size:
+        14px;
 }
 
 .dark .card {
 
-    background: #181818;
+    background:
+        #303636;
 
-    border-color: #3a3a3a;
+    border-color:
+        #46504e;
+}
+
+.dark .card:hover {
+
+    border-color:
+        var(--turquoise);
 }
 
 .dark .card h3 {
 
-    color: #d4af37;
+    color:
+        var(--gold-light);
 }
 
 .dark .card p {
 
-    color: #eeeeee;
+    color:
+        #eeeeea;
 }
 
 
@@ -464,28 +713,41 @@ section {
 
     background:
 
+        radial-gradient(
+            circle at 15% 20%,
+            #087f6c18,
+            transparent 30%
+        ),
+
         linear-gradient(
             135deg,
-            #080808,
-            #17130a
+            #1b2020,
+            #252a29
         );
 
-    color: #fff;
+    color:
+        #fff;
 }
 
 .box {
 
     border:
-        1px solid #8d7025;
+        1px solid #87712d;
 
-    border-radius: 15px;
+    border-radius:
+        15px;
 
-    padding: 35px;
+    padding:
+        35px;
+
+    background:
+        #252b2a80;
 }
 
 .box > p {
 
-    color: #eeeeee;
+    color:
+        #eeeeea;
 }
 
 
@@ -495,35 +757,50 @@ section {
 
 .cities {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         repeat(4, 1fr);
 
-    gap: 11px;
+    gap:
+        11px;
 }
 
 .city {
 
-    padding: 12px;
+    padding:
+        12px;
 
-    text-align: center;
+    text-align:
+        center;
 
     border:
-        1px solid #ddd;
+        1px solid #d9d4c7;
 
-    background: #fff;
+    background:
+        var(--cream-light);
 
-    border-radius: 6px;
+    border-radius:
+        7px;
 
-    color: #333;
+    color:
+        #333;
+
+    transition:
+        .2s ease;
 }
 
 .city:hover {
 
-    border-color: #d4af37;
+    border-color:
+        var(--emerald);
 
-    color: #80651f;
+    color:
+        var(--emerald);
+
+    background:
+        #eef7f4;
 }
 
 
@@ -533,23 +810,38 @@ section {
 
 .contact-grid {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         1fr 1fr;
 
-    gap: 20px;
+    gap:
+        20px;
 }
 
 .contact-number {
 
-    direction: ltr;
+    direction:
+        ltr;
 
-    unicode-bidi: embed;
+    unicode-bidi:
+        embed;
 
-    font-weight: bold;
+    font-weight:
+        bold;
 
-    color: #80651f;
+    color:
+        var(--emerald);
+
+    font-size:
+        16px;
+}
+
+.contact-number:hover {
+
+    color:
+        var(--turquoise);
 }
 
 
@@ -559,13 +851,17 @@ section {
 
 .map-buttons {
 
-    display: flex;
+    display:
+        flex;
 
-    gap: 10px;
+    gap:
+        10px;
 
-    flex-wrap: wrap;
+    flex-wrap:
+        wrap;
 
-    margin-top: 20px;
+    margin-top:
+        20px;
 }
 
 
@@ -575,38 +871,50 @@ section {
 
 .messenger-grid {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         repeat(5, 1fr);
 
-    gap: 15px;
+    gap:
+        15px;
 
-    margin-top: 25px;
+    margin-top:
+        25px;
 }
 
 .messenger-item {
 
-    min-height: 125px;
+    min-height:
+        125px;
 
-    display: flex;
+    display:
+        flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    gap: 7px;
+    gap:
+        7px;
 
-    background: #fff;
+    background:
+        var(--cream-light);
 
     border:
         1px solid #ddd;
 
-    border-radius: 12px;
+    border-radius:
+        12px;
 
-    color: #333;
+    color:
+        #333;
 
     transition:
         transform .2s ease,
@@ -616,9 +924,11 @@ section {
 
 .messenger-item:hover {
 
-    transform: translateY(-3px);
+    transform:
+        translateY(-3px);
 
-    border-color: #d4af37;
+    border-color:
+        var(--turquoise);
 
     box-shadow:
         0 5px 18px #0002;
@@ -626,20 +936,26 @@ section {
 
 .messenger-icon {
 
-    width: 52px;
+    width:
+        52px;
 
-    height: 52px;
+    height:
+        52px;
 
-    display: block;
+    display:
+        block;
 }
 
 .messenger-number {
 
-    font-size: 13px;
+    font-size:
+        13px;
 
-    direction: ltr;
+    direction:
+        ltr;
 
-    unicode-bidi: embed;
+    unicode-bidi:
+        embed;
 }
 
 
@@ -649,25 +965,35 @@ section {
 
 footer {
 
-    background: #070707;
+    background:
+        #171b1b;
 
-    color: #ccc;
+    color:
+        #d5d9d6;
 
     border-top:
-        1px solid #8d7025;
+        2px solid var(--gold);
 
     padding:
-        45px 0 20px;
+        48px 0 20px;
 }
 
 .foot {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         1.3fr 1fr 1fr;
 
-    gap: 30px;
+    gap:
+        30px;
+}
+
+footer a:hover {
+
+    color:
+        var(--turquoise-light) !important;
 }
 
 
@@ -679,18 +1005,19 @@ footer {
 
     .nav {
 
-        flex-direction: column;
+        flex-direction:
+            column;
 
-        padding: 12px 0;
+        padding:
+            14px 0;
     }
-
 
     .hero-grid,
     .contact-grid {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
     }
-
 
     .grid3 {
 
@@ -698,19 +1025,17 @@ footer {
             1fr 1fr;
     }
 
-
     .cities {
 
         grid-template-columns:
             1fr 1fr;
     }
 
-
     .hero h1 {
 
-        font-size: 32px;
+        font-size:
+            34px;
     }
-
 
     .foot {
 
@@ -718,55 +1043,82 @@ footer {
             1fr;
     }
 
-
     body {
 
-        font-size: 16px;
+        font-size:
+            16px;
 
-        line-height: 2;
+        line-height:
+            2;
     }
-
 
     .hero p {
 
-        font-size: 17px;
+        font-size:
+            17px;
 
-        line-height: 2;
+        line-height:
+            2;
 
-        color: #f0f0f0;
+        color:
+            #f0f0f0;
     }
-
 
     .hero-card li {
 
-        font-size: 16px;
+        font-size:
+            16px;
 
-        color: #f2f2f2;
+        color:
+            #f2f2f2;
     }
-
 
     .card p {
 
-        font-size: 16px;
+        font-size:
+            16px;
 
-        line-height: 2;
+        line-height:
+            2;
 
-        color: #444;
+        color:
+            #444;
     }
-
 
     .dark .card p {
 
-        color: #eeeeee;
+        color:
+            #eeeeee;
     }
-
 
     .messenger-grid {
 
         grid-template-columns:
             repeat(2, 1fr);
 
-        gap: 12px;
+        gap:
+            12px;
+    }
+
+    .logo {
+
+        width:
+            125px;
+
+        height:
+            82px;
+    }
+
+    .brand {
+
+        font-size:
+            28px;
+    }
+
+    nav a {
+
+        font-size:
+            15px;
     }
 }
 
@@ -775,92 +1127,99 @@ footer {
 
     .grid3 {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
     }
-
-
-    /* لوگوی بزرگ‌تر در موبایل */
 
     .logo {
 
-        width: 125px;
+        width:
+            130px;
 
-        height: 82px;
+        height:
+            85px;
     }
-
 
     .brand {
 
-        font-size: 25px;
+        font-size:
+            26px;
 
-        gap: 14px;
+        gap:
+            14px;
     }
-
 
     .brand small {
 
-        font-size: 11px;
+        font-size:
+            11px;
     }
-
-
-    /* منوی خواناتر */
 
     nav {
 
-        gap: 12px;
+        gap:
+            13px;
     }
 
     nav a {
 
-        font-size: 15px;
+        font-size:
+            15px;
 
-        color: #f2f2f2;
+        color:
+            #f2f2f2;
     }
 
+    .hero {
 
-    /* Hero */
+        padding:
+            65px 0;
+    }
 
     .hero h1 {
 
-        font-size: 30px;
+        font-size:
+            30px;
 
-        line-height: 1.7;
+        line-height:
+            1.7;
     }
-
 
     .hero p {
 
-        font-size: 17px;
+        font-size:
+            17px;
 
-        line-height: 2.1;
+        line-height:
+            2.1;
     }
-
 
     section {
 
-        padding: 60px 0;
+        padding:
+            60px 0;
     }
-
 
     .title h2 {
 
-        font-size: 27px;
+        font-size:
+            27px;
     }
-
 
     .title p {
 
-        font-size: 16px;
+        font-size:
+            16px;
 
-        color: #555;
+        color:
+            #555;
     }
-
 
     .dark .title p {
 
-        color: #eeeeee;
+        color:
+            #eeeeee;
     }
-
 
     .messenger-grid {
 
@@ -868,47 +1227,49 @@ footer {
             repeat(2, 1fr);
     }
 
-
     .messenger-icon {
 
-        width: 52px;
+        width:
+            52px;
 
-        height: 52px;
+        height:
+            52px;
     }
-
 
     .messenger-number {
 
-        font-size: 12px;
+        font-size:
+            12px;
     }
-
 
     .btn {
 
-        font-size: 16px;
+        font-size:
+            16px;
 
         padding:
             12px 18px;
     }
 
-
     .contact-number {
 
-        font-size: 16px;
+        font-size:
+            16px;
     }
-
 
     .map-buttons {
 
-        flex-direction: column;
+        flex-direction:
+            column;
     }
-
 
     .map-buttons .btn {
 
-        text-align: center;
+        text-align:
+            center;
 
-        width: 100%;
+        width:
+            100%;
     }
 }
 
@@ -1917,8 +2278,6 @@ color:#555;
 <div class="contact-grid">
 
 
-<!-- اطلاعات تماس -->
-
 <div class="card">
 
 <h3>
@@ -1947,6 +2306,22 @@ color:#555;
 طبقه بالای بانک سپه
 
 </strong>
+
+</p>
+
+
+<p>
+
+📞 تلفن ثابت:
+
+<a
+class="contact-number"
+href="tel:+983432476021"
+>
+
+034-32476021
+
+</a>
 
 </p>
 
@@ -1988,10 +2363,20 @@ href="tel:+989224417210"
 
 <a
 class="btn btn-gold"
+href="tel:+983432476021"
+>
+
+📞 تلفن ثابت
+
+</a>
+
+
+<a
+class="btn btn-outline"
 href="tel:+989131989006"
 >
 
-📞 تماس مستقیم
+📱 تماس همراه
 
 </a>
 
@@ -2013,8 +2398,6 @@ WhatsApp
 </div>
 
 
-
-<!-- موقعیت -->
 
 <div class="card">
 
@@ -2053,7 +2436,7 @@ WhatsApp
 
 <a
 class="btn btn-gold"
-href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%DA%A9%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%D9%83%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
 target="_blank"
 rel="noopener"
 >
@@ -2092,13 +2475,13 @@ rel="noopener"
 class="box"
 style="
 margin-top:25px;
-background:#fff;
+background:#faf9f5;
 color:#222;
 "
 >
 
 
-<h3 style="color:#80651f;">
+<h3 style="color:#087f6c;">
 
 ارتباط در پیام‌رسان‌ها
 
@@ -2115,8 +2498,6 @@ color:#222;
 
 <div class="messenger-grid">
 
-
-<!-- WHATSAPP -->
 
 <a
 class="messenger-item"
@@ -2162,8 +2543,6 @@ l7.9-2.1c2.2 1.2 4.6 1.8 7.1 1.8
 
 
 
-<!-- EITAA -->
-
 <a
 class="messenger-item"
 href="https://eitaa.com/09131989006"
@@ -2203,8 +2582,6 @@ d="M13 16h22v4H13zm0 6h16v4H13zm0 6h22v4H13z"
 
 
 
-<!-- BALE -->
-
 <a
 class="messenger-item"
 href="https://ble.ir/09131989006"
@@ -2243,8 +2620,6 @@ d="M12 16h24v15H23l-6 5v-5h-5z"
 </a>
 
 
-
-<!-- SOROUSH -->
 
 <a
 class="messenger-item"
@@ -2298,8 +2673,6 @@ fill="#6A4BC3"
 </a>
 
 
-
-<!-- RUBIKA -->
 
 <a
 class="messenger-item"
@@ -2476,7 +2849,23 @@ d="M20 20h8v8h-8z"
 
 <p>
 
-📞
+📞 تلفن ثابت:
+
+<a
+href="tel:+983432476021"
+style="color:#eee;"
+>
+
+034-32476021
+
+</a>
+
+</p>
+
+
+<p>
+
+📞 تماس مستقیم:
 
 <a
 href="tel:+989131989006"
@@ -2513,7 +2902,7 @@ style="color:#eee;"
 href="https://www.google.com/maps/place/%D9%85%D9%88%D8%B3%D8%B3%D9%87+%D8%AD%D8%B3%D8%A7%D8%A8%D8%AF%D8%A7%D8%B1%DB%8C+%D9%88%D8%AD%D8%B3%D8%A7%D8%A8%D8%B1%D8%B3%DB%8C+%DA%86%D8%B1%D8%AA%D9%83%D9%87%E2%80%AD/@30.2862934,57.0450416,17z/data=!4m8!3m7!1s0x3f0219263c46d8a7:0xc3fe0ca537bc0987!8m2!3d30.2862934!4d57.0450416!9m1!1b1!16s%2Fg%2F11qxwm1w_h?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
 target="_blank"
 rel="noopener"
-style="color:#d4af37;"
+style="color:#c9a227;"
 >
 
 📍 Google Maps
@@ -2529,7 +2918,7 @@ style="color:#d4af37;"
 href="https://neshan.org/maps/places/38a2ed7c55820a9747ca0ca5b7e1dc87#c30.286-57.045-20z-0p"
 target="_blank"
 rel="noopener"
-style="color:#d4af37;"
+style="color:#c9a227;"
 >
 
 🧭 مسیریابی با نشان
@@ -2548,7 +2937,7 @@ style="color:#d4af37;"
 <hr
 style="
 border:0;
-border-top:1px solid #333;
+border-top:1px solid #39403f;
 margin:30px 0 20px;
 "
 />
@@ -2576,3 +2965,4 @@ font-size:12px;
 </body>
 
 </html>
+```
