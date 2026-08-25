@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 
 
 # =========================================================
@@ -19,6 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = BASE_DIR / "news-data.json"
 
 MAX_ARTICLES = 80
+
+REQUEST_TIMEOUT = 30
 
 
 # =========================================================
@@ -185,6 +188,8 @@ def fetch_feed(feed):
         feed["query"]
     )
 
+    print(f"  URL: {url}")
+
     request = urllib.request.Request(
 
         url,
@@ -192,16 +197,73 @@ def fetch_feed(feed):
         headers={
             "User-Agent":
                 "Mozilla/5.0 "
-                "(compatible; ChortkehNewsBot/1.0)"
+                "(Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 "
+                "(KHTML, like Gecko) "
+                "Chrome/120 Safari/537.36",
+
+            "Accept":
+                "application/rss+xml, "
+                "application/xml, "
+                "text/xml, "
+                "*/*"
         }
     )
 
-    with urllib.request.urlopen(
-        request,
-        timeout=30
-    ) as response:
+    try:
 
-        return response.read()
+        with urllib.request.urlopen(
+            request,
+            timeout=REQUEST_TIMEOUT
+        ) as response:
+
+            status = response.status
+
+            content_type = response.headers.get(
+                "Content-Type",
+                ""
+            )
+
+            data = response.read()
+
+            print(
+                f"  HTTP Status: {status}"
+            )
+
+            print(
+                f"  Content-Type: {content_type}"
+            )
+
+            print(
+                f"  حجم پاسخ: {len(data)} bytes"
+            )
+
+            if not data:
+
+                raise RuntimeError(
+                    "پاسخ RSS خالی است."
+                )
+
+            return data
+
+    except HTTPError as error:
+
+        raise RuntimeError(
+            f"HTTP Error {error.code}: "
+            f"{error.reason}"
+        )
+
+    except URLError as error:
+
+        raise RuntimeError(
+            f"URL Error: {error.reason}"
+        )
+
+    except TimeoutError:
+
+        raise RuntimeError(
+            "Timeout در دریافت RSS"
+        )
 
 
 # =========================================================
@@ -212,9 +274,18 @@ def parse_feed(xml_data, feed):
 
     articles = []
 
-    root = ET.fromstring(
-        xml_data
-    )
+    try:
+
+        root = ET.fromstring(
+            xml_data
+        )
+
+    except ET.ParseError as error:
+
+        raise RuntimeError(
+            f"خطا در پردازش XML/RSS: {error}"
+        )
+
 
     channel = root.find(
         "channel"
@@ -222,12 +293,21 @@ def parse_feed(xml_data, feed):
 
     if channel is None:
 
-        return articles
+        raise RuntimeError(
+            "عنصر channel در RSS پیدا نشد."
+        )
 
 
-    for item in channel.findall(
+    items = channel.findall(
         "item"
-    ):
+    )
+
+    print(
+        f"  تعداد item در RSS: {len(items)}"
+    )
+
+
+    for item in items:
 
         title = item.findtext(
             "title",
@@ -291,15 +371,17 @@ def parse_feed(xml_data, feed):
 
         articles.append({
 
-            "id": article_id,
+            "id":
+                article_id,
 
-            "title": title,
+            "title":
+                title,
 
-            "summary": shorten(
-                description
-            ),
+            "summary":
+                shorten(description),
 
-            "link": link,
+            "link":
+                link,
 
             "source":
                 clean_text(source)
@@ -325,6 +407,10 @@ def load_existing():
 
     if not OUTPUT_FILE.exists():
 
+        print(
+            "فایل news-data.json وجود ندارد."
+        )
+
         return []
 
 
@@ -340,12 +426,34 @@ def load_existing():
                 file
             )
 
-        return data.get(
+
+        articles = data.get(
             "articles",
             []
         )
 
-    except Exception:
+
+        if not isinstance(
+            articles,
+            list
+        ):
+
+            return []
+
+
+        print(
+            f"اخبار قبلی: {len(articles)}"
+        )
+
+
+        return articles
+
+
+    except Exception as error:
+
+        print(
+            f"خطا در خواندن اخبار قبلی: {error}"
+        )
 
         return []
 
@@ -356,18 +464,40 @@ def load_existing():
 
 def main():
 
+    print("=" * 60)
+
     print(
         "شروع بروزرسانی خبرخوان چرتکه..."
     )
 
+    print("=" * 60)
+
 
     all_articles = []
 
+    successful_feeds = 0
+
+    failed_feeds = 0
+
+
+    # -----------------------------------------------------
+    # دریافت منابع خبری
+    # -----------------------------------------------------
 
     for feed in FEEDS:
 
+        print()
+
         print(
             f"دریافت: {feed['name']}"
+        )
+
+        print(
+            f"دسته‌بندی: {feed['category']}"
+        )
+
+        print(
+            f"Query: {feed['query']}"
         )
 
 
@@ -384,7 +514,7 @@ def main():
 
 
             print(
-                f"  {len(articles)} خبر دریافت شد."
+                f"  خبرهای معتبر: {len(articles)}"
             )
 
 
@@ -393,13 +523,51 @@ def main():
             )
 
 
+            successful_feeds += 1
+
+
         except Exception as error:
 
+            failed_feeds += 1
+
             print(
-                f"خطا در منبع "
-                f"{feed['name']}: "
-                f"{error}"
+                f"  ERROR: {error}"
             )
+
+
+    # -----------------------------------------------------
+    # گزارش دریافت
+    # -----------------------------------------------------
+
+    print()
+
+    print("=" * 60)
+
+    print(
+        f"منابع موفق: {successful_feeds}"
+    )
+
+    print(
+        f"منابع ناموفق: {failed_feeds}"
+    )
+
+    print(
+        f"خبرهای دریافت‌شده: {len(all_articles)}"
+    )
+
+    print("=" * 60)
+
+
+    # -----------------------------------------------------
+    # اگر هیچ منبعی موفق نبوده است
+    # -----------------------------------------------------
+
+    if successful_feeds == 0:
+
+        raise RuntimeError(
+            "هیچ‌یک از منابع RSS با موفقیت دریافت نشدند. "
+            "news-data.json تغییر نخواهد کرد."
+        )
 
 
     # -----------------------------------------------------
@@ -482,6 +650,7 @@ def main():
 
         "articles":
             articles
+
     }
 
 
@@ -503,15 +672,27 @@ def main():
         )
 
 
+    # -----------------------------------------------------
+    # گزارش نهایی
+    # -----------------------------------------------------
+
+    print()
+
+    print("=" * 60)
+
     print(
-        f"تعداد نهایی اخبار: "
-        f"{len(articles)}"
+        f"تعداد نهایی اخبار: {len(articles)}"
     )
 
+    print(
+        f"فایل خروجی: {OUTPUT_FILE}"
+    )
 
     print(
         "خبرخوان با موفقیت بروزرسانی شد."
     )
+
+    print("=" * 60)
 
 
 # =========================================================
