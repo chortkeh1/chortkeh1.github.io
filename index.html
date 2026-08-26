@@ -816,7 +816,63 @@ section {
     transform: translateY(-2px);
 }
 
+<!-- =====================================================
+     NEWS
+===================================================== -->
 
+<section
+    id="news"
+    class="news-section"
+>
+
+<div class="wrap">
+
+<div class="title">
+
+<h2>
+آخرین اخبار حسابداری، مالیاتی و اقتصادی
+</h2>
+
+<div class="line"></div>
+
+<p>
+آخرین اخبار منتخب حسابداری، مالیات، بیمه،
+اقتصاد، صنعت و معدن ایران و کرمان
+</p>
+
+</div>
+
+
+<div
+    id="news-status"
+    class="news-status"
+>
+در حال دریافت آخرین اخبار...
+</div>
+
+
+<div
+    id="news-grid"
+    class="news-grid"
+>
+</div>
+
+
+<div class="news-more">
+
+<a
+    class="btn btn-outline"
+    href="news.html"
+>
+مشاهده همه اخبار
+</a>
+
+</div>
+
+
+</div>
+
+</section>
 /* =====================================================
    CONTACT
 ===================================================== */
@@ -995,7 +1051,144 @@ footer a:hover {
     color: #35c5ba !important;
 }
 
+/* =====================================================
+   NEWS READER
+===================================================== */
 
+.news-section {
+    background:
+        linear-gradient(
+            180deg,
+            #f7faf9,
+            #edf4f2
+        );
+}
+
+.news-status {
+    text-align: center;
+    color: #66736f;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.news-card {
+    background: #ffffff;
+    border: 1px solid #d7e3e0;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 5px 18px #174f4b12;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 245px;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    border-color: #4daea7;
+    box-shadow: 0 10px 25px #174f4b20;
+}
+
+.news-category {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #e8f5f3;
+    color: #126c66;
+    font-size: 12px;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.news-card h3 {
+    margin: 0 0 12px;
+    color: #174f4b;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.news-card p {
+    color: #56635f;
+    font-size: 14px;
+    line-height: 2;
+    margin: 0 0 15px;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #e0e9e7;
+    color: #7a8783;
+    font-size: 11px;
+}
+
+.news-source {
+    color: #126c66;
+    font-weight: bold;
+}
+
+.news-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #126c66;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.news-link:hover {
+    color: #d4af37;
+}
+
+.news-more {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.news-more .btn {
+    min-width: 180px;
+}
+
+
+/* =====================================================
+   NEWS RESPONSIVE
+===================================================== */
+
+@media(max-width:900px) {
+
+    .news-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media(max-width:560px) {
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-card {
+        min-height: auto;
+    }
+
+    .news-card h3 {
+        font-size: 17px;
+    }
+
+}
 /* =====================================================
    RESPONSIVE
 ===================================================== */
