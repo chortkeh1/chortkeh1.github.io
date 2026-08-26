@@ -1,34 +1,32 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
-خبرخوان مؤسسه حسابداری و حسابرسی چرتکه
-نسخه اختصاصی ایران / کرمان
+============================================================
+Chortkeh News Updater
+============================================================
 
-ویژگی‌ها:
-- بدون Google News
-- منابع مشخص و قابل کنترل
-- اولویت RSS
-- استخراج HTML در صورت نبود RSS
-- فقط اخبار فارسی
-- فیلتر موضوعی
+هدف:
+- دریافت اخبار فقط از منابع منتخب ایران و کرمان
+- حذف Google News
+- حذف منابع نامرتبط و انگلیسی
 - حذف منابع نامطلوب
-- امتیازدهی هوشمند
-- حذف اخبار تکراری
-- محدودیت سنی اخبار
-- خروجی news-data.json
+- تولید news-data.json
+- بدون نیاز به requests
+- مناسب برای GitHub Actions
+============================================================
 """
 
 import json
 import re
-import html
-import hashlib
+import ssl
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta
+from html import unescape
 from urllib.parse import urljoin, urlparse
-
-import requests
-from bs4 import BeautifulSoup
-from email.utils import parsedate_to_datetime
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+import xml.etree.ElementTree as ET
 
 
 # ============================================================
@@ -39,1463 +37,920 @@ OUTPUT_FILE = "news-data.json"
 
 MAX_NEWS = 30
 
+# فقط خبرهای چند روز اخیر
 MAX_AGE_DAYS = 14
 
-MIN_SCORE = 5
+# حداکثر خبر از هر منبع
+MAX_PER_SOURCE = 8
 
-REQUEST_TIMEOUT = 25
+TIMEOUT = 20
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/131.0 Safari/537.36"
+    "Chrome/139.0 Safari/537.36"
 )
 
 
 # ============================================================
-# منابع خبری
+# منابع خبری رسمی و منتخب
 # ============================================================
 
 SOURCES = [
-
     {
-        "name": "سازمان امور مالیاتی",
-        "category": "مالیات",
+        "name": "سازمان امور مالیاتی کشور",
         "url": "https://www.intamedia.ir/setad-news",
-        "rss": [
-            "https://www.intamedia.ir/rss",
-            "https://www.intamedia.ir/rss.xml"
-        ],
+        "priority": 10,
         "keywords": [
             "مالیات",
             "مالیاتی",
-            "سامانه مودیان",
-            "سامانه مؤدیان",
             "مودیان",
-            "مودیان مالیاتی",
-            "ارزش افزوده",
+            "سامانه مودیان",
             "اظهارنامه",
-            "مالیات بر ارزش افزوده",
-            "مالیات بر درآمد",
-            "مالیات شرکت",
-            "مالیات اشخاص حقوقی",
-            "صورتحساب الکترونیکی"
+            "ارزش افزوده",
+            "حسابداری",
         ],
-        "priority": 10
     },
-
 
     {
         "name": "سازمان تأمین اجتماعی",
-        "category": "بیمه",
         "url": "https://tamin.ir/",
-        "rss": [
-            "https://news.tamin.ir/rss",
-            "https://news.tamin.ir/rss.xml",
-            "https://news.tamin.ir/feed",
-            "https://tamin.ir/rss",
-            "https://tamin.ir/rss.xml"
-        ],
+        "priority": 10,
         "keywords": [
             "تامین اجتماعی",
             "تأمین اجتماعی",
-            "حق بیمه",
             "بیمه",
-            "بیمه کارگران",
-            "بیمه کارکنان",
             "کارفرما",
-            "لیست بیمه",
+            "کارگر",
             "بازنشستگی",
-            "مستمری",
-            "مفاصا حساب",
-            "بیمه اجباری",
-            "بیمه کارفرمایان"
+            "حقوق",
+            "دستمزد",
         ],
-        "priority": 10
     },
-
 
     {
         "name": "بانک مرکزی جمهوری اسلامی ایران",
-        "category": "اقتصاد",
         "url": "https://www.cbi.ir/",
-        "rss": [
-            "https://www.cbi.ir/rss.aspx",
-            "https://www.cbi.ir/rss.aspx?type=1"
-        ],
+        "priority": 10,
         "keywords": [
             "بانک مرکزی",
-            "بانکی",
             "بانک",
-            "نرخ سود",
-            "نرخ بهره",
             "ارز",
-            "دلار",
-            "تسهیلات",
-            "اعتبار",
-            "تورم",
+            "نرخ ارز",
             "پول",
-            "نقدینگی",
-            "سیاست پولی",
-            "شبکه بانکی"
+            "تسهیلات",
+            "بانکی",
+            "اقتصاد",
+            "تورم",
         ],
-        "priority": 8
     },
-
 
     {
         "name": "جامعه حسابداران رسمی ایران",
-        "category": "حسابداری و حسابرسی",
         "url": "https://www.iacpa.ir/",
-        "rss": [
-            "https://www.iacpa.ir/rss",
-            "https://www.iacpa.ir/rss.xml",
-            "https://www.iacpa.ir/feed"
-        ],
+        "priority": 10,
         "keywords": [
             "حسابداری",
-            "حسابرس",
             "حسابرسی",
-            "حسابداران رسمی",
-            "جامعه حسابداران رسمی",
+            "حسابدار",
+            "حسابرس",
             "استاندارد حسابداری",
             "استاندارد حسابرسی",
-            "صورت های مالی",
-            "صورت‌های مالی",
-            "گزارش حسابرس",
-            "موسسه حسابرسی",
-            "مؤسسه حسابرسی"
+            "گزارش مالی",
         ],
-        "priority": 10
     },
-
 
     {
         "name": "اقتصاد آنلاین",
-        "category": "اقتصاد و کسب‌وکار",
         "url": "https://www.eghtesadonline.com/",
-        "rss": [
-            "https://www.eghtesadonline.com/rss",
-            "https://www.eghtesadonline.com/rss.xml",
-            "https://www.eghtesadonline.com/feed"
-        ],
+        "priority": 8,
         "keywords": [
             "اقتصاد",
-            "اقتصادی",
-            "کسب و کار",
-            "کسب‌وکار",
-            "شرکت",
+            "مالیات",
+            "بانک",
+            "بورس",
+            "بازار",
+            "صنعت",
+            "معدن",
             "تولید",
             "سرمایه گذاری",
             "سرمایه‌گذاری",
-            "بازار",
-            "بانک",
-            "مالیات",
-            "بورس",
-            "صنعت",
-            "تجارت"
+            "کسب و کار",
         ],
-        "priority": 6
     },
-
 
     {
         "name": "وزارت صنعت، معدن و تجارت",
-        "category": "صنعت و معدن",
         "url": "https://www.mimt.gov.ir/",
-        "rss": [
-            "https://www.mimt.gov.ir/rss",
-            "https://www.mimt.gov.ir/rss.xml",
-            "https://www.mimt.gov.ir/feed"
-        ],
+        "priority": 10,
         "keywords": [
-            "صمت",
             "صنعت",
             "معدن",
-            "معادن",
-            "معدنی",
+            "تجارت",
             "تولید",
-            "تولیدکننده",
-            "فولاد",
-            "مس",
-            "صنایع معدنی",
+            "صنایع",
+            "معدنی",
             "سرمایه گذاری",
             "سرمایه‌گذاری",
-            "تجارت",
-            "بازرگانی"
+            "صادرات",
+            "واردات",
         ],
-        "priority": 9
     },
-
 
     {
         "name": "اتاق بازرگانی",
-        "category": "تجارت و کسب‌وکار",
         "url": "https://otagh-bazargani.com/",
-        "rss": [
-            "https://otagh-bazargani.com/rss",
-            "https://otagh-bazargani.com/rss.xml",
-            "https://otagh-bazargani.com/feed"
-        ],
+        "priority": 8,
         "keywords": [
-            "اتاق بازرگانی",
             "بازرگانی",
             "تجارت",
+            "اقتصاد",
             "کسب و کار",
-            "کسب‌وکار",
+            "تولید",
             "صادرات",
             "واردات",
-            "شرکت",
-            "تولید",
             "سرمایه گذاری",
             "سرمایه‌گذاری",
-            "فعال اقتصادی"
         ],
-        "priority": 7
     },
-
 
     {
         "name": "اقتصاد کرمان",
-        "category": "کرمان",
         "url": "https://eghtesadkerman.ir/",
-        "rss": [
-            "https://eghtesadkerman.ir/rss",
-            "https://eghtesadkerman.ir/rss.xml",
-            "https://eghtesadkerman.ir/feed"
-        ],
+        "priority": 12,
         "keywords": [
             "کرمان",
             "سیرجان",
             "رفسنجان",
             "زرند",
             "شهربابک",
-            "سرچشمه",
-            "گل گهر",
-            "گل‌گهر",
+            "مس سرچشمه",
             "بم",
             "جیرفت",
-            "بافت",
-            "بردسیر",
-            "کوهبنان",
-            "راور",
-            "معدن کرمان",
-            "صنعت کرمان",
-            "اقتصاد کرمان",
-            "سرمایه گذاری کرمان",
-            "سرمایه‌گذاری کرمان"
+            "معدن",
+            "معدنی",
+            "صنعت",
+            "اقتصاد",
+            "تولید",
+            "بازرگانی",
         ],
-        "priority": 12
     },
-
 
     {
         "name": "وزارت امور اقتصادی و دارایی",
-        "category": "اقتصاد و امور مالی",
         "url": "https://www.mefa.ir/",
-        "rss": [
-            "https://www.mefa.ir/rss",
-            "https://www.mefa.ir/rss.xml",
-            "https://www.mefa.ir/feed"
-        ],
+        "priority": 10,
         "keywords": [
             "اقتصاد",
-            "امور اقتصادی",
-            "دارایی",
             "مالیات",
-            "گمرک",
+            "دارایی",
             "سرمایه گذاری",
             "سرمایه‌گذاری",
+            "بانک",
             "تولید",
-            "تامین مالی",
-            "تأمین مالی",
             "خصوصی سازی",
             "خصوصی‌سازی",
-            "بدهی",
-            "بودجه",
-            "بانک"
         ],
-        "priority": 8
     },
-
 
     {
         "name": "سازمان بورس و اوراق بهادار",
-        "category": "بورس و بازار سرمایه",
         "url": "https://www.seo.ir/",
-        "rss": [
-            "https://www.seo.ir/rss",
-            "https://www.seo.ir/rss.xml",
-            "https://www.seo.ir/feed"
-        ],
+        "priority": 9,
         "keywords": [
             "بورس",
-            "بازار سرمایه",
             "اوراق بهادار",
-            "سازمان بورس",
-            "شرکت بورسی",
-            "صورت های مالی",
-            "صورت‌های مالی",
-            "گزارش مالی",
-            "مجمع",
-            "سهام",
+            "بازار سرمایه",
             "سرمایه گذاری",
-            "سرمایه‌گذاری"
+            "سرمایه‌گذاری",
+            "شرکت",
+            "صورت مالی",
+            "گزارش مالی",
         ],
-        "priority": 7
-    }
-
+    },
 ]
 
 
 # ============================================================
-# کلمات حذف
+# کلمات کلیدی بسیار مرتبط با سایت چرتکه
 # ============================================================
 
-EXCLUDE_KEYWORDS = [
+HIGH_VALUE_KEYWORDS = [
+    "حسابداری",
+    "حسابرس",
+    "حسابرسی",
+    "مالیات",
+    "مالیاتی",
+    "مودیان",
+    "سامانه مودیان",
+    "اظهارنامه",
+    "ارزش افزوده",
+    "بیمه",
+    "تامین اجتماعی",
+    "تأمین اجتماعی",
+    "حقوق و دستمزد",
+    "بانک مرکزی",
+    "اقتصاد",
+    "معدن",
+    "معدنی",
+    "صنعت",
+    "تولید",
+    "کرمان",
+    "سیرجان",
+    "رفسنجان",
+    "زرند",
+    "شهربابک",
+    "مس سرچشمه",
+    "بم",
+    "جیرفت",
+    "بورس",
+    "بازار سرمایه",
+    "شرکت",
+    "کسب و کار",
+]
 
-    "فوتبال",
+
+# ============================================================
+# کلمات نامطلوب
+# ============================================================
+
+BAD_KEYWORDS = [
+    "فیسبوک",
+    "facebook",
+    "اینستاگرام",
+    "instagram",
+    "ایران اینترنشنال",
+    "iran international",
+    "instagram",
+    "twitter",
+    "x.com",
+    "تلگرام",
+    "telegram",
     "ورزش",
-    "لیگ",
-    "استقلال",
-    "پرسپولیس",
+    "فوتبال",
     "والیبال",
-    "بسکتبال",
-
     "سینما",
     "بازیگر",
-    "فیلم",
-    "تلویزیون",
-    "موسیقی",
     "خواننده",
-
+    "موسیقی",
     "فال",
     "سرگرمی",
-    "عکس روز",
-
-    "تصادف",
-    "قتل",
     "حوادث",
-
-    "اینستاگرام",
-    "فیسبوک",
-    "فیس بوک",
-    "تلگرام",
-
-    "ترامپ",
-    "جنگ اسرائیل",
-    "جنگ غزه"
+    "قتل",
+    "تصادف",
+    "جنگ",
+    "سلبریتی",
 ]
 
 
 # ============================================================
-# منابع غیرمجاز
+# SSL
 # ============================================================
 
-BLOCKED_DOMAINS = [
+SSL_CONTEXT = ssl.create_default_context()
 
-    "facebook.com",
-    "www.facebook.com",
-
-    "instagram.com",
-    "www.instagram.com",
-
-    "twitter.com",
-    "x.com",
-
-    "t.me",
-    "telegram.me",
-
-    "iranintl.com",
-    "www.iranintl.com",
-
-    "youtube.com",
-    "www.youtube.com"
-]
+try:
+    SSL_CONTEXT.set_ciphers("DEFAULT:@SECLEVEL=1")
+except Exception:
+    pass
 
 
 # ============================================================
-# Session
+# ابزار دریافت صفحه
 # ============================================================
 
-session = requests.Session()
+def fetch_url(url):
+    """
+    دریافت محتویات URL بدون requests
+    """
 
-session.headers.update({
-    "User-Agent": USER_AGENT,
-    "Accept-Language": "fa-IR,fa;q=0.9,en;q=0.5"
-})
+    try:
+        req = Request(
+            url,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Accept": (
+                    "text/html,application/xhtml+xml,"
+                    "application/xml;q=0.9,*/*;q=0.8"
+                ),
+                "Accept-Language": "fa,en;q=0.7",
+            },
+        )
+
+        with urlopen(
+            req,
+            timeout=TIMEOUT,
+            context=SSL_CONTEXT
+        ) as response:
+
+            content = response.read()
+
+            content_type = response.headers.get(
+                "Content-Type",
+                ""
+            ).lower()
+
+            charset = "utf-8"
+
+            match = re.search(
+                r"charset=([a-zA-Z0-9_-]+)",
+                content_type
+            )
+
+            if match:
+                charset = match.group(1)
+
+            try:
+                return content.decode(
+                    charset,
+                    errors="ignore"
+                )
+
+            except Exception:
+                return content.decode(
+                    "utf-8",
+                    errors="ignore"
+                )
+
+    except HTTPError as e:
+        print(
+            f"HTTP ERROR {e.code}: {url}"
+        )
+
+    except URLError as e:
+        print(
+            f"URL ERROR: {url} -> {e.reason}"
+        )
+
+    except Exception as e:
+        print(
+            f"ERROR: {url} -> {e}"
+        )
+
+    return ""
 
 
 # ============================================================
-# ابزارهای عمومی
+# پاکسازی HTML
 # ============================================================
 
-def normalize_text(text):
-
+def clean_html(text):
     if not text:
         return ""
 
-    text = html.unescape(str(text))
+    text = unescape(text)
 
-    replacements = {
-        "ي": "ی",
-        "ى": "ی",
-        "ك": "ک",
-        "ۀ": "ه",
-        "ة": "ه",
-        "ؤ": "و",
-        "إ": "ا",
-        "أ": "ا",
-        "‌": " ",
-        "\u200c": " "
-    }
+    text = re.sub(
+        r"<script.*?</script>",
+        " ",
+        text,
+        flags=re.I | re.S
+    )
 
-    for old, new in replacements.items():
-        text = text.replace(old, new)
+    text = re.sub(
+        r"<style.*?</style>",
+        " ",
+        text,
+        flags=re.I | re.S
+    )
 
-    text = re.sub(r"\s+", " ", text)
+    text = re.sub(
+        r"<[^>]+>",
+        " ",
+        text
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    )
 
     return text.strip()
 
 
-def is_persian(text):
+# ============================================================
+# تشخیص فارسی
+# ============================================================
+
+def persian_ratio(text):
 
     if not text:
-        return False
+        return 0
 
-    persian_chars = len(
+    persian = len(
         re.findall(
-            r"[آ-ی]",
+            r"[\u0600-\u06FF]",
             text
         )
     )
 
-    latin_chars = len(
+    letters = len(
         re.findall(
-            r"[A-Za-z]",
+            r"[A-Za-z\u0600-\u06FF]",
             text
         )
     )
 
-    if persian_chars < 8:
-        return False
+    if letters == 0:
+        return 0
 
-    if latin_chars > persian_chars * 2:
-        return False
-
-    return True
+    return persian / letters
 
 
-def clean_html(text):
+# ============================================================
+# حذف URLهای نامطلوب
+# ============================================================
 
-    if not text:
-        return ""
+def is_bad_url(url):
 
-    soup = BeautifulSoup(
-        text,
-        "html.parser"
-    )
+    value = url.lower()
 
-    text = soup.get_text(
-        " ",
-        strip=True
-    )
-
-    return normalize_text(text)
-
-
-def parse_date(value):
-
-    if not value:
-        return None
-
-    value = str(value).strip()
-
-    # RSS استاندارد
-    try:
-        return parsedate_to_datetime(value)
-    except Exception:
-        pass
-
-    # ISO
-    try:
-        return datetime.fromisoformat(
-            value.replace("Z", "+00:00")
-        )
-    except Exception:
-        pass
-
-    # تاریخ فارسی/عددی ساده
-    patterns = [
-        r"(\d{4})[-/](\d{1,2})[-/](\d{1,2})",
-        r"(\d{4})\.(\d{1,2})\.(\d{1,2})"
+    blocked_domains = [
+        "facebook.com",
+        "instagram.com",
+        "twitter.com",
+        "x.com",
+        "t.me",
+        "telegram.me",
+        "iranintl.com",
+        "iran-international.com",
     ]
 
-    for pattern in patterns:
-
-        match = re.search(
-            pattern,
-            value
-        )
-
-        if match:
-
-            try:
-
-                return datetime(
-                    int(match.group(1)),
-                    int(match.group(2)),
-                    int(match.group(3)),
-                    tzinfo=timezone.utc
-                )
-
-            except Exception:
-                pass
-
-    return None
-
-
-def make_id(title, url):
-
-    raw = (
-        normalize_text(title)
-        + "|"
-        + normalize_text(url)
-    )
-
-    return hashlib.sha256(
-        raw.encode("utf-8")
-    ).hexdigest()[:16]
-
-
-def domain_of(url):
-
-    try:
-
-        domain = urlparse(
-            url
-        ).netloc.lower()
-
-        if domain.startswith("www."):
-            domain = domain[4:]
-
-        return domain
-
-    except Exception:
-
-        return ""
-
-
-def is_blocked_url(url):
-
-    domain = domain_of(url)
-
-    for blocked in BLOCKED_DOMAINS:
-
-        if domain == blocked:
-            return True
-
-        if domain.endswith("." + blocked):
+    for domain in blocked_domains:
+        if domain in value:
             return True
 
     return False
 
 
 # ============================================================
-# دریافت URL
+# حذف خبر نامطلوب
 # ============================================================
 
-def fetch(url):
+def is_bad_news(title, description=""):
 
-    try:
+    text = (
+        title + " " + description
+    ).lower()
 
-        response = session.get(
-            url,
-            timeout=REQUEST_TIMEOUT
-        )
+    for word in BAD_KEYWORDS:
 
-        response.raise_for_status()
+        if word.lower() in text:
+            return True
 
-        response.encoding = (
-            response.apparent_encoding
-            or response.encoding
-            or "utf-8"
-        )
-
-        return response
-
-    except Exception as exc:
-
-        print(
-            f"  خطا در دریافت: {exc}"
-        )
-
-        return None
-
-
-# ============================================================
-# استخراج RSS
-# ============================================================
-
-def parse_rss(
-    content,
-    source
-):
-
-    soup = BeautifulSoup(
-        content,
-        "xml"
-    )
-
-    items = soup.find_all(
-        ["item", "entry"]
-    )
-
-    results = []
-
-    for item in items:
-
-        title_tag = item.find(
-            ["title"]
-        )
-
-        link_tag = item.find(
-            ["link"]
-        )
-
-        description_tag = item.find(
-            ["description", "summary", "content"]
-        )
-
-        date_tag = item.find(
-            [
-                "pubDate",
-                "published",
-                "updated",
-                "dc:date"
-            ]
-        )
-
-        title = (
-            title_tag.get_text(
-                " ",
-                strip=True
-            )
-            if title_tag
-            else ""
-        )
-
-        url = ""
-
-        if link_tag:
-
-            if link_tag.get("href"):
-
-                url = link_tag.get(
-                    "href"
-                )
-
-            else:
-
-                url = link_tag.get_text(
-                    " ",
-                    strip=True
-                )
-
-        description = (
-            description_tag.get_text(
-                " ",
-                strip=True
-            )
-            if description_tag
-            else ""
-        )
-
-        date = (
-            date_tag.get_text(
-                " ",
-                strip=True
-            )
-            if date_tag
-            else ""
-        )
-
-        if not url:
-            continue
-
-        url = urljoin(
-            source["url"],
-            url
-        )
-
-        results.append({
-            "title": normalize_text(title),
-            "url": url,
-            "summary": clean_html(description),
-            "date": parse_date(date),
-            "source": source["name"],
-            "category": source["category"],
-            "priority": source["priority"]
-        })
-
-    return results
-
-
-# ============================================================
-# استخراج لینک‌های صفحه HTML
-# ============================================================
-
-def parse_html_page(
-    content,
-    source
-):
-
-    soup = BeautifulSoup(
-        content,
-        "html.parser"
-    )
-
-    results = []
-
-    # لینک‌هایی که احتمالاً خبر هستند
-    links = soup.find_all(
-        "a",
-        href=True
-    )
-
-    seen = set()
-
-    for link in links:
-
-        title = normalize_text(
-            link.get_text(
-                " ",
-                strip=True
-            )
-        )
-
-        href = link.get(
-            "href"
-        )
-
-        if not title or not href:
-            continue
-
-        if len(title) < 20:
-            continue
-
-        if len(title) > 300:
-            continue
-
-        url = urljoin(
-            source["url"],
-            href
-        )
-
-        if url in seen:
-            continue
-
-        seen.add(url)
-
-        # فقط لینک‌های همان دامنه
-        source_domain = domain_of(
-            source["url"]
-        )
-
-        link_domain = domain_of(
-            url
-        )
-
-        if link_domain and link_domain != source_domain:
-            continue
-
-        # حذف لینک‌های عمومی
-        lower_url = url.lower()
-
-        bad_parts = [
-            "/contact",
-            "/about",
-            "/login",
-            "/search",
-            "/archive",
-            "/gallery",
-            "/video",
-            "/photo"
-        ]
-
-        if any(
-            part in lower_url
-            for part in bad_parts
-        ):
-            continue
-
-        # پیدا کردن والد برای خلاصه
-        summary = ""
-
-        parent = link.parent
-
-        if parent:
-
-            parent_text = normalize_text(
-                parent.get_text(
-                    " ",
-                    strip=True
-                )
-            )
-
-            if len(parent_text) > len(title):
-
-                summary = parent_text
-
-                summary = summary.replace(
-                    title,
-                    ""
-                ).strip()
-
-        results.append({
-            "title": title,
-            "url": url,
-            "summary": summary[:500],
-            "date": None,
-            "source": source["name"],
-            "category": source["category"],
-            "priority": source["priority"]
-        })
-
-    return results
-
-
-# ============================================================
-# پیدا کردن RSS
-# ============================================================
-
-def discover_rss(
-    source
-):
-
-    response = fetch(
-        source["url"]
-    )
-
-    if not response:
-        return []
-
-    soup = BeautifulSoup(
-        response.text,
-        "html.parser"
-    )
-
-    discovered = []
-
-    for tag in soup.find_all(
-        "link",
-        href=True
-    ):
-
-        rel = tag.get(
-            "rel",
-            []
-        )
-
-        rel_text = " ".join(
-            rel
-        ).lower()
-
-        typ = tag.get(
-            "type",
-            ""
-        ).lower()
-
-        if (
-            "alternate" in rel_text
-            and (
-                "rss" in typ
-                or "atom" in typ
-                or "xml" in typ
-            )
-        ):
-
-            discovered.append(
-                urljoin(
-                    source["url"],
-                    tag["href"]
-                )
-            )
-
-    return discovered
-
-
-# ============================================================
-# دریافت اخبار یک منبع
-# ============================================================
-
-def fetch_source(
-    source
-):
-
-    print()
-    print(
-        f"دریافت: {source['name']}"
-    )
-
-    # --------------------------------------------------------
-    # اول RSS های مشخص
-    # --------------------------------------------------------
-
-    rss_urls = list(
-        source.get(
-            "rss",
-            []
-        )
-    )
-
-    # --------------------------------------------------------
-    # سپس RSS کشف‌شده
-    # --------------------------------------------------------
-
-    discovered = discover_rss(
-        source
-    )
-
-    for url in discovered:
-
-        if url not in rss_urls:
-            rss_urls.append(url)
-
-    # --------------------------------------------------------
-    # امتحان RSS
-    # --------------------------------------------------------
-
-    for rss_url in rss_urls:
-
-        print(
-            f"  RSS: {rss_url}"
-        )
-
-        response = fetch(
-            rss_url
-        )
-
-        if not response:
-            continue
-
-        content_type = (
-            response.headers.get(
-                "content-type",
-                ""
-            ).lower()
-        )
-
-        text_start = response.text[
-            :500
-        ].lower()
-
-        if (
-            "xml" not in content_type
-            and "<rss" not in text_start
-            and "<feed" not in text_start
-        ):
-            continue
-
-        items = parse_rss(
-            response.text,
-            source
-        )
-
-        if items:
-
-            print(
-                f"  تعداد RSS: {len(items)}"
-            )
-
-            return items
-
-    # --------------------------------------------------------
-    # اگر RSS نبود، HTML
-    # --------------------------------------------------------
-
-    print(
-        "  RSS قابل استفاده پیدا نشد؛ بررسی HTML..."
-    )
-
-    response = fetch(
-        source["url"]
-    )
-
-    if not response:
-        return []
-
-    items = parse_html_page(
-        response.text,
-        source
-    )
-
-    print(
-        f"  تعداد لینک‌های استخراج‌شده: {len(items)}"
-    )
-
-    return items
+    return False
 
 
 # ============================================================
 # امتیازدهی خبر
 # ============================================================
 
-def score_news(
-    item
+def calculate_score(
+    title,
+    description,
+    source
 ):
 
-    title = normalize_text(
-        item.get(
-            "title",
-            ""
-        )
-    )
-
-    summary = normalize_text(
-        item.get(
-            "summary",
-            ""
-        )
-    )
-
     text = (
-        title
-        + " "
-        + summary
-    )
+        title + " " + description
+    ).lower()
 
-    score = int(
-        item.get(
-            "priority",
-            0
-        )
-    )
+    score = source["priority"]
 
-    source = item.get(
-        "source",
-        ""
-    )
+    # خبر فارسی
+    ratio = persian_ratio(text)
 
-    category = item.get(
-        "category",
-        ""
-    )
+    if ratio >= 0.70:
+        score += 8
 
-    # --------------------------------------------------------
-    # امتیاز موضوع
-    # --------------------------------------------------------
+    elif ratio >= 0.50:
+        score += 4
 
-    for keyword in [
-        "مالیات",
-        "سامانه مودیان",
-        "سامانه مؤدیان",
-        "ارزش افزوده",
-        "اظهارنامه",
-        "صورتحساب الکترونیکی"
-    ]:
+    else:
+        score -= 10
 
-        if keyword in text:
-            score += 5
+    # کلمات بسیار مهم
+    for keyword in HIGH_VALUE_KEYWORDS:
 
-    for keyword in [
-        "حسابداری",
-        "حسابرس",
-        "حسابرسی",
-        "حسابداران رسمی",
-        "صورت های مالی",
-        "صورت‌های مالی"
-    ]:
+        if keyword.lower() in text:
+            score += 4
 
-        if keyword in text:
-            score += 5
+    # کلمات اختصاصی منبع
+    for keyword in source["keywords"]:
 
-    for keyword in [
-        "تامین اجتماعی",
-        "تأمین اجتماعی",
-        "حق بیمه",
-        "لیست بیمه",
-        "کارفرما",
-        "بازنشستگی"
-    ]:
-
-        if keyword in text:
-            score += 5
-
-    for keyword in [
-        "معدن",
-        "معادن",
-        "صنعت",
-        "مس",
-        "فولاد",
-        "تولید"
-    ]:
-
-        if keyword in text:
+        if keyword.lower() in text:
             score += 3
 
-    # --------------------------------------------------------
-    # کرمان امتیاز ویژه دارد
-    # --------------------------------------------------------
-
+    # تمرکز ویژه روی کرمان
     kerman_keywords = [
         "کرمان",
         "سیرجان",
         "رفسنجان",
         "زرند",
         "شهربابک",
-        "سرچشمه",
-        "گل گهر",
-        "گل‌گهر",
+        "مس سرچشمه",
         "بم",
         "جیرفت",
-        "بافت",
-        "بردسیر",
-        "کوهبنان",
-        "راور"
     ]
 
     for keyword in kerman_keywords:
 
         if keyword in text:
-
-            score += 8
-
-            break
-
-    # --------------------------------------------------------
-    # منبع اختصاصی کرمان
-    # --------------------------------------------------------
-
-    if source == "اقتصاد کرمان":
-
-        score += 8
-
-    # --------------------------------------------------------
-    # خبرهای خیلی کوتاه
-    # --------------------------------------------------------
-
-    if len(title) < 30:
-
-        score -= 2
-
-    # --------------------------------------------------------
-    # کلمات نامرتبط
-    # --------------------------------------------------------
-
-    for keyword in EXCLUDE_KEYWORDS:
-
-        if keyword in text:
-
-            score -= 20
-
-    # --------------------------------------------------------
-    # انگلیسی بودن
-    # --------------------------------------------------------
-
-    if not is_persian(
-        title
-    ):
-
-        score -= 30
-
-    # --------------------------------------------------------
-    # دسته‌های بسیار مرتبط
-    # --------------------------------------------------------
-
-    if category in [
-        "مالیات",
-        "بیمه",
-        "حسابداری و حسابرسی",
-        "صنعت و معدن",
-        "کرمان"
-    ]:
-
-        score += 3
+            score += 5
 
     return score
 
 
 # ============================================================
-# اعتبارسنجی خبر
+# استخراج RSS
 # ============================================================
 
-def validate_news(
-    item
-):
+def parse_rss(content, source):
 
-    title = normalize_text(
-        item.get(
-            "title",
-            ""
-        )
+    items = []
+
+    if not content:
+        return items
+
+    try:
+        root = ET.fromstring(content)
+
+    except Exception:
+        return items
+
+    for item in root.iter():
+
+        if item.tag.lower().endswith("item"):
+
+            title = ""
+            link = ""
+            description = ""
+            pub_date = ""
+
+            for child in item:
+
+                tag = child.tag.lower()
+
+                if tag.endswith("title"):
+                    title = clean_html(
+                        child.text or ""
+                    )
+
+                elif tag.endswith("link"):
+                    link = (
+                        child.text or ""
+                    ).strip()
+
+                elif tag.endswith(
+                    "description"
+                ):
+                    description = clean_html(
+                        child.text or ""
+                    )
+
+                elif (
+                    tag.endswith("pubdate")
+                    or tag.endswith("published")
+                    or tag.endswith("updated")
+                ):
+                    pub_date = (
+                        child.text or ""
+                    ).strip()
+
+            if title and link:
+
+                items.append({
+                    "title": title,
+                    "link": link,
+                    "description": description,
+                    "pub_date": pub_date,
+                    "source": source["name"],
+                    "priority": source["priority"],
+                })
+
+    return items
+
+
+# ============================================================
+# جستجوی RSS احتمالی
+# ============================================================
+
+def discover_feeds(source_url):
+
+    parsed = urlparse(source_url)
+
+    base = (
+        f"{parsed.scheme}://"
+        f"{parsed.netloc}"
     )
 
-    url = item.get(
-        "url",
-        ""
-    )
-
-    if not title:
-        return False
-
-    if not url:
-        return False
-
-    if is_blocked_url(
-        url
-    ):
-        return False
-
-    if not is_persian(
-        title
-    ):
-        return False
-
-    # حذف عنوان‌های نامرتبط
-    lower_title = title.lower()
-
-    for keyword in EXCLUDE_KEYWORDS:
-
-        if keyword in lower_title:
-            return False
-
-    # باید حداقل یک کلیدواژه مرتبط وجود داشته باشد
-    combined = normalize_text(
-        title
-        + " "
-        + item.get(
-            "summary",
-            ""
-        )
-    )
-
-    relevant_keywords = [
-
-        "حسابداری",
-        "حسابرس",
-        "حسابرسی",
-        "مالیات",
-        "مالیاتی",
-        "مودیان",
-        "ارزش افزوده",
-        "اظهارنامه",
-
-        "تامین اجتماعی",
-        "تأمین اجتماعی",
-        "بیمه",
-        "حق بیمه",
-        "کارفرما",
-
-        "اقتصاد",
-        "اقتصادی",
-        "بانک",
-        "بانکی",
-        "سرمایه گذاری",
-        "سرمایه‌گذاری",
-        "تولید",
-        "تجارت",
-
-        "صنعت",
-        "معدن",
-        "مس",
-        "فولاد",
-
-        "کرمان",
-        "سیرجان",
-        "رفسنجان",
-        "زرند",
-        "شهربابک",
-        "سرچشمه",
-        "گل گهر",
-        "گل‌گهر",
-        "بم",
-        "جیرفت"
+    candidates = [
+        source_url.rstrip("/") + "/rss",
+        source_url.rstrip("/") + "/feed",
+        source_url.rstrip("/") + "/rss.xml",
+        source_url.rstrip("/") + "/feed.xml",
+        source_url.rstrip("/") + "/news/rss",
+        base + "/rss",
+        base + "/feed",
+        base + "/rss.xml",
+        base + "/feed.xml",
     ]
 
-    if not any(
-        keyword in combined
-        for keyword in relevant_keywords
-    ):
-
-        return False
-
-    return True
+    return list(dict.fromkeys(candidates))
 
 
 # ============================================================
-# تاریخ و پاکسازی
+# استخراج خبر از HTML
 # ============================================================
 
-def process_date(
-    item
+def parse_html_links(
+    content,
+    source
 ):
 
-    date = item.get(
-        "date"
+    items = []
+
+    if not content:
+        return items
+
+    # استخراج لینک و عنوان تقریبی
+    pattern = re.compile(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>'
+        r'(.*?)</a>',
+        re.I | re.S
     )
 
-    if date is None:
+    for match in pattern.finditer(content):
 
-        # برای HTML که تاریخ ندارد،
-        # فعلاً تاریخ امروز را ثبت می‌کنیم.
-        return datetime.now(
-            timezone.utc
+        href = match.group(1)
+
+        text = clean_html(
+            match.group(2)
         )
 
-    if date.tzinfo is None:
+        if not text:
+            continue
 
-        date = date.replace(
-            tzinfo=timezone.utc
+        if len(text) < 20:
+            continue
+
+        if len(text) > 250:
+            continue
+
+        link = urljoin(
+            source["url"],
+            href
         )
 
-    return date
+        if is_bad_url(link):
+            continue
+
+        if is_bad_news(
+            text,
+            ""
+        ):
+            continue
+
+        items.append({
+            "title": text,
+            "link": link,
+            "description": "",
+            "pub_date": "",
+            "source": source["name"],
+            "priority": source["priority"],
+        })
+
+    return items
 
 
-def remove_old_news(
-    items
-):
+# ============================================================
+# دریافت اخبار هر منبع
+# ============================================================
+
+def collect_source(source):
+
+    print(
+        f"\nدر حال بررسی: "
+        f"{source['name']}"
+    )
+
+    all_items = []
+
+    # --------------------------------------------------------
+    # مرحله اول: RSS
+    # --------------------------------------------------------
+
+    feeds = discover_feeds(
+        source["url"]
+    )
+
+    for feed in feeds:
+
+        content = fetch_url(feed)
+
+        if not content:
+            continue
+
+        items = parse_rss(
+            content,
+            source
+        )
+
+        if items:
+
+            all_items.extend(items)
+
+            print(
+                f"RSS موفق: {feed}"
+            )
+
+            break
+
+        time.sleep(0.3)
+
+    # --------------------------------------------------------
+    # مرحله دوم: HTML
+    # --------------------------------------------------------
+
+    if not all_items:
+
+        content = fetch_url(
+            source["url"]
+        )
+
+        if content:
+
+            items = parse_html_links(
+                content,
+                source
+            )
+
+            all_items.extend(items)
+
+            if items:
+                print(
+                    f"HTML موفق: "
+                    f"{len(items)} خبر"
+                )
+
+    # --------------------------------------------------------
+    # حذف موارد نامطلوب
+    # --------------------------------------------------------
+
+    clean_items = []
+
+    seen = set()
+
+    for item in all_items:
+
+        title = item["title"].strip()
+
+        link = item["link"].strip()
+
+        if not title or not link:
+            continue
+
+        if link in seen:
+            continue
+
+        seen.add(link)
+
+        if is_bad_url(link):
+            continue
+
+        if is_bad_news(
+            title,
+            item.get(
+                "description",
+                ""
+            )
+        ):
+            continue
+
+        item["score"] = calculate_score(
+            title,
+            item.get(
+                "description",
+                ""
+            ),
+            source
+        )
+
+        clean_items.append(item)
+
+    clean_items.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    clean_items = clean_items[
+        :MAX_PER_SOURCE
+    ]
+
+    print(
+        f"خبرهای قابل استفاده: "
+        f"{len(clean_items)}"
+    )
+
+    return clean_items
+
+
+# ============================================================
+# حذف خبرهای تکراری
+# ============================================================
+
+def normalize_title(title):
+
+    title = title.lower()
+
+    title = re.sub(
+        r"[^\w\u0600-\u06FF\s]",
+        " ",
+        title
+    )
+
+    title = re.sub(
+        r"\s+",
+        " ",
+        title
+    )
+
+    return title.strip()
+
+
+def remove_duplicates(items):
+
+    result = []
+
+    seen_titles = set()
+    seen_links = set()
+
+    for item in items:
+
+        title_key = normalize_title(
+            item["title"]
+        )
+
+        link = item["link"]
+
+        if (
+            title_key in seen_titles
+            or link in seen_links
+        ):
+            continue
+
+        seen_titles.add(
+            title_key
+        )
+
+        seen_links.add(
+            link
+        )
+
+        result.append(item)
+
+    return result
+
+
+# ============================================================
+# ساخت خروجی
+# ============================================================
+
+def build_output(items):
 
     now = datetime.now(
         timezone.utc
-    )
-
-    cutoff = (
-        now
-        - timedelta(
-            days=MAX_AGE_DAYS
+    ).astimezone(
+        timezone(
+            timedelta(hours=3, minutes=30)
         )
     )
 
-    result = []
+    output = {
+        "updated_at": now.isoformat(),
+        "count": len(items),
+        "news": []
+    }
 
     for item in items:
 
-        date = process_date(
-            item
-        )
-
-        if date >= cutoff:
-
-            item["date"] = date
-
-            result.append(
-                item
-            )
-
-    return result
-
-
-# ============================================================
-# حذف تکراری
-# ============================================================
-
-def remove_duplicates(
-    items
-):
-
-    seen_ids = set()
-
-    result = []
-
-    for item in items:
-
-        news_id = make_id(
-            item["title"],
-            item["url"]
-        )
-
-        if news_id in seen_ids:
-            continue
-
-        seen_ids.add(
-            news_id
-        )
-
-        item["id"] = news_id
-
-        result.append(
-            item
-        )
-
-    return result
-
-
-# ============================================================
-# خروجی JSON
-# ============================================================
-
-def prepare_output(
-    items
-):
-
-    output = []
-
-    for item in items:
-
-        date = item.get(
-            "date"
-        )
-
-        if isinstance(
-            date,
-            datetime
-        ):
-
-            date_string = date.astimezone(
-                timezone.utc
-            ).isoformat()
-
-        else:
-
-            date_string = str(
-                date or ""
-            )
-
-        output.append({
-
-            "id": item.get(
-                "id",
+        output["news"].append({
+            "title": item["title"],
+            "description": item.get(
+                "description",
                 ""
             ),
-
-            "title": normalize_text(
-                item.get(
-                    "title",
-                    ""
-                )
-            ),
-
-            "summary": normalize_text(
-                item.get(
-                    "summary",
-                    ""
-                )
-            )[:500],
-
-            "url": item.get(
-                "url",
+            "url": item["link"],
+            "source": item["source"],
+            "published": item.get(
+                "pub_date",
                 ""
             ),
-
-            "source": item.get(
-                "source",
-                ""
+            "score": item.get(
+                "score",
+                0
             ),
-
-            "category": item.get(
-                "category",
-                ""
-            ),
-
-            "date": date_string,
-
-            "score": int(
-                item.get(
-                    "score",
-                    0
-                )
-            )
         })
 
     return output
@@ -1510,204 +965,75 @@ def main():
     print("=" * 60)
 
     print(
-        "شروع بروزرسانی خبرخوان چرتکه"
-    )
-
-    print(
-        "نسخه: ایران / کرمان / منابع اختصاصی"
-    )
-
-    print(
-        f"حداکثر اخبار: {MAX_NEWS}"
-    )
-
-    print(
-        f"بازه زمانی: {MAX_AGE_DAYS} روز"
-    )
-
-    print(
-        f"حداقل امتیاز: {MIN_SCORE}"
+        "خبرخوان جدید مؤسسه چرتکه"
     )
 
     print("=" * 60)
-
 
     all_news = []
 
-    successful_sources = 0
+    successful = 0
+    failed = 0
 
-    failed_sources = 0
-
-
-    # ========================================================
-    # دریافت منابع
-    # ========================================================
+    # --------------------------------------------------------
+    # منابع
+    # --------------------------------------------------------
 
     for source in SOURCES:
 
-        try:
+        news = collect_source(
+            source
+        )
 
-            items = fetch_source(
-                source
+        if news:
+
+            successful += 1
+
+            all_news.extend(
+                news
             )
 
-            if items:
+        else:
 
-                successful_sources += 1
+            failed += 1
 
-                print(
-                    f"  منبع موفق: {source['name']}"
-                )
+        time.sleep(0.5)
 
-                all_news.extend(
-                    items
-                )
+    # --------------------------------------------------------
+    # حذف تکراری‌ها
+    # --------------------------------------------------------
 
-            else:
-
-                failed_sources += 1
-
-                print(
-                    f"  منبع بدون خبر: {source['name']}"
-                )
-
-        except Exception as exc:
-
-            failed_sources += 1
-
-            print(
-                f"  خطای منبع {source['name']}: {exc}"
-            )
-
-        time.sleep(1)
-
-
-    print()
-    print("=" * 60)
-
-    print(
-        f"منابع موفق: {successful_sources}"
-    )
-
-    print(
-        f"منابع ناموفق: {failed_sources}"
-    )
-
-    print(
-        f"خبرهای اولیه: {len(all_news)}"
-    )
-
-    print("=" * 60)
-
-
-    # ========================================================
-    # حذف اخبار قدیمی
-    # ========================================================
-
-    all_news = remove_old_news(
+    all_news = remove_duplicates(
         all_news
     )
 
-    print(
-        f"پس از حذف اخبار قدیمی: {len(all_news)}"
-    )
-
-
-    # ========================================================
-    # اعتبارسنجی
-    # ========================================================
-
-    valid_news = []
-
-    for item in all_news:
-
-        if validate_news(
-            item
-        ):
-
-            valid_news.append(
-                item
-            )
-
-    print(
-        f"پس از فیلتر موضوعی: {len(valid_news)}"
-    )
-
-
-    # ========================================================
-    # امتیازدهی
-    # ========================================================
-
-    for item in valid_news:
-
-        item["score"] = score_news(
-            item
-        )
-
-
-    # ========================================================
-    # حذف امتیاز پایین
-    # ========================================================
-
-    valid_news = [
-        item
-        for item in valid_news
-        if item["score"] >= MIN_SCORE
-    ]
-
-    print(
-        f"پس از حداقل امتیاز: {len(valid_news)}"
-    )
-
-
-    # ========================================================
-    # حذف تکراری
-    # ========================================================
-
-    valid_news = remove_duplicates(
-        valid_news
-    )
-
-    print(
-        f"پس از حذف تکراری‌ها: {len(valid_news)}"
-    )
-
-
-    # ========================================================
+    # --------------------------------------------------------
     # مرتب‌سازی
-    # ========================================================
+    # --------------------------------------------------------
 
-    valid_news.sort(
-        key=lambda item: (
-            item.get(
-                "score",
-                0
-            ),
-            process_date(
-                item
-            )
+    all_news.sort(
+        key=lambda x: x.get(
+            "score",
+            0
         ),
         reverse=True
     )
 
+    # --------------------------------------------------------
+    # تعداد نهایی
+    # --------------------------------------------------------
 
-    # ========================================================
-    # انتخاب نهایی
-    # ========================================================
-
-    final_news = valid_news[
+    final_news = all_news[
         :MAX_NEWS
     ]
 
-
-    # ========================================================
+    # --------------------------------------------------------
     # خروجی
-    # ========================================================
+    # --------------------------------------------------------
 
-    output = prepare_output(
+    output = build_output(
         final_news
     )
-
 
     with open(
         OUTPUT_FILE,
@@ -1722,20 +1048,34 @@ def main():
             indent=2
         )
 
-
-    # ========================================================
+    # --------------------------------------------------------
     # گزارش
-    # ========================================================
+    # --------------------------------------------------------
 
-    print()
+    print("\n")
     print("=" * 60)
 
     print(
-        f"تعداد نهایی اخبار: {len(output)}"
+        f"منابع موفق: {successful}"
     )
 
     print(
-        f"فایل خروجی: {OUTPUT_FILE}"
+        f"منابع ناموفق: {failed}"
+    )
+
+    print(
+        f"خبرهای دریافت‌شده: "
+        f"{len(all_news)}"
+    )
+
+    print(
+        f"تعداد نهایی اخبار: "
+        f"{len(final_news)}"
+    )
+
+    print(
+        f"فایل خروجی: "
+        f"{OUTPUT_FILE}"
     )
 
     print(
@@ -1745,33 +1085,5 @@ def main():
     print("=" * 60)
 
 
-    # ========================================================
-    # نمایش اخبار نهایی برای بررسی
-    # ========================================================
-
-    print()
-
-    print(
-        "اخبار انتخاب‌شده:"
-    )
-
-    print("-" * 60)
-
-    for index, item in enumerate(
-        output,
-        start=1
-    ):
-
-        print(
-            f"{index}. "
-            f"[{item['category']}] "
-            f"{item['title']} "
-            f"(امتیاز: {item['score']})"
-        )
-
-    print("-" * 60)
-
-
 if __name__ == "__main__":
-
     main()
