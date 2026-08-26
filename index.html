@@ -816,63 +816,221 @@ section {
     transform: translateY(-2px);
 }
 
-<!-- =====================================================
-     NEWS
-===================================================== -->
 
-<section
-    id="news"
-    class="news-section"
->
+/* =====================================================
+   NEWS READER
+===================================================== */
 
-<div class="wrap">
+.news-grid {
 
-<div class="title">
+    display: grid;
 
-<h2>
-آخرین اخبار حسابداری، مالیاتی و اقتصادی
-</h2>
+    grid-template-columns:
+        repeat(3, 1fr);
 
-<div class="line"></div>
+    gap: 20px;
+}
 
-<p>
-آخرین اخبار منتخب حسابداری، مالیات، بیمه،
-اقتصاد، صنعت و معدن ایران و کرمان
-</p>
+.news-card {
 
-</div>
+    display: flex;
+
+    flex-direction: column;
+
+    height: 100%;
+
+    background: #ffffff;
+
+    border:
+        1px solid #d7e3e0;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 5px 18px #174f4b12;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+.news-card:hover {
+
+    transform: translateY(-3px);
+
+    border-color: #4daea7;
+
+    box-shadow:
+        0 10px 25px #174f4b20;
+}
+
+.news-category {
+
+    display: inline-block;
+
+    align-self: flex-start;
+
+    padding:
+        4px 11px;
+
+    border-radius: 20px;
+
+    background: #e9f6f4;
+
+    color: #126c66;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+.news-card h3 {
+
+    margin:
+        0 0 12px;
+
+    color: #174f4b;
+
+    font-size: 18px;
+
+    line-height: 1.85;
+}
+
+.news-card p {
+
+    color: #596763;
+
+    font-size: 14px;
+
+    line-height: 2;
+
+    margin:
+        0 0 15px;
+}
+
+.news-meta {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    color: #7a8783;
+
+    font-size: 12px;
+
+    margin-top: auto;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid #e2ebe9;
+}
+
+.news-source {
+
+    color: #126c66;
+
+    font-weight: bold;
+}
+
+.news-date {
+
+    direction: rtl;
+}
+
+.news-link {
+
+    display: inline-block;
+
+    margin-top: 15px;
+
+    color: #b28b18;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+.news-link:hover {
+
+    color: #126c66;
+}
+
+.news-loading {
+
+    grid-column:
+        1 / -1;
+
+    text-align: center;
+
+    padding: 35px;
+
+    color: #66736f;
+}
+
+.news-error {
+
+    grid-column:
+        1 / -1;
+
+    text-align: center;
+
+    padding: 30px;
+
+    border:
+        1px solid #e0d5b0;
+
+    border-radius: 12px;
+
+    background: #fffdf5;
+
+    color: #665a35;
+}
+
+.news-empty {
+
+    grid-column:
+        1 / -1;
+
+    text-align: center;
+
+    padding: 30px;
+
+    border:
+        1px solid #d7e3e0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #66736f;
+}
+
+#news-status {
+
+    text-align: center;
+
+    color: #66736f;
+
+    font-size: 14px;
+
+    margin-top: -20px;
+
+    margin-bottom: 28px;
+}
 
 
-<div
-    id="news-status"
-    class="news-status"
->
-در حال دریافت آخرین اخبار...
-</div>
-
-
-<div
-    id="news-grid"
-    class="news-grid"
->
-</div>
-
-
-<div class="news-more">
-
-<a
-    class="btn btn-outline"
-    href="news.html"
->
-مشاهده همه اخبار
-</a>
-
-</div>
-
-
-</div>
-
-</section>
 /* =====================================================
    CONTACT
 ===================================================== */
@@ -1051,144 +1209,7 @@ footer a:hover {
     color: #35c5ba !important;
 }
 
-/* =====================================================
-   NEWS READER
-===================================================== */
 
-.news-section {
-    background:
-        linear-gradient(
-            180deg,
-            #f7faf9,
-            #edf4f2
-        );
-}
-
-.news-status {
-    text-align: center;
-    color: #66736f;
-    margin-bottom: 25px;
-    font-size: 14px;
-}
-
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.news-card {
-    background: #ffffff;
-    border: 1px solid #d7e3e0;
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 5px 18px #174f4b12;
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        border-color .2s ease;
-    display: flex;
-    flex-direction: column;
-    min-height: 245px;
-}
-
-.news-card:hover {
-    transform: translateY(-4px);
-    border-color: #4daea7;
-    box-shadow: 0 10px 25px #174f4b20;
-}
-
-.news-category {
-    display: inline-block;
-    align-self: flex-start;
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: #e8f5f3;
-    color: #126c66;
-    font-size: 12px;
-    margin-bottom: 12px;
-    font-weight: bold;
-}
-
-.news-card h3 {
-    margin: 0 0 12px;
-    color: #174f4b;
-    font-size: 18px;
-    line-height: 1.8;
-}
-
-.news-card p {
-    color: #56635f;
-    font-size: 14px;
-    line-height: 2;
-    margin: 0 0 15px;
-}
-
-.news-meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px solid #e0e9e7;
-    color: #7a8783;
-    font-size: 11px;
-}
-
-.news-source {
-    color: #126c66;
-    font-weight: bold;
-}
-
-.news-link {
-    display: inline-block;
-    margin-top: 15px;
-    color: #126c66;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.news-link:hover {
-    color: #d4af37;
-}
-
-.news-more {
-    text-align: center;
-    margin-top: 35px;
-}
-
-.news-more .btn {
-    min-width: 180px;
-}
-
-
-/* =====================================================
-   NEWS RESPONSIVE
-===================================================== */
-
-@media(max-width:900px) {
-
-    .news-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-}
-
-@media(max-width:560px) {
-
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .news-card {
-        min-height: auto;
-    }
-
-    .news-card h3 {
-        font-size: 17px;
-    }
-
-}
 /* =====================================================
    RESPONSIVE
 ===================================================== */
@@ -1209,6 +1230,12 @@ footer a:hover {
     }
 
     .grid3 {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .news-grid {
 
         grid-template-columns:
             1fr 1fr;
@@ -1274,6 +1301,11 @@ footer a:hover {
 @media(max-width:560px) {
 
     .grid3 {
+
+        grid-template-columns: 1fr;
+    }
+
+    .news-grid {
 
         grid-template-columns: 1fr;
     }
@@ -1398,6 +1430,51 @@ footer a:hover {
 
         padding: 24px;
     }
+
+    .news-card {
+
+        padding: 20px;
+    }
+
+    .news-card h3 {
+
+        font-size: 17px;
+
+        line-height: 1.9;
+    }
+
+    .news-card p {
+
+        font-size: 15px;
+    }
+
+}
+
+
+/* =====================================================
+   NEWS BUTTON
+===================================================== */
+
+.news-more-wrapper {
+
+    text-align: center;
+
+    margin-top: 30px;
+}
+
+#news-more {
+
+    display: none;
+}
+
+
+/* =====================================================
+   NEWS SECTION NAV HIGHLIGHT
+===================================================== */
+
+#news {
+
+    scroll-margin-top: 110px;
 }
 
 </style>
@@ -1466,6 +1543,10 @@ footer a:hover {
 
 <a href="#knowledge">
 مرکز دانش
+</a>
+
+<a href="#news">
+اخبار
 </a>
 
 </nav>
@@ -2376,6 +2457,75 @@ href="accounting-auditing-south-kerman.html"
 
 
 <!-- =====================================================
+     LATEST NEWS
+===================================================== -->
+
+<section
+    id="news"
+    class="light"
+>
+
+<div class="wrap">
+
+
+<div class="title">
+
+<h2>
+آخرین اخبار حسابداری، مالیاتی و اقتصادی
+</h2>
+
+<div class="line"></div>
+
+<p>
+جدیدترین اخبار حسابداری، مالیات، بیمه،
+اقتصاد، صنعت، معدن و اخبار اقتصادی کرمان
+</p>
+
+</div>
+
+
+<div id="news-status">
+
+در حال دریافت آخرین اخبار...
+
+</div>
+
+
+<div
+    id="news-container"
+    class="news-grid"
+>
+
+<div class="news-loading">
+
+در حال بارگذاری خبرها...
+
+</div>
+
+</div>
+
+
+<div class="news-more-wrapper">
+
+<button
+    id="news-more"
+    class="btn btn-gold"
+    type="button"
+>
+
+نمایش اخبار بیشتر
+
+</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
      CONTACT
 ===================================================== -->
 
@@ -2954,6 +3104,13 @@ d="M20 20h8v8h-8z"
 
 
 <p>
+<a href="#news" style="color:#eee;">
+آخرین اخبار
+</a>
+</p>
+
+
+<p>
 <a href="#contact" style="color:#eee;">
 تماس با ما
 </a>
@@ -3093,6 +3250,792 @@ font-size:12px;
 </div>
 
 </footer>
+
+
+<!-- =====================================================
+     NEWS READER JAVASCRIPT
+===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const newsContainer =
+            document.getElementById(
+                "news-container"
+            );
+
+
+        const newsStatus =
+            document.getElementById(
+                "news-status"
+            );
+
+
+        const newsMore =
+            document.getElementById(
+                "news-more"
+            );
+
+
+        let allNews = [];
+
+        let visibleNews = 9;
+
+
+        /* =================================================
+           HELPERS
+        ================================================= */
+
+
+        function getFirstValue(
+            object,
+            keys
+        ) {
+
+            for (
+                let i = 0;
+                i < keys.length;
+                i++
+            ) {
+
+                const key =
+                    keys[i];
+
+
+                if (
+                    object &&
+                    object[key] !== undefined &&
+                    object[key] !== null &&
+                    String(object[key]).trim() !== ""
+                ) {
+
+                    return object[key];
+
+                }
+
+            }
+
+
+            return "";
+
+        }
+
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        function safeURL(value) {
+
+            if (!value) {
+
+                return "#";
+
+            }
+
+
+            const url =
+                String(value).trim();
+
+
+            if (
+                url.startsWith("https://") ||
+                url.startsWith("http://")
+            ) {
+
+                return url;
+
+            }
+
+
+            return "#";
+
+        }
+
+
+        function formatDate(
+            dateValue
+        ) {
+
+            if (!dateValue) {
+
+                return "";
+
+            }
+
+
+            const date =
+                new Date(dateValue);
+
+
+            if (
+                isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(
+                    dateValue
+                );
+
+            }
+
+
+            try {
+
+                return new Intl.DateTimeFormat(
+                    "fa-IR",
+                    {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    }
+                ).format(date);
+
+            }
+
+            catch (error) {
+
+                return date.toLocaleDateString(
+                    "fa-IR"
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           NORMALIZE NEWS
+        ================================================= */
+
+
+        function normalizeNews(
+            news
+        ) {
+
+            if (
+                !news ||
+                typeof news !== "object"
+            ) {
+
+                return null;
+
+            }
+
+
+            const title =
+                getFirstValue(
+                    news,
+                    [
+                        "title",
+                        "name",
+                        "headline"
+                    ]
+                );
+
+
+            const description =
+                getFirstValue(
+                    news,
+                    [
+                        "description",
+                        "summary",
+                        "excerpt",
+                        "content"
+                    ]
+                );
+
+
+            const category =
+                getFirstValue(
+                    news,
+                    [
+                        "category",
+                        "section",
+                        "type"
+                    ]
+                ) ||
+                "اخبار";
+
+
+            const source =
+                getFirstValue(
+                    news,
+                    [
+                        "source",
+                        "publisher",
+                        "source_name",
+                        "site"
+                    ]
+                ) ||
+                "منبع خبر";
+
+
+            const date =
+                getFirstValue(
+                    news,
+                    [
+                        "date",
+                        "pubDate",
+                        "published",
+                        "publishedAt",
+                        "published_at",
+                        "created_at"
+                    ]
+                );
+
+
+            const link =
+                getFirstValue(
+                    news,
+                    [
+                        "link",
+                        "url",
+                        "source_url"
+                    ]
+                );
+
+
+            if (!title) {
+
+                return null;
+
+            }
+
+
+            return {
+
+                title:
+                    String(title),
+
+                description:
+                    String(description || ""),
+
+                category:
+                    String(category),
+
+                source:
+                    String(source),
+
+                date:
+                    date,
+
+                link:
+                    safeURL(link)
+
+            };
+
+        }
+
+
+        /* =================================================
+           GET NEWS ARRAY
+        ================================================= */
+
+
+        function extractNews(
+            data
+        ) {
+
+            if (
+                Array.isArray(data)
+            ) {
+
+                return data;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(
+                    data.news
+                )
+            ) {
+
+                return data.news;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(
+                    data.items
+                )
+            ) {
+
+                return data.items;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(
+                    data.articles
+                )
+            ) {
+
+                return data.articles;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(
+                    data.results
+                )
+            ) {
+
+                return data.results;
+
+            }
+
+
+            return [];
+
+        }
+
+
+        /* =================================================
+           CREATE NEWS CARD
+        ================================================= */
+
+
+        function createNewsCard(
+            news
+        ) {
+
+            const title =
+                escapeHTML(
+                    news.title
+                );
+
+
+            const description =
+                escapeHTML(
+                    news.description
+                );
+
+
+            const category =
+                escapeHTML(
+                    news.category
+                );
+
+
+            const source =
+                escapeHTML(
+                    news.source
+                );
+
+
+            const date =
+                escapeHTML(
+                    formatDate(
+                        news.date
+                    )
+                );
+
+
+            const link =
+                safeURL(
+                    news.link
+                );
+
+
+            return `
+
+                <article
+                    class="news-card"
+                >
+
+
+                    <span
+                        class="news-category"
+                    >
+
+                        ${category}
+
+                    </span>
+
+
+                    <h3>
+
+                        ${title}
+
+                    </h3>
+
+
+                    ${
+                        description
+                        ?
+                        `
+                        <p>
+
+                            ${description}
+
+                        </p>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    <div
+                        class="news-meta"
+                    >
+
+                        <span
+                            class="news-source"
+                        >
+
+                            ${source}
+
+                        </span>
+
+
+                        <span
+                            class="news-date"
+                        >
+
+                            ${date}
+
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        link !== "#"
+                        ?
+                        `
+                        <a
+                            class="news-link"
+                            href="${escapeHTML(link)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+
+                            مطالعه خبر ←
+
+                        </a>
+                        `
+                        :
+                        ""
+                    }
+
+
+                </article>
+
+            `;
+
+        }
+
+
+        /* =================================================
+           SORT NEWS
+        ================================================= */
+
+
+        function sortNews(
+            newsList
+        ) {
+
+            return newsList.sort(
+                function (a, b) {
+
+
+                    const dateA =
+                        new Date(
+                            a.date || 0
+                        );
+
+
+                    const dateB =
+                        new Date(
+                            b.date || 0
+                        );
+
+
+                    const timeA =
+                        dateA.getTime();
+
+
+                    const timeB =
+                        dateB.getTime();
+
+
+                    if (
+                        !isNaN(timeA) &&
+                        !isNaN(timeB)
+                    ) {
+
+                        return timeB - timeA;
+
+                    }
+
+
+                    return 0;
+
+                }
+            );
+
+        }
+
+
+        /* =================================================
+           RENDER NEWS
+        ================================================= */
+
+
+        function renderNews() {
+
+
+            if (
+                !allNews ||
+                allNews.length === 0
+            ) {
+
+                newsContainer.innerHTML = `
+
+                    <div
+                        class="news-empty"
+                    >
+
+                        در حال حاضر
+                        خبری برای نمایش وجود ندارد.
+
+                    </div>
+
+                `;
+
+
+                newsStatus.textContent =
+                    "در حال حاضر خبر جدیدی برای نمایش وجود ندارد.";
+
+
+                newsMore.style.display =
+                    "none";
+
+
+                return;
+
+            }
+
+
+            const newsToShow =
+                allNews.slice(
+                    0,
+                    visibleNews
+                );
+
+
+            newsContainer.innerHTML =
+                newsToShow
+                    .map(
+                        createNewsCard
+                    )
+                    .join("");
+
+
+            newsStatus.textContent =
+                "نمایش " +
+                newsToShow.length +
+                " خبر از " +
+                allNews.length +
+                " خبر";
+
+
+            if (
+                visibleNews <
+                allNews.length
+            ) {
+
+                newsMore.style.display =
+                    "inline-block";
+
+            }
+
+            else {
+
+                newsMore.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+        /* =================================================
+           MORE NEWS BUTTON
+        ================================================= */
+
+
+        newsMore.addEventListener(
+            "click",
+            function () {
+
+
+                visibleNews += 9;
+
+
+                renderNews();
+
+
+            }
+        );
+
+
+        /* =================================================
+           LOAD NEWS DATA
+        ================================================= */
+
+
+        fetch(
+            "news-data.json?v=" +
+            Date.now(),
+            {
+                cache: "no-store"
+            }
+        )
+
+        .then(
+            function (response) {
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                return response.json();
+
+            }
+        )
+
+        .then(
+            function (data) {
+
+
+                const rawNews =
+                    extractNews(
+                        data
+                    );
+
+
+                allNews =
+                    rawNews
+                        .map(
+                            normalizeNews
+                        )
+                        .filter(
+                            function (item) {
+
+                                return item !== null;
+
+                            }
+                        );
+
+
+                sortNews(
+                    allNews
+                );
+
+
+                renderNews();
+
+
+            }
+        )
+
+        .catch(
+            function (error) {
+
+
+                console.error(
+                    "خطا در دریافت خبرخوان:",
+                    error
+                );
+
+
+                newsContainer.innerHTML = `
+
+                    <div
+                        class="news-error"
+                    >
+
+                        <strong>
+                            دریافت اخبار با مشکل مواجه شد.
+                        </strong>
+
+                        <br>
+
+                        لطفاً چند لحظه بعد دوباره
+                        صفحه را باز کنید.
+
+                    </div>
+
+                `;
+
+
+                newsStatus.textContent =
+                    "خطا در اتصال به خبرخوان.";
+
+            }
+        );
+
+
+    }
+
+);
+
+</script>
 
 
 </body>
