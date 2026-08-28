@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-08-26T16:14:37.142138+00:00",
+  "updated_at": "2026-08-28T21:22:34.800137+00:00",
   "language": "fa",
   "region": "Iran / Kerman",
   "source_count": 10,
-  "successful_sources": 4,
-  "failed_sources": 6,
+  "successful_sources": 5,
+  "failed_sources": 5,
   "news_count": 30,
   "news": [
     {
-      "title": "تفاهمنامه همکاری راهبردی اتاق کرمان و منطقه ویژه اقتصادی رفسنجان به امضا رسید",
-      "url": "https://otagh-bazargani.com/%d8%aa%d9%81%d8%a7%d9%87%d9%85%d9%86%d8%a7%d9%85%d9%87-%d9%87%d9%85%da%a9%d8%a7%d8%b1%db%8c-%d8%b1%d8%a7%d9%87%d8%a8%d8%b1%d8%af%db%8c-%d8%a7%d8%aa%d8%a7%d9%82-%da%a9%d8%b1%d9%85%d8%a7%d9%86-%d9%88/",
+      "title": "رئیس اتاق کرمان: معادن استان از قلک تامین مخارج کشور خارج شوند",
+      "url": "https://otagh-bazargani.com/%d8%b1%d8%a6%db%8c%d8%b3-%d8%a7%d8%aa%d8%a7%d9%82-%da%a9%d8%b1%d9%85%d8%a7%d9%86-%d9%85%d8%b9%d8%a7%d8%af%d9%86-%d8%a7%d8%b3%d8%aa%d8%a7%d9%86-%d8%a7%d8%b2-%d9%82%d9%84%da%a9-%d8%aa%d8%a7%d9%85%db%8c/",
       "source": "اتاق بازرگانی"
     },
     {
@@ -20,11 +20,6 @@
     {
       "title": "شورای گفت‌وگوی دولت و بخش خصوصی استان کرمان رتبه دوم کشور را کسب کرد",
       "url": "https://otagh-bazargani.com/%d8%b4%d9%88%d8%b1%d8%a7%db%8c-%da%af%d9%81%d8%aa%d9%88%da%af%d9%88%db%8c-%d8%af%d9%88%d9%84%d8%aa-%d9%88-%d8%a8%d8%ae%d8%b4-%d8%ae%d8%b5%d9%88%d8%b5%db%8c-%d8%a7%d8%b3%d8%aa%d8%a7%d9%86/",
-      "source": "اتاق بازرگانی"
-    },
-    {
-      "title": "سه اصل برای انتفاع مناطق ویژه اقتصادی استان کرمان",
-      "url": "https://otagh-bazargani.com/%d8%b3%d9%87-%d8%a7%d8%b5%d9%84-%d8%a8%d8%b1%d8%a7%db%8c-%d8%a7%d9%86%d8%aa%d9%81%d8%a7%d8%b9-%d9%85%d9%86%d8%a7%d8%b7%d9%82-%d9%88%db%8c%da%98%d9%87-%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af%db%8c-%d8%a7/",
       "source": "اتاق بازرگانی"
     },
     {
@@ -50,6 +45,11 @@
     {
       "title": "خط مشی کیفیت اتاق بازرگانی استان کرمان",
       "url": "https://otagh-bazargani.com/%d8%ae%d8%b7-%d9%85%d8%b4%db%8c-%da%a9%db%8c%d9%81%db%8c%d8%aa-%d8%a7%d8%aa%d8%a7%d9%82-%d8%a8%d8%a7%d8%b2%d8%b1%da%af%d8%a7%d9%86%db%8c-%d8%a7%d8%b3%d8%aa%d8%a7%d9%86-%da%a9%d8%b1%d9%85%d8%a7%d9%86/",
+      "source": "اتاق بازرگانی"
+    },
+    {
+      "title": "کرمان استانی توانمند برای پذیرش معین کشور پاکستان است",
+      "url": "https://otagh-bazargani.com/%da%a9%d8%b1%d9%85%d8%a7%d9%86-%d8%a7%d8%b3%d8%aa%d8%a7%d9%86%db%8c-%d8%aa%d9%88%d8%a7%d9%86%d9%85%d9%86%d8%af-%d8%a8%d8%b1%d8%a7%db%8c-%d9%be%d8%b0%db%8c%d8%b1%d8%b4-%d9%85%d8%b9%db%8c%d9%86-%da%a9/",
       "source": "اتاق بازرگانی"
     },
     {
@@ -153,8 +153,8 @@
       "source": "اقتصاد کرمان"
     },
     {
-      "title": "امداد خودرو کرمان موتور",
-      "url": "https://kerman-motor.com/",
+      "title": "گل گهر از سپاهان شکایت کرد",
+      "url": "https://www.eghtesadonline.com/fa/news/2159841/گل-گهر-از-سپاهان-شکایت-کرد",
       "source": "اقتصاد آنلاین"
     }
   ]
