@@ -1,0 +1,14 @@
+name: H1 Audit Once
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Audit H1 tags
+        run: python3 scripts/h1_audit_once.py
