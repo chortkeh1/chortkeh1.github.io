@@ -1,0 +1,79 @@
+name: Fix Internal Links
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix-links:
+    if: ${{ !contains(github.event.head_commit.message, '[internal-links-fixed]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repair internal links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # Province page: correct existing city-page filenames only.
+          p = Path('accounting-auditing-kerman-province.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              'href="index.html"': 'href="accounting-auditing-kerman.html"',
+              'href="accounting-auditing-rafanjan.html"': 'href="accounting-auditing-rafsanjan.html"',
+              'href="accounting-auditing-ravar-kohbanan-pabdana.html"': 'href="accounting-auditing-ravar-kuhbanan-pabdana.html"',
+          }
+          # Only replace the first province-page occurrence of the generic index link;
+          # the remaining index.html links (e.g. breadcrumb/home) are handled by context.
+          old = 'href="index.html"'
+          marker = 'accounting-auditing-kerman.html'
+          if old in s and marker not in s:
+              s = s.replace(old, marker, 1)
+          else:
+              # Find a city-card anchor specifically pointing to index.html.
+              s = s.replace('<a href="index.html">کرمان</a>', '<a href="accounting-auditing-kerman.html">کرمان</a>')
+          for a, b in replacements.items():
+              if a != old:
+                  s = s.replace(a, b)
+          p.write_text(s, encoding='utf-8')
+
+          # Kerman page: repair city cards that still point to the contact section.
+          p = Path('accounting-auditing-kerman.html')
+          s = p.read_text(encoding='utf-8')
+          city_links = {
+              'کرمان': 'accounting-auditing-kerman.html',
+              'سیرجان': 'accounting-auditing-sirjan.html',
+              'رفسنجان': 'accounting-auditing-rafsanjan.html',
+              'زرند': 'accounting-auditing-zarand.html',
+              'شهربابک': 'accounting-auditing-shahrbabak.html',
+              'بم': 'accounting-auditing-bam.html',
+              'جیرفت': 'accounting-auditing-jiroft.html',
+              'بردسیر': 'accounting-auditing-bardsir-baft-rabar.html',
+              'بافت': 'accounting-auditing-bardsir-baft-rabar.html',
+              'راور': 'accounting-auditing-ravar-kuhbanan-pabdana.html',
+              'کوهبنان': 'accounting-auditing-ravar-kuhbanan-pabdana.html',
+              'پابدانا': 'accounting-auditing-ravar-kuhbanan-pabdana.html',
+              'جنوب کرمان': 'accounting-auditing-south-kerman.html',
+          }
+          for city, target in city_links.items():
+              s = s.replace(f'href="#contact">{city}</a>', f'href="{target}">{city}</a>')
+          s = s.replace('به‌زودی صفحات اختصاصی شهرستان‌ها ایجاد خواهند شد', 'برای مشاهده صفحه اختصاصی هر شهرستان، روی نام آن کلیک کنید')
+          s = s.replace('به زودی صفحات اختصاصی شهرستان‌ها ایجاد خواهند شد', 'برای مشاهده صفحه اختصاصی هر شهرستان، روی نام آن کلیک کنید')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes and remove one-time workflow
+        run: |
+          rm -f .github/workflows/fix-internal-links.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add accounting-auditing-kerman-province.html accounting-auditing-kerman.html .github/workflows/fix-internal-links.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "SEO: fix internal city links [internal-links-fixed]"
+          git push
