@@ -1,0 +1,48 @@
+name: Update Shahrbabak H1 Once
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-h1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update H1
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("accounting-auditing-shahrbabak.html")
+          text = path.read_text(encoding="utf-8")
+
+          old = '''<h1>\n\nحسابداری و حسابرسی\n\n<br>\n\n<span class="gold">\n\nدر شهربابک\n\n</span>\n\n</h1>'''
+
+          new = '''<h1>\n\nحسابداری و حسابرسی\n\n<br>\n\n<span class="gold">\n\nدر شهربابک و مس سرچشمه\n\n</span>\n\n</h1>'''
+
+          if old not in text:
+              raise SystemExit("Target H1 pattern not found; no changes made.")
+
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          print("H1 updated successfully.")
+          PY
+
+      - name: Commit H1 change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add accounting-auditing-shahrbabak.html
+          git diff --cached --quiet || git commit -m "Add Sarcheshmeh to Shahrbabak H1"
+          git push
+
+      - name: Remove one-time workflow
+        run: |
+          rm .github/workflows/update-shahrbabak-h1-once.yml
+          git add .github/workflows/update-shahrbabak-h1-once.yml
+          git commit -m "Remove one-time Shahrbabak H1 workflow" || true
+          git push || true
