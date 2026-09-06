@@ -1,0 +1,84 @@
+name: Audit Internal Links Once
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Audit internal HTML links
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          html_files = sorted(root.glob('*.html'))
+          targets = {p.name for p in html_files}
+          href_re = re.compile(r'href=["\']([^"\']+)["\']', re.I)
+
+          internal = []
+          broken = []
+
+          for page in html_files:
+              text = page.read_text(encoding='utf-8', errors='ignore')
+              for href in href_re.findall(text):
+                  href = href.strip()
+                  if not href or href.startswith(('#', 'http://', 'https://', 'mailto:', 'tel:', 'javascript:')):
+                      continue
+                  target = href.split('#', 1)[0].split('?', 1)[0]
+                  if not target:
+                      continue
+                  if target.endswith('.html'):
+                      internal.append((page.name, href))
+                      if Path(target).name not in targets or '/' in target.strip('/'):
+                          if not Path(target).exists():
+                              broken.append((page.name, href))
+
+          out = Path('internal-link-audit.txt')
+          lines = []
+          lines.append('INTERNAL LINK AUDIT')
+          lines.append('===================')
+          lines.append(f'HTML pages scanned: {len(html_files)}')
+          lines.append(f'Internal HTML links found: {len(internal)}')
+          lines.append(f'Broken internal HTML links: {len(broken)}')
+          lines.append('')
+          if broken:
+              lines.append('BROKEN LINKS')
+              lines.append('------------')
+              for page, href in broken:
+                  lines.append(f'{page} -> {href}')
+          else:
+              lines.append('No broken internal HTML links were found.')
+          lines.append('')
+          lines.append('ALL INTERNAL HTML LINKS')
+          lines.append('-----------------------')
+          for page, href in internal:
+              lines.append(f'{page} -> {href}')
+
+          out.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          print('\n'.join(lines))
+          PY
+
+      - name: Commit audit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add internal-link-audit.txt
+          git diff --cached --quiet || git commit -m "Audit internal links"
+          git push
+
+      - name: Remove one-time workflow
+        run: |
+          rm .github/workflows/audit-internal-links-once.yml
+          git add .github/workflows/audit-internal-links-once.yml
+          git commit -m "Remove one-time internal link audit workflow" || true
+          git push || true
