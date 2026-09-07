@@ -1,0 +1,58 @@
+name: Build Internal Link Hub Once
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add primary SEO hub links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          marker = '<div class="cities">'
+          if marker not in s:
+              raise SystemExit('cities marker not found')
+
+          if 'class="seo-link-hub"' not in s:
+              block = '''\n<section class="light seo-link-hub">\n  <div class="wrap">\n    <div class="title">\n      <h2>مسیرهای اصلی خدمات حسابداری و حسابرسی</h2>\n      <div class="line"></div>\n      <p>برای دسترسی سریع به خدمات تخصصی چرتکه در استان کرمان، شهر کرمان و مراکز مهم صنعتی و معدنی</p>\n    </div>\n\n    <div class="cities">\n      <a class="city" href="accounting-auditing-kerman-province.html">استان کرمان</a>\n      <a class="city" href="accounting-auditing-kerman.html">شهر کرمان</a>\n      <a class="city" href="accounting-auditing-sirjan.html">سیرجان</a>\n      <a class="city" href="accounting-auditing-rafsanjan.html">رفسنجان</a>\n      <a class="city" href="accounting-auditing-shahrbabak.html">شهربابک و مس سرچشمه</a>\n      <a class="city" href="accounting-auditing-zarand.html">زرند</a>\n    </div>\n  </div>\n</section>\n\n'''
+              s = s.replace(marker, block + marker, 1)
+              p.write_text(s, encoding='utf-8')
+          else:
+              print('SEO hub already exists; no content change needed')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Build primary internal link hub"
+            git push
+          fi
+
+      - name: Remove one-time workflow
+        run: |
+          rm -f .github/workflows/build-internal-link-hub-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/build-internal-link-hub-once.yml
+          if git diff --cached --quiet; then
+            echo "Workflow already absent"
+          else
+            git commit -m "Remove one-time internal link hub workflow"
+            git push
+          fi
