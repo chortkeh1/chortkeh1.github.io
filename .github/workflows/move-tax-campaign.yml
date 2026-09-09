@@ -1,0 +1,59 @@
+name: Move Tax Campaign
+
+on:
+  push:
+    paths:
+      - 'trigger-tax-campaign.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Move campaign above hero
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          pattern = r'\n<section class="light" id="urgent-tax-campaign">.*?\n</section>\n'
+          m = re.search(pattern, s, flags=re.S)
+          if not m:
+              raise SystemExit('Tax campaign section not found')
+
+          campaign = m.group(0).strip('\n')
+          s = s[:m.start()] + '\n' + s[m.end():]
+
+          header_end = s.find('</header>')
+          if header_end == -1:
+              raise SystemExit('Header end not found')
+
+          insert_at = header_end + len('</header>')
+          s = s[:insert_at] + '\n\n' + campaign + '\n' + s[insert_at:]
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Move tax campaign above hero" || echo "No changes"
+          git push
+
+      - name: Remove temporary workflow and trigger
+        if: always()
+        run: |
+          git rm -f .github/workflows/move-tax-campaign.yml trigger-tax-campaign.txt || true
+          git commit -m "Remove temporary tax campaign workflow" || echo "Cleanup complete"
+          git push || true
