@@ -1,7 +1,9 @@
 name: Strengthen Kerman City SEO
 
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - 'trigger-kerman-city.txt'
 
 permissions:
   contents: write
