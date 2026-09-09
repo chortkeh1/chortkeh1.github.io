@@ -1,65 +1,21 @@
 name: Test Runner
 
 on:
-  push:
-    paths:
-      - "trigger-sirjan-context.txt"
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Strengthen Sirjan internal SEO link
+      - name: Test GitHub Runner
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path("index.html")
-          s = p.read_text(encoding="utf-8")
-          marker = 'class="sirjan-context"'
-          if marker not in s:
-              anchor = '<div class="cities">'
-              block = '''<p class="sirjan-context">\nبرای دریافت <a href="accounting-auditing-sirjan.html">حسابداری و حسابرسی در سیرجان</a>، خدمات تخصصی مالیاتی، حسابرسی و مشاوره مالی چرتکه در خدمت شرکت‌ها و کسب‌وکارهای سیرجان است.\n</p>\n\n'''
-              if anchor not in s:
-                  raise SystemExit("cities anchor not found")
-              s = s.replace(anchor, block + anchor, 1)
-              p.write_text(s, encoding="utf-8")
-          PY
-
-      - name: Restore runner and clean temporary files
-        run: |
-          cat > .github/workflows/test-runner.yml <<'EOF'
-          name: Test Runner
-
-          on:
-            workflow_dispatch:
-
-          jobs:
-            test:
-              runs-on: ubuntu-latest
-
-              steps:
-                - name: Test GitHub Runner
-                  run: |
-                    echo "================================"
-                    echo "GitHub Runner is working"
-                    echo "================================"
-                    echo "Operating System:"
-                    uname -a
-                    echo "Python:"
-                    python --version
-                    echo "Date:"
-                    date
-          EOF
-          rm -f .github/workflows/add-sirjan-context.yml trigger-sirjan-context.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html .github/workflows/test-runner.yml
-          git add -u .github/workflows/add-sirjan-context.yml trigger-sirjan-context.txt
-          git commit -m "Strengthen Sirjan internal SEO link"
-          git push
+          echo "================================"
+          echo "GitHub Runner is working"
+          echo "================================"
+          echo "Operating System:"
+          uname -a
+          echo "Python:"
+          python --version
+          echo "Date:"
+          date
