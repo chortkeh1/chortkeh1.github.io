@@ -1,0 +1,40 @@
+name: Add Sirjan SEO Context
+
+on:
+  push:
+    paths:
+      - "trigger-sirjan-context.txt"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add contextual Sirjan link
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          marker = 'href="accounting-auditing-sirjan.html">\nحسابداری و حسابرسی در سیرجان'
+          if marker not in s:
+              anchor = '''<div class="cities">'''
+              block = '''<p class="sirjan-context">\nبرای دریافت <a href="accounting-auditing-sirjan.html">حسابداری و حسابرسی در سیرجان</a>، خدمات تخصصی مالیاتی، حسابرسی و مشاوره مالی چرتکه در خدمت شرکت‌ها و کسب‌وکارهای سیرجان است.\n</p>\n\n'''
+              if anchor not in s:
+                  raise SystemExit("cities anchor not found")
+              s = s.replace(anchor, block + anchor, 1)
+              p.write_text(s, encoding="utf-8")
+          PY
+
+      - name: Commit site change and clean up
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm -f .github/workflows/add-sirjan-context.yml trigger-sirjan-context.txt
+          git commit -m "Strengthen Sirjan internal SEO link"
+          git push
