@@ -1,0 +1,45 @@
+name: Enlarge Brand Subtitle
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enlarge institute title
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = '''.brand small {\n\n    display: block;\n\n    color: #dce9e7;\n\n    font-size: 11px;'''
+          new = '''.brand small {\n\n    display: block;\n\n    color: #dce9e7;\n\n    font-size: 15px;'''
+          if old not in s:
+              raise SystemExit('Expected brand subtitle CSS block not found')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Enlarge institute title in header"
+          git push
+
+      - name: Remove temporary files
+        if: always()
+        run: |
+          git rm -f .github/workflows/enlarge-brand-subtitle.yml header-subtitle-trigger.txt || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove temporary brand subtitle files" || true
+          git push || true
