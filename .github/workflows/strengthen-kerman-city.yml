@@ -1,0 +1,53 @@
+name: Strengthen Kerman City SEO
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  strengthen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Strengthen city page differentiation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('accounting-auditing-kerman.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = {
+              '<title>\nحسابداری و حسابرسی در شهر کرمان | خدمات مالی و مالیاتی چرتکه\n</title>': '<title>\nخدمات حسابداری در کرمان | حسابرسی و مشاوره مالی شرکت‌ها | چرتکه\n</title>',
+              'content="خدمات حسابداری، حسابرسی، مالیاتی، بیمه و مشاوره مالی برای شرکت‌ها، اصناف و کسب‌وکارهای شهر کرمان؛ همراه با خدمات نرم‌افزارهای مالی و مشاوره تخصصی چرتکه."': 'content="خدمات حسابداری در کرمان برای شرکت‌ها، اصناف و کسب‌وکارها؛ شامل حسابداری برون‌سپاری، حسابرسی، امور مالیاتی، بیمه، مشاوره مالی و استقرار نرم‌افزارهای مالی توسط چرتکه."',
+              'content="حسابداری و حسابرسی در شهر کرمان | چرتکه"': 'content="خدمات حسابداری در کرمان | چرتکه"',
+              'content="خدمات تخصصی حسابداری، حسابرسی، مالیاتی، بیمه و مشاوره مالی برای شرکت‌ها و کسب‌وکارهای شهر کرمان."': 'content="خدمات تخصصی حسابداری، حسابرسی و مشاوره مالی برای شرکت‌ها و کسب‌وکارهای کرمان."',
+              '<h1>حسابداری و حسابرسی در شهر کرمان</h1>': '<h1>خدمات حسابداری در کرمان | حسابرسی و مشاوره مالی شرکت‌ها</h1>\n\n<p class="kerman-commercial-intro">\nاگر به دنبال خدمات یک مجموعه تخصصی حسابداری در کرمان برای شرکت یا کسب‌وکار خود هستید، چرتکه خدمات حسابداری، حسابرسی، امور مالیاتی، بیمه و مشاوره مالی را متناسب با نوع فعالیت مجموعه ارائه می‌کند. این صفحه به‌طور اختصاصی برای خدمات مالی و حسابداری در شهر کرمان طراحی شده است.\n</p>'
+          }
+
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'Missing expected text: {old[:100]}')
+              s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add accounting-auditing-kerman.html
+          git commit -m "Strengthen Kerman city page commercial SEO"
+          git push
+
+      - name: Remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/strengthen-kerman-city.yml trigger-kerman-city.txt
+          git commit -m "Remove temporary Kerman SEO workflow"
+          git push
