@@ -173,28 +173,34 @@ def main():
 
     final_news.sort(key=lambda x: x["date"], reverse=True)
 
-    # FINAL HEADLINE SANITY FILTER v2
+    # FINAL HEADLINE SANITY FILTER v3
     economic_title_terms = [
         "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
-        "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",
-        "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام", "تسهیلات", "مالیات",
-        "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",
-        "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",
-        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"
+        "فولاد", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "سرمایه‌گذاری", "سرمایه گذاری",
+        "بانک", "بانکی", "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام",
+        "تسهیلات", "مالیات", "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه",
+        "تأمین اجتماعی", "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار",
+        "قیمت", "صادرات", "واردات"
+    ]
+    non_economic_title_terms = [
+        "آتش", "حریق", "انفجار", "فوتبال", "استقلال", "پرسپولیس", "ورزش", "سینما", "فیلم",
+        "بازیگر", "موسیقی", "هنر", "فرهنگ", "رونمایی", "مستند", "سردار", "جنگ", "حمله",
+        "حوادث", "پزشکی", "بیمار", "دارو", "گردشگری", "تئاتر"
     ]
 
-    def whole_term_in_title(title, terms):
-        text = title.lower()
-        for term in terms:
-            pattern = r"(?<![\wآ-ی])" + re.escape(term.lower()) + r"(?![\wآ-ی])"
-            if re.search(pattern, text):
-                return True
-        return False
+    def whole_term(title, term):
+        pattern = r"(?<![\wآ-ی])" + re.escape(term.lower()) + r"(?![\wآ-ی])"
+        return re.search(pattern, title.lower()) is not None
 
-    final_news = [
-        item for item in final_news
-        if whole_term_in_title(item.get("title", ""), economic_title_terms)
-    ][:MAX_NEWS]
+    final_news = []
+    for item in final_news:
+        title = item.get("title", "")
+        if any(whole_term(title, bad) for bad in non_economic_title_terms):
+            continue
+        if any(whole_term(title, good) for good in economic_title_terms):
+            final_news.append(item)
+        if len(final_news) >= MAX_NEWS:
+            break
 
     output = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
