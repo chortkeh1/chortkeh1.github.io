@@ -1,12 +1,10 @@
-# Trigger immediate one-time news refresh.
 # ============================================================
-# Chortkeh News Updater - RSS / DIVERSE SOURCES VERSION
-# Fresh Persian economic, financial, industrial and Kerman news
+# Chortkeh News Updater - balanced multi-source RSS
 # ============================================================
-
 import html
 import json
 import re
+from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -15,19 +13,20 @@ import feedparser
 
 OUTPUT_FILE = "news-data.json"
 MAX_NEWS = 30
-MAX_PER_SOURCE = 5
-MAX_AGE_DAYS = 30
+MAX_PER_SOURCE_FETCH = 8
+MAX_AGE_DAYS = 14
 
 SOURCES = [
     {"name": "اقتصاد کرمان", "feed": "https://eghtesadkerman.ir/feed/", "local": True},
     {"name": "اتاق بازرگانی کرمان", "feed": "https://otagh-bazargani.com/feed/", "local": True},
-    {"name": "خبرگزاری جمهوری اسلامی (ایرنا)", "feed": "https://www.irna.ir/rss", "local": False},
+    {"name": "خبرگزاری تسنیم", "feed": "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF", "local": False},
     {"name": "خبرگزاری ایسنا", "feed": "https://www.isna.ir/rss", "local": False},
     {"name": "خبرگزاری مهر", "feed": "https://www.mehrnews.com/rss", "local": False},
-    {"name": "خبرگزاری تسنیم", "feed": "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF", "local": False},
-    {"name": "اقتصاد آنلاین", "feed": "https://www.eghtesadonline.com/rss", "local": False},
+    {"name": "باشگاه خبرنگاران جوان", "feed": "https://www.yjc.ir/fa/rss/allnews", "local": False},
+    {"name": "تابناک", "feed": "https://www.tabnak.ir/fa/rss/allnews", "local": False},
+    {"name": "خبرآنلاین", "feed": "https://www.khabaronline.ir/rss", "local": False},
+    {"name": "عصر ایران", "feed": "https://www.asriran.com/fa/rss/allnews", "local": False},
     {"name": "دنیای اقتصاد", "feed": "https://donya-e-eqtesad.com/rss", "local": False},
-    {"name": "سازمان امور مالیاتی کشور", "feed": "https://www.intamedia.ir/rss", "local": False},
 ]
 
 KEYWORDS = [
@@ -37,18 +36,17 @@ KEYWORDS = [
     "تسهیلات", "مالیات", "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه",
     "تأمین اجتماعی", "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "کرمان", "سیرجان",
     "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر",
-    "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر",
+    "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر"
 ]
 
 BLOCKED = ["facebook.com", "instagram.com", "twitter.com", "x.com", "youtube.com"]
-
+JUNK = ["پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده"]
 
 def clean_text(value):
     if not value:
         return ""
     value = html.unescape(re.sub(r"<[^>]+>", " ", str(value)))
     return re.sub(r"\s+", " ", value).strip()
-
 
 def parse_date(entry):
     for key in ("published", "updated", "created"):
@@ -71,14 +69,6 @@ def parse_date(entry):
                 pass
     return None
 
-
-def is_relevant(title, summary, local=False):
-    text = f"{title} {summary}".lower()
-    if len(title) < 12:
-        return False
-    return local or any(k.lower() in text for k in KEYWORDS)
-
-
 def safe_url(url):
     if not url:
         return ""
@@ -89,14 +79,18 @@ def safe_url(url):
         return ""
     return url
 
+def is_relevant(title, summary, local):
+    text = f"{title} {summary}".lower()
+    if len(title) < 12 or any(x in title for x in JUNK):
+        return False
+    return local or any(k.lower() in text for k in KEYWORDS)
 
 def fetch_source(source):
     print(f"[SOURCE] {source['name']} -> {source['feed']}")
     parsed = feedparser.parse(source["feed"])
-    if getattr(parsed, "bozo", False) and not parsed.entries:
-        print("  [FAIL] feed unavailable")
+    if not parsed.entries:
+        print("  [FAIL] no entries")
         return []
-
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     items, seen = [], set()
     for entry in parsed.entries:
@@ -108,57 +102,62 @@ def fetch_source(source):
             continue
         if not is_relevant(title, summary, source.get("local", False)):
             continue
-        key = re.sub(r"\s+", " ", title.lower())
+        key = re.sub(r"\W+", " ", title.lower()).strip()
         if key in seen:
             continue
         seen.add(key)
         items.append({
             "title": title,
-            "description": summary[:500],
+            "description": summary[:450],
             "url": url,
             "source": source["name"],
             "date": published.isoformat(),
         })
-
     items.sort(key=lambda x: x["date"], reverse=True)
-    items = items[:MAX_PER_SOURCE]
-    print(f"  [OK] fresh relevant items: {len(items)}")
-    return items
-
+    print(f"  [OK] {len(items[:MAX_PER_SOURCE_FETCH])} relevant fresh items")
+    return items[:MAX_PER_SOURCE_FETCH]
 
 def main():
-    all_news, successful, failed = [], 0, 0
+    by_source = defaultdict(list)
+    successful = 0
+    failed = 0
     for source in SOURCES:
         try:
             items = fetch_source(source)
             if items:
                 successful += 1
-                all_news.extend(items)
+                by_source[source["name"]].extend(items)
             else:
                 failed += 1
         except Exception as exc:
             failed += 1
-            print(f"  [ERROR] {type(exc).__name__}: {exc}")
+            print(f"  [ERROR] {source['name']}: {type(exc).__name__}: {exc}")
 
-    unique, seen_titles = [], set()
-    for item in all_news:
-        key = re.sub(r"\W+", " ", item["title"].lower()).strip()
-        if key in seen_titles:
-            continue
-        seen_titles.add(key)
-        unique.append(item)
+    seen_titles = set()
+    for source_name in list(by_source):
+        clean = []
+        for item in by_source[source_name]:
+            key = re.sub(r"\W+", " ", item["title"].lower()).strip()
+            if key not in seen_titles:
+                seen_titles.add(key)
+                clean.append(item)
+        by_source[source_name] = clean
 
-    def rank(item):
-        local_bonus = 2 if item["source"] in {"اقتصاد کرمان", "اتاق بازرگانی کرمان"} else 0
-        try:
-            dt = datetime.fromisoformat(item["date"].replace("Z", "+00:00"))
-            age_hours = max(0, (datetime.now(timezone.utc) - dt).total_seconds() / 3600)
-        except Exception:
-            age_hours = 9999
-        return (local_bonus, -age_hours)
+    ordered_sources = [s["name"] for s in SOURCES if by_source.get(s["name"])]
+    final_news = []
+    cursor = 0
+    while len(final_news) < MAX_NEWS and ordered_sources:
+        added = False
+        for source_name in ordered_sources:
+            items = by_source[source_name]
+            if cursor < len(items) and len(final_news) < MAX_NEWS:
+                final_news.append(items[cursor])
+                added = True
+        if not added:
+            break
+        cursor += 1
 
-    unique.sort(key=rank, reverse=True)
-    final_news = unique[:MAX_NEWS]
+    final_news.sort(key=lambda x: x["date"], reverse=True)
 
     output = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
@@ -167,14 +166,13 @@ def main():
         "source_count": len(SOURCES),
         "successful_sources": successful,
         "failed_sources": failed,
+        "active_sources": ordered_sources,
         "news_count": len(final_news),
         "news": final_news,
     }
     Path(OUTPUT_FILE).write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Successful sources: {successful}")
-    print(f"Failed sources: {failed}")
-    print(f"Final news: {len(final_news)}")
-
+    print("ACTIVE SOURCES:", ", ".join(ordered_sources))
+    print("FINAL NEWS:", len(final_news))
 
 if __name__ == "__main__":
     main()
