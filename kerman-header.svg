@@ -1,15 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid slice" role="img" aria-label="پانورامای کرمان">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="پانورامای کرمان">
 <defs>
-<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#173f3c"/><stop offset="0.58" stop-color="#718987"/><stop offset="1" stop-color="#d8d5c7"/></linearGradient>
-<linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#344f4d"/><stop offset="1" stop-color="#1b302f"/></linearGradient>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#168c9b"/><stop offset="0.55" stop-color="#63c6c0"/><stop offset="1" stop-color="#f1c76a"/></linearGradient>
+ <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6c7778"/><stop offset="1" stop-color="#263c3d"/></linearGradient>
+ <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d5d0bf"/><stop offset="1" stop-color="#665e52"/></linearGradient>
+ <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8a94c"/><stop offset="1" stop-color="#8a5b28"/></linearGradient>
 </defs>
-<rect width="1000" height="120" fill="url(#sky)"/>
-<path d="M0 82L70 53 125 72 190 38 245 69 315 29 370 68 430 47 500 78 565 40 630 70 705 31 770 68 840 44 905 72 955 51 1000 70V120H0Z" fill="url(#mountain)"/>
-<path d="M0 91L90 66 155 82 225 58 300 84 375 52 445 84 520 62 590 87 665 55 740 82 815 61 900 86 965 65 1000 78V120H0Z" fill="#243b39" opacity=".78"/>
-<g fill="#172a29"><rect x="20" y="91" width="44" height="29"/><rect x="69" y="85" width="33" height="35"/><rect x="108" y="96" width="54" height="24"/><rect x="168" y="82" width="43" height="38"/><rect x="217" y="94" width="66" height="26"/><rect x="291" y="86" width="38" height="34"/><rect x="338" y="96" width="58" height="24"/><rect x="405" y="88" width="46" height="32"/><rect x="458" y="96" width="65" height="24"/><rect x="532" y="84" width="42" height="36"/><rect x="584" y="94" width="59" height="26"/><rect x="654" y="87" width="46" height="33"/><rect x="708" y="95" width="67" height="25"/><rect x="783" y="83" width="43" height="37"/><rect x="834" y="94" width="60" height="26"/><rect x="904" y="86" width="40" height="34"/><rect x="952" y="95" width="48" height="25"/></g>
-<g fill="#a88343" stroke="#d5b45b" stroke-width="1.2"><path d="M112 91V70l9-5v-8l8 4 7-6 7 6 8-4v9l8 4v21Z"/><path d="M122 71h29v20h-29Z" fill="#806839"/><path d="M130 72v19m13-19v19"/></g>
-<g fill="#c6a653"><path d="M250 96V65h8V54h8v11h8v31Z"/><path d="M276 96V71h8V60h8v11h8v25Z"/><path d="M740 96V68h8V56h8v12h8v28Z"/></g>
-<g fill="#1a312f" stroke="#1a312f" stroke-linecap="round"><path d="M62 118Q67 93 70 73" fill="none" stroke-width="5"/><path d="M70 76Q51 67 42 73 55 61 70 70 66 54 74 48q3 13 0 23 13-14 25-10-11 9-23 15 18 2 25 11-17-5-27-7Z"/><path d="M928 120Q930 92 936 70" fill="none" stroke-width="5"/><path d="M936 73q-20-9-29-3 14-13 29-3-4-15 4-22 3 14 0 23 14-13 26-9-12 9-24 14 19 3 26 11-17-5-27-6Z"/></g>
-<g stroke="#d4af37" stroke-width="2" fill="none"><path d="M855 91l20-39 20 39M864 74h22M860 82h30M875 52V35M866 43h18"/></g>
-<rect y="116" width="1000" height="4" fill="#8e7849"/><rect y="117" width="1000" height="2" fill="#d4af37"/>
+<rect width="1400" height="150" fill="url(#sky)"/>
+<circle cx="1090" cy="48" r="28" fill="#fff0ad" opacity=".9"/>
+<path d="M0 105 L100 72 180 96 300 38 395 90 500 28 620 92 735 48 840 94 965 30 1080 86 1180 43 1300 88 1400 48 V150 H0Z" fill="url(#m2)" opacity=".95"/>
+<path d="M0 112 L100 85 185 105 300 57 395 103 505 46 620 105 740 68 845 108 965 51 1080 102 1185 64 1305 103 1400 72 V150 H0Z" fill="url(#m1)"/>
+<!-- snow highlights -->
+<path d="M300 58l28-13 26 17-17-4-12 15-10-11zM505 47l30-17 31 19-20-6-12 16-12-13zM965 52l28-14 28 17-18-4-11 13-12-11z" fill="#f5efe0" opacity=".9"/>
+<!-- palm grove -->
+<g fill="#174f3d" stroke="#174f3d" stroke-linecap="round">
+ <path d="M75 150 Q80 118 86 92" fill="none" stroke-width="7"/><path d="M86 97q-27-12-43-2 16-20 43-9-7-24 4-34 7 20 2 35 19-20 40-12-14 17-35 23 28 4 39 20-23-9-41-9Z"/>
+ <path d="M150 150 Q155 122 161 99" fill="none" stroke-width="6"/><path d="M161 103q-24-10-38-2 14-18 38-8-5-20 4-29 6 17 2 29 17-17 35-10-12 15-31 21 24 3 34 17-20-8-38-8Z"/>
+ <path d="M1240 150 Q1246 120 1250 93" fill="none" stroke-width="7"/><path d="M1250 98q-26-12-42-2 16-20 42-9-6-24 4-34 7 20 2 35 19-20 40-12-14 17-35 23 28 4 39 20-23-9-41-9Z"/>
+ <path d="M1320 150 Q1324 124 1330 103" fill="none" stroke-width="6"/><path d="M1330 107q-23-10-37-2 14-18 37-8-5-20 4-29 6 17 2 29 17-17 35-10-12 15-31 21 24 3 34 17-20-8-38-8Z"/>
+</g>
+<!-- Bam citadel -->
+<g transform="translate(25 35)">
+ <path d="M0 88 L15 42 38 42 48 16 62 16 70 38 92 38 104 9 121 9 129 39 151 39 163 24 178 24 188 45 208 45 220 88Z" fill="#a96932"/>
+ <path d="M28 42h24v46H28zM102 35h27v53h-27zM160 43h28v45h-28z" fill="#7d4b27"/>
+ <g fill="#f0d58c"><rect x="34" y="52" width="6" height="10"/><rect x="48" y="52" width="6" height="10"/><rect x="109" y="48" width="6" height="10"/><rect x="123" y="48" width="6" height="10"/><rect x="169" y="55" width="6" height="10"/><rect x="183" y="55" width="6" height="10"/></g>
+</g>
+<!-- windcatchers / historic skyline -->
+<g fill="#9d6b35" stroke="#744a27" stroke-width="2">
+ <path d="M800 150V70h30V44h15v26h22v80z"/><path d="M920 150V57h24V25h14v32h25v93z"/><path d="M1015 150V72h26V42h14v30h24v78z"/><path d="M1110 150V62h24V30h13v32h25v88z"/>
+</g>
+<g fill="#f2d48c"><rect x="808" y="82" width="14" height="10"/><rect x="928" y="70" width="14" height="10"/><rect x="1024" y="84" width="14" height="10"/><rect x="1118" y="73" width="14" height="10"/></g>
+<!-- mining excavator -->
+<g transform="translate(1180 83)" stroke="#6d451c" stroke-width="4" stroke-linejoin="round">
+ <path d="M0 47h94" stroke="#222" stroke-width="14"/><circle cx="25" cy="47" r="14" fill="#222"/><circle cx="75" cy="47" r="14" fill="#222"/>
+ <path d="M25 33l13-29h39l15 29z" fill="#e1ad2f"/><path d="M54 5V-22h28l16 27" fill="none"/><path d="M97 5l42 25-13 12-39-25z" fill="#e1ad2f"/><path d="M139 30l37 22-15 13-35-22z" fill="#d19324"/>
+</g>
+<path d="M0 132 Q180 120 350 133 T700 131 T1050 132 T1400 129 V150 H0Z" fill="url(#ground)" opacity=".92"/>
+<path d="M0 146 Q230 130 470 145 T940 143 T1400 139" fill="none" stroke="#d4af37" stroke-width="4"/>
 </svg>
