@@ -97,7 +97,7 @@ def is_relevant(title, summary, local):
     has_economic_title = any(k in title_l for k in economic)
     has_economic_text = any(k in text_l for k in economic)
     has_local = any(k in text_l for k in local_terms)
-    return has_economic_title or (has_economic_text and has_local)
+    return has_economic_title
 
 def fetch_source(source):
     print(f"[SOURCE] {source['name']} -> {source['feed']}")
