@@ -173,6 +173,20 @@ def main():
 
     final_news.sort(key=lambda x: x["date"], reverse=True)
 
+    # FINAL HEADLINE SANITY FILTER v1
+    economic_title_terms = [
+        "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
+        "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",
+        "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام", "تسهیلات", "مالیات",
+        "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",
+        "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",
+        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"
+    ]
+    final_news = [
+        item for item in final_news
+        if any(term in item.get("title", "").lower() for term in economic_title_terms)
+    ][:MAX_NEWS]
+
     output = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "language": "fa",
