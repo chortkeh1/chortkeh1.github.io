@@ -23,12 +23,12 @@ jobs:
           s = p.read_text(encoding='utf-8')
 
           s = s.replace(
-              '"https://eghtesadkerman.ir/feed/", "local": True',
-              '"https://eghtesadkerman.ir/feed/", "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa", "local": True'
+              '"feed": "https://eghtesadkerman.ir/feed/"',
+              '"feed": "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa"'
           )
           s = s.replace(
-              '"https://otagh-bazargani.com/feed/", "local": True',
-              '"https://otagh-bazargani.com/feed/", "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa", "local": True'
+              '"feed": "https://otagh-bazargani.com/feed/"',
+              '"feed": "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa"'
           )
 
           pattern = re.compile(r'def is_relevant\(title, summary, local\):\n.*?\n\ndef fetch_source', re.S)
