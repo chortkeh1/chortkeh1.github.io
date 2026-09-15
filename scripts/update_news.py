@@ -1,924 +1,204 @@
 # ============================================================
-# Chortkeh News Updater - FAIL SAFE VERSION
-# Iran / Kerman Focus
+# Chortkeh News Updater - RSS / DIVERSE SOURCES VERSION
+# Fresh Persian economic, financial, industrial and Kerman news
 # ============================================================
 
+import html
 import json
 import re
-import time
-from datetime import datetime, timezone
-from urllib.request import Request, urlopen
-from urllib.parse import urljoin
-from html.parser import HTMLParser
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
+from pathlib import Path
 
-
-# ============================================================
-# SETTINGS
-# ============================================================
+import feedparser
 
 OUTPUT_FILE = "news-data.json"
-
 MAX_NEWS = 30
-
-REQUEST_TIMEOUT = 12
-
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/124.0 Safari/537.36"
-)
+MAX_PER_SOURCE = 5
+MAX_AGE_DAYS = 30
 
 
-# ============================================================
-# APPROVED SOURCES
-# ============================================================
-
+# RSS feeds are preferred over scraping homepages because they provide
+# real publication dates and prevent old archive links from dominating.
 SOURCES = [
-
-    {
-        "name": "سازمان امور مالیاتی کشور",
-        "url": "https://www.intamedia.ir/setad-news"
-    },
-
-    {
-        "name": "سازمان تأمین اجتماعی",
-        "url": "https://tamin.ir/"
-    },
-
-    {
-        "name": "بانک مرکزی جمهوری اسلامی ایران",
-        "url": "https://www.cbi.ir/"
-    },
-
-    {
-        "name": "جامعه حسابداران رسمی ایران",
-        "url": "https://www.iacpa.ir/"
-    },
-
-    {
-        "name": "اقتصاد آنلاین",
-        "url": "https://www.eghtesadonline.com/"
-    },
-
-    {
-        "name": "وزارت صنعت، معدن و تجارت",
-        "url": "https://www.mimt.gov.ir/"
-    },
-
-    {
-        "name": "اتاق بازرگانی",
-        "url": "https://otagh-bazargani.com/"
-    },
-
-    {
-        "name": "اقتصاد کرمان",
-        "url": "https://eghtesadkerman.ir/"
-    },
-
-    {
-        "name": "وزارت امور اقتصادی و دارایی",
-        "url": "https://www.mefa.ir/"
-    },
-
-    {
-        "name": "سازمان بورس و اوراق بهادار",
-        "url": "https://www.seo.ir/"
-    }
-
+    {"name": "اقتصاد کرمان", "feed": "https://eghtesadkerman.ir/feed/", "local": True},
+    {"name": "اتاق بازرگانی کرمان", "feed": "https://otagh-bazargani.com/feed/", "local": True},
+    {"name": "خبرگزاری جمهوری اسلامی (ایرنا)", "feed": "https://www.irna.ir/rss", "local": False},
+    {"name": "خبرگزاری ایسنا", "feed": "https://www.isna.ir/rss", "local": False},
+    {"name": "خبرگزاری مهر", "feed": "https://www.mehrnews.com/rss", "local": False},
+    {"name": "خبرگزاری تسنیم", "feed": "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF", "local": False},
+    {"name": "اقتصاد آنلاین", "feed": "https://www.eghtesadonline.com/rss", "local": False},
+    {"name": "دنیای اقتصاد", "feed": "https://donya-e-eqtesad.com/rss", "local": False},
+    {"name": "سازمان امور مالیاتی کشور", "feed": "https://www.intamedia.ir/rss", "local": False},
 ]
 
-
-# ============================================================
-# FORBIDDEN / UNWANTED DOMAINS
-# ============================================================
-
-BLOCKED_DOMAINS = [
-
-    "facebook.com",
-    "instagram.com",
-    "twitter.com",
-    "x.com",
-    "youtube.com",
-
-    "iranintl.com",
-    "iran-international.com",
-
-    "google.com",
-    "news.google.com",
-
+KEYWORDS = [
+    "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
+    "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه گذاری", "سرمایه‌گذاری",
+    "بانک", "بانکی", "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام",
+    "تسهیلات", "مالیات", "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه",
+    "تأمین اجتماعی", "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "کرمان", "سیرجان",
+    "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر",
+    "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر",
 ]
 
-
-# ============================================================
-# KEYWORDS
-# ============================================================
-
-IRAN_KEYWORDS = [
-
-    "ایران",
-    "ایرانی",
-    "کشور",
-    "دولت",
-    "وزارت",
-    "سازمان",
-    "بانک مرکزی",
-    "اقتصاد",
-    "اقتصادی",
-    "بازار",
-    "تولید",
-    "صنعت",
-    "معدن",
-    "معادن",
-    "تجارت",
-    "صادرات",
-    "واردات",
-    "سرمایه گذاری",
-    "سرمایه‌گذاری",
-    "شرکت",
-    "کسب و کار",
-    "کسب‌وکار",
-    "کارفرما",
-    "کارگران",
-    "کارکنان",
-
-]
+BLOCKED = ["facebook.com", "instagram.com", "twitter.com", "x.com", "youtube.com"]
 
 
-KERMAN_KEYWORDS = [
-
-    "کرمان",
-    "سیرجان",
-    "رفسنجان",
-    "زرند",
-    "شهربابک",
-    "مس سرچشمه",
-    "سرچشمه",
-    "بم",
-    "جیرفت",
-    "کهنوج",
-    "بردسیر",
-    "بافت",
-    "رابر",
-    "راور",
-    "کوهبنان",
-    "پابدانا",
-    "جنوب کرمان",
-    "گل گهر",
-    "گل‌گهر",
-
-]
-
-
-ACCOUNTING_KEYWORDS = [
-
-    "حسابداری",
-    "حسابرس",
-    "حسابرسی",
-    "حسابداران",
-    "مالیات",
-    "مالیاتی",
-    "اظهارنامه",
-    "سامانه مؤدیان",
-    "سامانه مودیان",
-    "ارزش افزوده",
-    "بیمه",
-    "تأمین اجتماعی",
-    "تامین اجتماعی",
-    "حقوق و دستمزد",
-    "دستمزد",
-    "بخشنامه",
-    "قانون مالیات",
-    "قانون کار",
-    "تکالیف مالیاتی",
-    "مالیات بر ارزش افزوده",
-    "مالیات بر درآمد",
-
-]
-
-
-FINANCE_KEYWORDS = [
-
-    "بانک",
-    "بانکی",
-    "نرخ سود",
-    "نرخ بهره",
-    "ارز",
-    "دلار",
-    "طلا",
-    "بورس",
-    "سهام",
-    "فرابورس",
-    "اوراق",
-    "بازار سرمایه",
-    "بودجه",
-    "خزانه",
-    "منابع مالی",
-    "تسهیلات",
-    "وام",
-    "اعتبار",
-    "نقدینگی",
-    "تورم",
-
-]
-
-
-INDUSTRY_KEYWORDS = [
-
-    "صنعت",
-    "صنایع",
-    "معدن",
-    "معادن",
-    "فولاد",
-    "مس",
-    "آهن",
-    "تولید",
-    "کارخانه",
-    "پیمانکاری",
-    "انرژی",
-    "نیروگاه",
-    "بازرگانی",
-    "تجارت",
-    "سرمایه گذاری",
-    "سرمایه‌گذاری",
-
-]
-
-
-ALL_KEYWORDS = (
-    IRAN_KEYWORDS
-    + KERMAN_KEYWORDS
-    + ACCOUNTING_KEYWORDS
-    + FINANCE_KEYWORDS
-    + INDUSTRY_KEYWORDS
-)
-
-
-# ============================================================
-# HTML PARSER
-# ============================================================
-
-class LinkParser(HTMLParser):
-
-    def __init__(self, base_url):
-        super().__init__()
-
-        self.base_url = base_url
-
-        self.links = []
-
-        self.current_link = None
-
-        self.current_text = []
-
-        self.title = ""
-
-        self.in_title = False
-
-    def handle_starttag(self, tag, attrs):
-
-        attrs = dict(attrs)
-
-        if tag.lower() == "title":
-            self.in_title = True
-
-        if tag.lower() == "a":
-
-            href = attrs.get("href")
-
-            if href:
-
-                self.current_link = urljoin(
-                    self.base_url,
-                    href
-                )
-
-                self.current_text = []
-
-    def handle_data(self, data):
-
-        text = data.strip()
-
-        if not text:
-            return
-
-        if self.in_title:
-
-            self.title += " " + text
-
-        if self.current_link:
-
-            self.current_text.append(text)
-
-    def handle_endtag(self, tag):
-
-        if tag.lower() == "title":
-
-            self.in_title = False
-
-        if tag.lower() == "a":
-
-            if self.current_link:
-
-                text = " ".join(self.current_text)
-
-                if text:
-
-                    self.links.append(
-                        (
-                            self.current_link,
-                            text
-                        )
-                    )
-
-            self.current_link = None
-
-            self.current_text = []
-
-
-# ============================================================
-# TEXT CLEANING
-# ============================================================
-
-def clean_text(text):
-
-    if not text:
+def clean_text(value):
+    if not value:
         return ""
-
-    text = re.sub(
-        r"\s+",
-        " ",
-        text
-    )
-
-    text = text.strip()
-
-    return text
+    value = html.unescape(re.sub(r"<[^>]+>", " ", str(value)))
+    value = re.sub(r"\s+", " ", value)
+    return value.strip()
 
 
-# ============================================================
-# PERSIAN TEXT TEST
-# ============================================================
-
-def persian_ratio(text):
-
-    if not text:
-        return 0
-
-    persian_chars = len(
-        re.findall(
-            r"[\u0600-\u06FF]",
-            text
-        )
-    )
-
-    letters = len(
-        re.findall(
-            r"[A-Za-z\u0600-\u06FF]",
-            text
-        )
-    )
-
-    if letters == 0:
-        return 0
-
-    return persian_chars / letters
+def parse_date(entry):
+    for key in ("published", "updated", "created"):
+        value = entry.get(key)
+        if value:
+            try:
+                dt = parsedate_to_datetime(value)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt.astimezone(timezone.utc)
+            except Exception:
+                pass
+    for key in ("published_parsed", "updated_parsed", "created_parsed"):
+        value = entry.get(key)
+        if value:
+            try:
+                from calendar import timegm
+                return datetime.fromtimestamp(timegm(value), tz=timezone.utc)
+            except Exception:
+                pass
+    return None
 
 
-def is_persian(text):
-
-    return persian_ratio(text) >= 0.45
-
-
-# ============================================================
-# DOMAIN TEST
-# ============================================================
-
-def is_blocked_url(url):
-
-    lower = url.lower()
-
-    for domain in BLOCKED_DOMAINS:
-
-        if domain in lower:
-
-            return True
-
-    return False
-
-
-# ============================================================
-# KEYWORD SCORE
-# ============================================================
-
-def keyword_score(text):
-
-    text = text.lower()
-
-    score = 0
-
-    for keyword in ALL_KEYWORDS:
-
-        if keyword.lower() in text:
-
-            score += 1
-
-    return score
-
-
-def kerman_score(text):
-
-    text = text.lower()
-
-    score = 0
-
-    for keyword in KERMAN_KEYWORDS:
-
-        if keyword.lower() in text:
-
-            score += 1
-
-    return score
-
-
-# ============================================================
-# RELEVANCE TEST
-# ============================================================
-
-def is_relevant(title):
-
-    title = clean_text(title)
-
-    if len(title) < 15:
-
+def is_relevant(title, summary, local=False):
+    text = f"{title} {summary}".lower()
+    if len(title) < 12:
         return False
-
-    if not is_persian(title):
-
-        return False
-
-    score = keyword_score(title)
-
-    kscore = kerman_score(title)
-
-    # اخبار کرمان همیشه پذیرفته شوند
-    if kscore >= 1:
-
+    if local:
         return True
-
-    # اخبار تخصصی مالی / اقتصادی
-    if score >= 2:
-
-        return True
-
-    return False
-
-
-# ============================================================
-# DOWNLOAD PAGE
-# ============================================================
-
-def fetch_page(url):
-
-    try:
-
-        request = Request(
-            url,
-            headers={
-                "User-Agent": USER_AGENT,
-                "Accept": (
-                    "text/html,"
-                    "application/xhtml+xml,"
-                    "application/xml;q=0.9,"
-                    "*/*;q=0.8"
-                ),
-            }
-        )
-
-        with urlopen(
-            request,
-            timeout=REQUEST_TIMEOUT
-        ) as response:
-
-            data = response.read()
-
-            charset = response.headers.get_content_charset()
-
-            if charset:
-
-                encoding = charset
-
-            else:
-
-                encoding = "utf-8"
-
-            return data.decode(
-                encoding,
-                errors="ignore"
-            )
-
-    except Exception as exc:
-
-        print(
-            f"  [ERROR] {url}"
-        )
-
-        print(
-            f"  {type(exc).__name__}: {exc}"
-        )
-
-        return None
-
-
-# ============================================================
-# EXTRACT LINKS
-# ============================================================
-
-def extract_links(source_url, html):
-
-    parser = LinkParser(
-        source_url
-    )
-
-    try:
-
-        parser.feed(html)
-
-    except Exception as exc:
-
-        print(
-            f"  [WARN] HTML parser error: {exc}"
-        )
-
-    results = []
-
-    for url, text in parser.links:
-
-        text = clean_text(text)
-
-        if not text:
-
-            continue
-
-        if len(text) < 15:
-
-            continue
-
-        if len(text) > 300:
-
-            continue
-
-        if is_blocked_url(url):
-
-            continue
-
-        results.append(
-            {
-                "title": text,
-                "url": url
-            }
-        )
-
-    return results
-
-
-# ============================================================
-# REMOVE DUPLICATES
-# ============================================================
-
-def normalize_title(title):
-
-    title = title.lower()
-
-    title = re.sub(
-        r"[^\w\u0600-\u06FF\s]",
-        " ",
-        title
-    )
-
-    title = re.sub(
-        r"\s+",
-        " ",
-        title
-    )
-
-    return title.strip()
-
-
-def remove_duplicates(items):
-
-    seen = set()
-
-    result = []
-
-    for item in items:
-
-        key = normalize_title(
-            item["title"]
-        )
-
-        if key in seen:
-
-            continue
-
-        seen.add(key)
-
-        result.append(item)
-
-    return result
-
-
-# ============================================================
-# SOURCE PROCESSING
-# ============================================================
-
-def process_source(source):
-
-    name = source["name"]
-
-    url = source["url"]
-
-    print()
-    print(
-        "------------------------------------------------------------"
-    )
-
-    print(
-        f"[SOURCE] {name}"
-    )
-
-    print(
-        f"[URL] {url}"
-    )
-
-    html = fetch_page(url)
-
-    if not html:
-
-        print(
-            "[SKIP] Source unavailable."
-        )
-
+    return any(k.lower() in text for k in KEYWORDS)
+
+
+def safe_url(url):
+    if not url:
+        return ""
+    url = str(url).strip()
+    if not (url.startswith("https://") or url.startswith("http://")):
+        return ""
+    if any(domain in url.lower() for domain in BLOCKED):
+        return ""
+    return url
+
+
+def fetch_source(source):
+    print(f"[SOURCE] {source['name']} -> {source['feed']}")
+    parsed = feedparser.parse(source["feed"])
+    if getattr(parsed, "bozo", False) and not parsed.entries:
+        print(f"  [FAIL] feed unavailable")
         return []
 
-    links = extract_links(
-        url,
-        html
-    )
+    cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
+    items = []
+    seen = set()
 
-    print(
-        f"[INFO] Links found: {len(links)}"
-    )
+    for entry in parsed.entries:
+        title = clean_text(entry.get("title"))
+        summary = clean_text(entry.get("summary") or entry.get("description"))
+        url = safe_url(entry.get("link"))
+        published = parse_date(entry)
 
-    selected = []
-
-    for item in links:
-
-        title = item["title"]
-
-        if not is_relevant(title):
-
+        if not title or not url or not published:
+            continue
+        if published < cutoff:
+            continue
+        if not is_relevant(title, summary, source.get("local", False)):
             continue
 
-        selected.append(
-            {
-                "title": title,
-                "url": item["url"],
-                "source": name
-            }
-        )
+        key = re.sub(r"\s+", " ", title.lower())
+        if key in seen:
+            continue
+        seen.add(key)
 
-    print(
-        f"[INFO] Relevant Persian news: {len(selected)}"
-    )
+        items.append({
+            "title": title,
+            "description": summary[:500],
+            "url": url,
+            "source": source["name"],
+            "date": published.isoformat(),
+        })
 
-    return selected
+    items.sort(key=lambda x: x["date"], reverse=True)
+    items = items[:MAX_PER_SOURCE]
+    print(f"  [OK] fresh relevant items: {len(items)}")
+    return items
 
-
-# ============================================================
-# MAIN
-# ============================================================
 
 def main():
-
-    print()
-    print(
-        "============================================================"
-    )
-
-    print(
-        "Chortkeh News Updater - FAIL SAFE"
-    )
-
-    print(
-        "Iran / Kerman focused news collector"
-    )
-
-    print(
-        "============================================================"
-    )
-
-    print(
-        f"Approved sources: {len(SOURCES)}"
-    )
-
-    print(
-        f"Maximum news: {MAX_NEWS}"
-    )
-
-    print(
-        f"Timeout per source: {REQUEST_TIMEOUT} seconds"
-    )
-
-    print()
-
     all_news = []
-
-    successful_sources = 0
-
-    failed_sources = 0
+    successful = 0
+    failed = 0
 
     for source in SOURCES:
-
         try:
-
-            news = process_source(
-                source
-            )
-
-            if news:
-
-                successful_sources += 1
-
-                all_news.extend(news)
-
+            items = fetch_source(source)
+            if items:
+                successful += 1
+                all_news.extend(items)
             else:
-
-                failed_sources += 1
-
+                failed += 1
         except Exception as exc:
+            failed += 1
+            print(f"  [ERROR] {type(exc).__name__}: {exc}")
 
-            failed_sources += 1
+    # De-duplicate across sources while preserving source diversity.
+    unique = []
+    seen_titles = set()
+    for item in all_news:
+        key = re.sub(r"\W+", " ", item["title"].lower()).strip()
+        if key in seen_titles:
+            continue
+        seen_titles.add(key)
+        unique.append(item)
 
-            print()
+    # Freshness first, with a small local-news preference rather than a hard
+    # source monopoly. The per-source cap guarantees diversity.
+    def rank(item):
+        local_bonus = 2 if item["source"] in {"اقتصاد کرمان", "اتاق بازرگانی کرمان"} else 0
+        try:
+            dt = datetime.fromisoformat(item["date"].replace("Z", "+00:00"))
+            age_hours = max(0, (datetime.now(timezone.utc) - dt).total_seconds() / 3600)
+        except Exception:
+            age_hours = 9999
+        return (local_bonus, -age_hours)
 
-            print(
-                f"[FATAL-SOURCE-ERROR] "
-                f"{source['name']}"
-            )
-
-            print(
-                f"{type(exc).__name__}: {exc}"
-            )
-
-            print(
-                "[CONTINUE] Moving to next source..."
-            )
-
-        # جلوگیری از فشار زیاد به سایت‌ها
-        time.sleep(1)
-
-    print()
-    print(
-        "============================================================"
-    )
-
-    print(
-        "Filtering and sorting..."
-    )
-
-    print(
-        "============================================================"
-    )
-
-    all_news = remove_duplicates(
-        all_news
-    )
-
-    # اولویت:
-    # 1. اخبار کرمان
-    # 2. اخبار تخصصی مالی/حسابداری
-    # 3. سایر اخبار اقتصادی
-
-    def sort_score(item):
-
-        title = item["title"]
-
-        return (
-            kerman_score(title) * 10
-            + keyword_score(title)
-        )
-
-    all_news.sort(
-        key=sort_score,
-        reverse=True
-    )
-
-    final_news = all_news[
-        :MAX_NEWS
-    ]
-
-    # ========================================================
-    # OUTPUT
-    # ========================================================
+    unique.sort(key=rank, reverse=True)
+    final_news = unique[:MAX_NEWS]
 
     output = {
-
-        "updated_at": datetime.now(
-            timezone.utc
-        ).isoformat(),
-
+        "updated_at": datetime.now(timezone.utc).isoformat(),
         "language": "fa",
-
         "region": "Iran / Kerman",
-
         "source_count": len(SOURCES),
-
-        "successful_sources":
-            successful_sources,
-
-        "failed_sources":
-            failed_sources,
-
-        "news_count":
-            len(final_news),
-
-        "news":
-            final_news
-
+        "successful_sources": successful,
+        "failed_sources": failed,
+        "news_count": len(final_news),
+        "news": final_news,
     }
 
-    try:
+    Path(OUTPUT_FILE).write_text(
+        json.dumps(output, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
-        with open(
-            OUTPUT_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
+    print(f"Successful sources: {successful}")
+    print(f"Failed sources: {failed}")
+    print(f"Final news: {len(final_news)}")
 
-            json.dump(
-                output,
-                file,
-                ensure_ascii=False,
-                indent=2
-            )
-
-        print()
-        print(
-            "============================================================"
-        )
-
-        print(
-            f"Successful sources: "
-            f"{successful_sources}"
-        )
-
-        print(
-            f"Failed sources: "
-            f"{failed_sources}"
-        )
-
-        print(
-            f"Collected news: "
-            f"{len(all_news)}"
-        )
-
-        print(
-            f"Final news: "
-            f"{len(final_news)}"
-        )
-
-        print(
-            f"Output file: "
-            f"{OUTPUT_FILE}"
-        )
-
-        print(
-            "News update completed successfully."
-        )
-
-        print(
-            "============================================================"
-        )
-
-    except Exception as exc:
-
-        print()
-
-        print(
-            "[OUTPUT ERROR]"
-        )
-
-        print(
-            f"{type(exc).__name__}: {exc}"
-        )
-
-        raise
-
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
-
     main()
