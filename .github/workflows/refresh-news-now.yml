@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'scripts/update_news.py'
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
