@@ -17,8 +17,8 @@ MAX_PER_SOURCE_FETCH = 8
 MAX_AGE_DAYS = 14
 
 SOURCES = [
-    {"name": "اقتصاد کرمان", "feed": "https://eghtesadkerman.ir/feed/", "local": True},
-    {"name": "اتاق بازرگانی کرمان", "feed": "https://otagh-bazargani.com/feed/", "local": True},
+    {"name": "اقتصاد کرمان", "feed": "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa", "local": True},
+    {"name": "اتاق بازرگانی کرمان", "feed": "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa", "local": True},
     {"name": "خبرگزاری تسنیم", "feed": "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF", "local": False},
     {"name": "خبرگزاری ایسنا", "feed": "https://www.isna.ir/rss", "local": False},
     {"name": "خبرگزاری مهر", "feed": "https://www.mehrnews.com/rss", "local": False},
@@ -80,10 +80,24 @@ def safe_url(url):
     return url
 
 def is_relevant(title, summary, local):
-    text = f"{title} {summary}".lower()
-    if len(title) < 12 or any(x in title for x in JUNK):
+    title_l = title.lower()
+    text_l = f"{title} {summary}".lower()
+    economic = [
+        "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
+        "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",
+        "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام", "تسهیلات", "مالیات",
+        "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",
+        "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",
+        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"
+    ]
+    local_terms = ["کرمان", "سیرجان", "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر", "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر"]
+    junk = ["پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده", "فوتبال", "استقلال", "پرسپولیس", "سینما", "فیلم", "بازیگر", "موسیقی", "ورزش", "سلامت", "پزشکی", "حوادث", "جنایی"]
+    if len(title) < 12 or any(x in title for x in junk):
         return False
-    return local or any(k.lower() in text for k in KEYWORDS)
+    has_economic_title = any(k in title_l for k in economic)
+    has_economic_text = any(k in text_l for k in economic)
+    has_local = any(k in text_l for k in local_terms)
+    return has_economic_title or (has_economic_text and has_local)
 
 def fetch_source(source):
     print(f"[SOURCE] {source['name']} -> {source['feed']}")
