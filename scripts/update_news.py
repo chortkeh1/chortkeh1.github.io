@@ -1,3 +1,4 @@
+# Trigger immediate one-time news refresh.
 # ============================================================
 # Chortkeh News Updater - RSS / DIVERSE SOURCES VERSION
 # Fresh Persian economic, financial, industrial and Kerman news
@@ -17,9 +18,6 @@ MAX_NEWS = 30
 MAX_PER_SOURCE = 5
 MAX_AGE_DAYS = 30
 
-
-# RSS feeds are preferred over scraping homepages because they provide
-# real publication dates and prevent old archive links from dominating.
 SOURCES = [
     {"name": "اقتصاد کرمان", "feed": "https://eghtesadkerman.ir/feed/", "local": True},
     {"name": "اتاق بازرگانی کرمان", "feed": "https://otagh-bazargani.com/feed/", "local": True},
@@ -49,8 +47,7 @@ def clean_text(value):
     if not value:
         return ""
     value = html.unescape(re.sub(r"<[^>]+>", " ", str(value)))
-    value = re.sub(r"\s+", " ", value)
-    return value.strip()
+    return re.sub(r"\s+", " ", value).strip()
 
 
 def parse_date(entry):
@@ -79,9 +76,7 @@ def is_relevant(title, summary, local=False):
     text = f"{title} {summary}".lower()
     if len(title) < 12:
         return False
-    if local:
-        return True
-    return any(k.lower() in text for k in KEYWORDS)
+    return local or any(k.lower() in text for k in KEYWORDS)
 
 
 def safe_url(url):
@@ -99,31 +94,24 @@ def fetch_source(source):
     print(f"[SOURCE] {source['name']} -> {source['feed']}")
     parsed = feedparser.parse(source["feed"])
     if getattr(parsed, "bozo", False) and not parsed.entries:
-        print(f"  [FAIL] feed unavailable")
+        print("  [FAIL] feed unavailable")
         return []
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
-    items = []
-    seen = set()
-
+    items, seen = [], set()
     for entry in parsed.entries:
         title = clean_text(entry.get("title"))
         summary = clean_text(entry.get("summary") or entry.get("description"))
         url = safe_url(entry.get("link"))
         published = parse_date(entry)
-
-        if not title or not url or not published:
-            continue
-        if published < cutoff:
+        if not title or not url or not published or published < cutoff:
             continue
         if not is_relevant(title, summary, source.get("local", False)):
             continue
-
         key = re.sub(r"\s+", " ", title.lower())
         if key in seen:
             continue
         seen.add(key)
-
         items.append({
             "title": title,
             "description": summary[:500],
@@ -139,10 +127,7 @@ def fetch_source(source):
 
 
 def main():
-    all_news = []
-    successful = 0
-    failed = 0
-
+    all_news, successful, failed = [], 0, 0
     for source in SOURCES:
         try:
             items = fetch_source(source)
@@ -155,9 +140,7 @@ def main():
             failed += 1
             print(f"  [ERROR] {type(exc).__name__}: {exc}")
 
-    # De-duplicate across sources while preserving source diversity.
-    unique = []
-    seen_titles = set()
+    unique, seen_titles = [], set()
     for item in all_news:
         key = re.sub(r"\W+", " ", item["title"].lower()).strip()
         if key in seen_titles:
@@ -165,8 +148,6 @@ def main():
         seen_titles.add(key)
         unique.append(item)
 
-    # Freshness first, with a small local-news preference rather than a hard
-    # source monopoly. The per-source cap guarantees diversity.
     def rank(item):
         local_bonus = 2 if item["source"] in {"اقتصاد کرمان", "اتاق بازرگانی کرمان"} else 0
         try:
@@ -189,12 +170,7 @@ def main():
         "news_count": len(final_news),
         "news": final_news,
     }
-
-    Path(OUTPUT_FILE).write_text(
-        json.dumps(output, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-
+    Path(OUTPUT_FILE).write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Successful sources: {successful}")
     print(f"Failed sources: {failed}")
     print(f"Final news: {len(final_news)}")
