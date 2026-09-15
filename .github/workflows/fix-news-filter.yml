@@ -1,0 +1,77 @@
+name: One-time news relevance fix
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tighten economic news filtering
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('scripts/update_news.py')
+          s = p.read_text(encoding='utf-8')
+
+          s = s.replace(
+              '"https://eghtesadkerman.ir/feed/", "local": True',
+              '"https://eghtesadkerman.ir/feed/", "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa", "local": True'
+          )
+          s = s.replace(
+              '"https://otagh-bazargani.com/feed/", "local": True',
+              '"https://otagh-bazargani.com/feed/", "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa", "local": True'
+          )
+
+          pattern = re.compile(r'def is_relevant\(title, summary, local\):\n.*?\n\ndef fetch_source', re.S)
+          replacement = '''def is_relevant(title, summary, local):
+              title_l = title.lower()
+              text_l = f"{title} {summary}".lower()
+              economic = [
+                  "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
+                  "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",
+                  "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام", "تسهیلات", "مالیات",
+                  "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",
+                  "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",
+                  "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"
+              ]
+              local_terms = ["کرمان", "سیرجان", "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر", "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر"]
+              junk = ["پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده", "فوتبال", "استقلال", "پرسپولیس", "سینما", "فیلم", "بازیگر", "موسیقی", "ورزش", "سلامت", "پزشکی", "حوادث", "جنایی"]
+              if len(title) < 12 or any(x in title for x in junk):
+                  return False
+              has_economic_title = any(k in title_l for k in economic)
+              has_economic_text = any(k in text_l for k in economic)
+              has_local = any(k in text_l for k in local_terms)
+              return has_economic_title or (has_economic_text and has_local)
+
+          def fetch_source'''
+          s2, count = pattern.subn(replacement, s, count=1)
+          if count != 1:
+              raise SystemExit('Could not locate is_relevant function')
+          p.write_text(s2, encoding='utf-8')
+          PY
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install feedparser requests beautifulsoup4
+
+      - name: Refresh news
+        run: python scripts/update_news.py
+
+      - name: Commit and remove one-time workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/update_news.py news-data.json
+          git rm .github/workflows/fix-news-filter.yml
+          git commit -m "Filter news to relevant economic topics"
+          git push
