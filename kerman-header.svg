@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 230" role="img" aria-label="نمای نمادهای استان کرمان">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b3431"/><stop offset="1" stop-color="#183f3b"/></linearGradient>
+  <linearGradient id="sand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a7620"/><stop offset=".5" stop-color="#d4af37"/><stop offset="1" stop-color="#80611a"/></linearGradient>
+  <linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8da9a5"/><stop offset="1" stop-color="#315854"/></linearGradient>
+  <linearGradient id="mountain2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#557b76"/><stop offset="1" stop-color="#193b38"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<rect width="1600" height="230" fill="url(#sky)"/>
+<circle cx="1190" cy="62" r="28" fill="#f5d978" opacity=".9" filter="url(#glow)"/><circle cx="1190" cy="62" r="16" fill="#f5d978"/>
+<path d="M0 165 L115 108 195 145 305 58 415 137 535 76 660 150 785 54 915 145 1045 82 1165 150 1280 67 1400 145 1510 92 1600 125 L1600 230 0 230Z" fill="url(#mountain2)"/>
+<path d="M235 145 L305 58 347 91 390 138 430 108 485 149Z" fill="url(#mountain)" opacity=".95"/>
+<path d="M742 145 L785 54 820 91 857 78 915 145Z" fill="url(#mountain)"/>
+<path d="M1215 155 L1280 67 1320 101 1360 145Z" fill="url(#mountain)"/>
+<path d="M0 190 Q180 165 330 188 T650 180 T980 188 T1300 178 T1600 188 V230 H0Z" fill="#102a27"/>
+<!-- Bam Citadel -->
+<g transform="translate(58 82)" fill="#c69c35" stroke="#e0c15e" stroke-width="2">
+ <path d="M0 92 V42 L20 31 V18 H44 V34 H70 V15 H94 V38 H118 V28 H139 V42 H164 V92Z"/>
+ <path d="M18 42 V92 M45 34 V92 M72 38 V92 M98 42 V92 M126 43 V92" fill="none"/>
+ <path d="M8 51 H156 M8 68 H156" fill="none"/>
+</g>
+<!-- Palm trees -->
+<g stroke="#d4af37" stroke-width="5" fill="none" stroke-linecap="round">
+ <path d="M220 210 Q218 170 228 140"/><path d="M228 146 Q198 132 184 110 M229 147 Q252 123 275 112 M227 145 Q219 116 222 96 M230 146 Q249 143 270 134"/>
+ <path d="M1420 215 Q1418 174 1428 143"/><path d="M1428 149 Q1397 135 1380 116 M1429 150 Q1452 126 1475 116 M1427 148 Q1419 119 1422 98 M1430 150 Q1450 146 1470 138"/>
+</g>
+<!-- Windcatcher -->
+<g transform="translate(1330 75)" fill="#d1aa43" stroke="#f0d37a" stroke-width="2">
+ <path d="M0 132 V55 H22 V18 H72 V55 H94 V132Z"/>
+ <path d="M22 55 H72 M35 18 V55 M59 18 V55 M12 80 H82 M12 104 H82" fill="none"/>
+</g>
+<!-- Mine / industrial symbol -->
+<g transform="translate(1050 151)" fill="none" stroke="#d4af37" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M0 52 H120"/><path d="M18 52 L42 20 68 52 91 10 120 52"/>
+ <path d="M63 52 V18 M55 18 H73"/>
+ <path d="M92 10 L115 10"/>
+ <circle cx="42" cy="61" r="12"/><circle cx="92" cy="61" r="12"/>
+</g>
+<!-- subtle gold horizon -->
+<path d="M0 224 H1600" stroke="url(#sand)" stroke-width="4" opacity=".9"/>
+<g opacity=".12" stroke="#d4af37" fill="none"><path d="M20 25 Q160 5 300 25 T580 25 T860 25 T1140 25 T1420 25 T1600 25"/><path d="M0 205 Q240 185 480 205 T960 205 T1440 205 T1600 205"/></g>
+</svg>
