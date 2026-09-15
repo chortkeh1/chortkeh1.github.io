@@ -1,0 +1,47 @@
+name: Final news sanity filter
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply final headline-only filter
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('scripts/update_news.py')
+          s = p.read_text(encoding='utf-8')
+          marker = '# FINAL HEADLINE SANITY FILTER v1'
+          if marker not in s:
+              old = '    final_news.sort(key=lambda x: x["date"], reverse=True)\n'
+              new = '''    final_news.sort(key=lambda x: x["date"], reverse=True)\n\n    # FINAL HEADLINE SANITY FILTER v1\n    economic_title_terms = [\n        "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",\n        "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",\n        "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "وام", "تسهیلات", "مالیات",\n        "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",\n        "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",\n        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"\n    ]\n    final_news = [\n        item for item in final_news\n        if any(term in item.get("title", "").lower() for term in economic_title_terms)\n    ][:MAX_NEWS]\n'''
+              if old not in s:
+                  raise SystemExit('Insertion point not found')
+              p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install feedparser requests beautifulsoup4
+
+      - name: Refresh news
+        run: python scripts/update_news.py
+
+      - name: Commit and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/update_news.py news-data.json
+          git rm .github/workflows/final-news-sanity.yml
+          git commit -m "Finalize economic news filtering"
+          git push
