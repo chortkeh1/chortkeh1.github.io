@@ -1559,6 +1559,33 @@ header {
 
 </style>
 
+
+<style>
+/* CHORTKEH HEADER FINAL FIX */
+header { min-height: 0 !important; background: #073d39 !important; }
+.nav { min-height: 78px !important; padding: 7px 0 !important; }
+.logo { width: 115px !important; height: 68px !important; }
+.brand { font-size: 25px !important; gap: 10px !important; }
+.brand small { font-size: 12px !important; }
+.kerman-panorama { width: 100%; height: 88px; overflow: hidden; border-top: 1px solid #b78918; }
+.kerman-panorama img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+@media(max-width:900px) {
+  header { min-height: 0 !important; }
+  .nav { min-height: 0 !important; padding: 6px 0 !important; gap: 6px !important; }
+  .kerman-panorama { height: 72px; }
+}
+@media(max-width:560px) {
+  header { min-height: 0 !important; }
+  .nav { min-height: 0 !important; padding: 5px 0 !important; gap: 4px !important; }
+  .logo { width: 95px !important; height: 56px !important; }
+  .brand { font-size: 20px !important; gap: 7px !important; }
+  .brand small { font-size: 10px !important; }
+  nav { gap: 8px !important; }
+  nav a { font-size: 13px !important; }
+  .kerman-panorama { height: 62px; }
+}
+</style>
+
 </head>
 
 
@@ -1640,6 +1667,7 @@ header {
 
 </div>
 
+<div class="kerman-panorama"><img src="kerman-header.svg" alt="پانورامای کرمان"></div>
 </header>
 
 <section class="light" id="urgent-tax-campaign">
