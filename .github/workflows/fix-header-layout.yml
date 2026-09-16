@@ -1,0 +1,41 @@
+name: Fix header layout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-header-layout.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix header
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* CHORTKEH HEADER FINAL FIX */'
+          if marker not in s:
+              s = s.replace('</header>', '<div class="kerman-panorama"><img src="kerman-header.svg" alt="پانورامای کرمان"></div>\n</header>', 1)
+              css = '''\n<style>\n/* CHORTKEH HEADER FINAL FIX */\nheader { min-height: 0 !important; background: #073d39 !important; }\n.nav { min-height: 78px !important; padding: 7px 0 !important; }\n.logo { width: 115px !important; height: 68px !important; }\n.brand { font-size: 25px !important; gap: 10px !important; }\n.brand small { font-size: 12px !important; }\n.kerman-panorama { width: 100%; height: 88px; overflow: hidden; border-top: 1px solid #b78918; }\n.kerman-panorama img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }\n@media(max-width:900px) {\n  header { min-height: 0 !important; }\n  .nav { min-height: 0 !important; padding: 6px 0 !important; gap: 6px !important; }\n  .kerman-panorama { height: 72px; }\n}\n@media(max-width:560px) {\n  header { min-height: 0 !important; }\n  .nav { min-height: 0 !important; padding: 5px 0 !important; gap: 4px !important; }\n  .logo { width: 95px !important; height: 56px !important; }\n  .brand { font-size: 20px !important; gap: 7px !important; }\n  .brand small { font-size: 10px !important; }\n  nav { gap: 8px !important; }\n  nav a { font-size: 13px !important; }\n  .kerman-panorama { height: 62px; }\n}\n</style>\n'''
+              s = s.replace('</head>', css + '\n</head>', 1)
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "اصلاح نهایی ارتفاع و نمایش پانورامای هدر"
+          git push
+      - name: Remove one-time workflow
+        if: success()
+        run: |
+          git rm .github/workflows/fix-header-layout.yml || true
+          git commit -m "حذف workflow موقت اصلاح هدر" || true
+          git push || true
