@@ -1,0 +1,68 @@
+name: Remove bad panorama
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/remove-bad-panorama.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove panorama and compact header
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          import re
+          s = re.sub(r'\s*<div class="kerman-panorama">.*?</div>\s*', '\n', s, flags=re.S)
+          css = r'''
+          /* CHORTKEH FINAL HEADER CLEANUP */
+          header { min-height: 0 !important; height: auto !important; background: linear-gradient(135deg,#102725,#071615) !important; }
+          .nav { min-height: 76px !important; height: auto !important; padding: 5px 0 !important; }
+          .logo { width: 112px !important; height: 68px !important; }
+          .brand { font-size: 25px !important; gap: 9px !important; }
+          .brand small { font-size: 12px !important; }
+          .kerman-panorama { display: none !important; }
+          @media (max-width:900px) {
+            .nav { min-height: 0 !important; padding: 5px 0 !important; }
+            .logo { width: 100px !important; height: 60px !important; }
+            .brand { font-size: 22px !important; }
+          }
+          @media (max-width:560px) {
+            .nav { min-height: 0 !important; padding: 4px 0 !important; }
+            .logo { width: 88px !important; height: 52px !important; }
+            .brand { font-size: 19px !important; gap: 6px !important; }
+            .brand small { font-size: 10px !important; }
+            nav { gap: 7px !important; }
+            nav a { font-size: 12px !important; }
+          }
+          '''
+          if 'CHORTKEH FINAL HEADER CLEANUP' not in s:
+              s = s.replace('</style>', css + '\n</style>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'حذف پانورامای بی کیفیت و کوچک سازی هدر'
+          git push
+
+      - name: Remove one-time workflow
+        if: success()
+        run: |
+          rm -f .github/workflows/remove-bad-panorama.yml
+          git add .github/workflows/remove-bad-panorama.yml
+          git diff --cached --quiet || git commit -m 'حذف workflow موقت اصلاح هدر'
+          git push
