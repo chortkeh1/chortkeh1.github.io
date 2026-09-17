@@ -1,3 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1672 155" preserveAspectRatio="xMidYMid slice" role="img" aria-label="پانورامای کرمان">
-<image width="1672" height="155" preserveAspectRatio="none" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABoAAAACTCAIAAACaKc9WAAA..."/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 230" preserveAspectRatio="xMidYMid slice" role="img" aria-label="پانورامای کرمان">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ec9dc"/><stop offset=".62" stop-color="#f5d58a"/><stop offset="1" stop-color="#e6a85b"/></linearGradient>
+ <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d99b52"/><stop offset="1" stop-color="#a96538"/></linearGradient>
+ <linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#526d73"/><stop offset="1" stop-color="#263f43"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d4af37"/><stop offset=".5" stop-color="#f0d36a"/><stop offset="1" stop-color="#b78918"/></linearGradient>
+ <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".28"/></filter>
+</defs>
+<rect width="1600" height="230" fill="url(#sky)"/>
+<circle cx="1130" cy="58" r="42" fill="#fff1b0" opacity=".72"/>
+<path d="M0 155 L150 78 250 142 390 42 505 143 650 63 780 151 920 48 1045 145 1190 76 1320 151 1460 38 1600 137 V230 H0Z" fill="url(#mount)"/>
+<path d="M0 163 L155 104 250 154 390 70 505 155 650 91 780 162 920 77 1045 158 1190 105 1320 160 1460 67 1600 148 V230 H0Z" fill="#365257" opacity=".82"/>
+<path d="M352 78l38-36 34 25 30 42-34-20-28 15-22-16zM885 78l35-30 32 23 28 39-33-18-29 14-20-15zM1430 77l30-39 35 30 28 42-33-19-25 13z" fill="#e9f2ee" opacity=".9"/>
+<path d="M0 158 Q280 143 540 165 T1050 160 T1600 151 V230 H0Z" fill="url(#sand)"/>
+<g fill="#b86f38" stroke="#7e482e" stroke-width="2" filter="url(#shadow)"><path d="M65 145V103h28V83h22v62z"/><path d="M95 145V91h38v54z"/><path d="M132 145V104h30v41z"/><path d="M55 103h18v-25h15v25h17v-13h15v13h18v42H55z" opacity=".96"/><path d="M55 145h120v12H55z"/></g>
+<g fill="#6b3d2b"><circle cx="84" cy="91" r="2"/><circle cx="120" cy="100" r="2"/><circle cx="151" cy="113" r="2"/></g>
+<g stroke="#68452b" stroke-width="5" stroke-linecap="round" fill="none"><path d="M220 174q-4-42 4-66M255 180q-7-39 2-60M300 178q-4-35 5-54"/></g>
+<g fill="#17624f"><path d="M224 112q-27-21-34-9 17 18 35 16-26-5-34 10 20 6 37-5-12 17-3 25 13-12 8-31 9 20 26 24 3-17-14-29 21 13 30 3-13-18-39-7 19-19 10-29-16 8-28 32z"/><path d="M258 122q-22-18-31-8 13 16 31 14-20 1-27 13 18 4 31-7-8 18 1 23 11-10 7-28 8 19 23 20 3-15-12-25 18 11 27 2-11-15-34-5 15-18 7-26-13 7-24 25z"/><path d="M303 130q-20-17-29-7 12 15 29 13-19 1-25 12 16 4 28-7-7 17 1 21 10-10 6-26 8 17 22 19 3-14-11-23 17 10 25 1-10-14-32-5 14-17 6-24-12 6-22 23z"/></g>
+<g fill="#9b5e35" stroke="#744229" stroke-width="2" filter="url(#shadow)"><path d="M865 164v-49h36v49zM905 164v-70h48v70zM958 164v-42h34v42zM998 164v-55h42v55zM1048 164v-40h30v40zM1082 164v-62h36v62z"/><path d="M914 94h15V73h14v21h15v12h-44zM1088 102h11V80h13v22h12v11h-36z"/></g>
+<g fill="#d9b36b"><rect x="916" y="108" width="7" height="10"/><rect x="938" y="108" width="7" height="10"/><rect x="1010" y="121" width="7" height="9"/><rect x="1093" y="113" width="7" height="10"/><rect x="1111" y="113" width="7" height="10"/></g>
+<g filter="url(#shadow)"><path d="M1325 168l48-39 55 39z" fill="#5d5650"/><path d="M1380 129l28-21 24 9-18 19z" fill="#303d3e"/><path d="M1405 138l-20 25 8 6 24-24z" fill="#303d3e"/><circle cx="1380" cy="177" r="13" fill="#33383a"/><circle cx="1454" cy="177" r="13" fill="#33383a"/><circle cx="1380" cy="177" r="6" fill="#d4af37"/><circle cx="1454" cy="177" r="6" fill="#d4af37"/><path d="M1480 166h68l25 12-15 16h-78z" fill="#d5a43e"/><circle cx="1498" cy="194" r="12" fill="#3b3b3a"/><circle cx="1550" cy="194" r="12" fill="#3b3b3a"/></g>
+<path d="M0 205 Q260 185 520 207 T1040 203 T1600 196 V230 H0Z" fill="#204f48" opacity=".72"/><path d="M0 226 Q360 210 720 226 T1600 216" fill="none" stroke="url(#gold)" stroke-width="5"/>
 </svg>
