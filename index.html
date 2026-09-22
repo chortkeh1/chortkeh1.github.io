@@ -1589,12 +1589,24 @@ header { min-height: 0 !important; background: #073d39 !important; }
 .logo { width: 115px !important; height: 68px !important; }
 .brand { font-size: 25px !important; gap: 10px !important; }
 .brand small { font-size: 12px !important; }
-.kerman-panorama { width: 100%; height: 88px; overflow: hidden; border-top: 1px solid #b78918; }
-.kerman-panorama img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+/* پانورامای کرمان به‌عنوان پس‌زمینه همان نوار هدر */
+header {
+  min-height: 0 !important;
+  background:
+    linear-gradient(180deg, rgba(3,25,23,.76), rgba(3,25,23,.58)),
+    url('kerman_panorama_clean.png') center center / cover no-repeat !important;
+}
+.nav {
+  min-height: 78px !important;
+  background: linear-gradient(180deg, rgba(4,28,26,.78), rgba(4,28,26,.58)) !important;
+  position: relative;
+  z-index: 2;
+}
+.kerman-panorama { display: none !important; }
 @media(max-width:900px) {
   header { min-height: 0 !important; }
   .nav { min-height: 0 !important; padding: 6px 0 !important; gap: 6px !important; }
-  .kerman-panorama { height: 72px; }
+  header { background-position: center center !important; }
 }
 @media(max-width:560px) {
   header { min-height: 0 !important; }
@@ -1604,7 +1616,7 @@ header { min-height: 0 !important; background: #073d39 !important; }
   .brand small { font-size: 10px !important; }
   nav { gap: 8px !important; }
   nav a { font-size: 13px !important; }
-  .kerman-panorama { height: 62px; }
+  header { background-position: center center !important; }
 }
 </style>
 
@@ -1689,9 +1701,6 @@ header { min-height: 0 !important; background: #073d39 !important; }
 
 </div>
 
-<div class="kerman-panorama">
-  <img src="kerman_panorama_clean.png" alt="پانورامای کرمان">
-</div>
 </div>
 </header>
 
