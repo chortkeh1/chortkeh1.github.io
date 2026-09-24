@@ -1,5 +1,5 @@
 # ============================================================
-# Chortkeh News Updater - balanced multi-source RSS
+# Chortkeh News Updater - Kerman-only official/local sources
 # ============================================================
 import html
 import json
@@ -12,41 +12,37 @@ from pathlib import Path
 import feedparser
 
 OUTPUT_FILE = "news-data.json"
-MAX_NEWS = 30
-MAX_PER_SOURCE_FETCH = 8
+MAX_NEWS = 20
+MAX_PER_SOURCE_FETCH = 10
 MAX_AGE_DAYS = 14
 
+# IMPORTANT: only these two sources are allowed on the Chortkeh site.
+# Google News RSS is used only as a feed reader, with an explicit site: filter.
 SOURCES = [
-    {"name": "اقتصاد کرمان", "feed": "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa", "local": True},
-    {"name": "اتاق بازرگانی کرمان", "feed": "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa", "local": True},
-    {"name": "خبرگزاری تسنیم", "feed": "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF", "local": False},
-    {"name": "خبرگزاری ایسنا", "feed": "https://www.isna.ir/rss", "local": False},
-    {"name": "خبرگزاری مهر", "feed": "https://www.mehrnews.com/rss", "local": False},
-    {"name": "باشگاه خبرنگاران جوان", "feed": "https://www.yjc.ir/fa/rss/allnews", "local": False},
-    {"name": "تابناک", "feed": "https://www.tabnak.ir/fa/rss/allnews", "local": False},
-    {"name": "خبرآنلاین", "feed": "https://www.khabaronline.ir/rss", "local": False},
-    {"name": "عصر ایران", "feed": "https://www.asriran.com/fa/rss/allnews", "local": False},
-    {"name": "دنیای اقتصاد", "feed": "https://donya-e-eqtesad.com/rss", "local": False},
-]
-
-KEYWORDS = [
-    "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
-    "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه گذاری", "سرمایه‌گذاری",
-    "بانک", "بانکی", "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه",
-    "تسهیلات", "مالیات", "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه",
-    "تأمین اجتماعی", "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "کرمان", "سیرجان",
-    "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر",
-    "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر"
+    {
+        "name": "اقتصاد کرمان",
+        "feed": "https://news.google.com/rss/search?q=site%3Aeghtesadkerman.ir&hl=fa&gl=IR&ceid=IR%3Afa",
+        "domain": "eghtesadkerman.ir",
+    },
+    {
+        "name": "اتاق بازرگانی کرمان",
+        "feed": "https://news.google.com/rss/search?q=site%3Aotagh-bazargani.com&hl=fa&gl=IR&ceid=IR%3Afa",
+        "domain": "otagh-bazargani.com",
+    },
 ]
 
 BLOCKED = ["facebook.com", "instagram.com", "twitter.com", "x.com", "youtube.com"]
-JUNK = ["پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده"]
+JUNK = [
+    "پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده",
+]
+
 
 def clean_text(value):
     if not value:
         return ""
     value = html.unescape(re.sub(r"<[^>]+>", " ", str(value)))
     return re.sub(r"\s+", " ", value).strip()
+
 
 def parse_date(entry):
     for key in ("published", "updated", "created"):
@@ -69,6 +65,7 @@ def parse_date(entry):
                 pass
     return None
 
+
 def safe_url(url):
     if not url:
         return ""
@@ -79,25 +76,32 @@ def safe_url(url):
         return ""
     return url
 
-def is_relevant(title, summary, local):
-    title_l = title.lower()
-    text_l = f"{title} {summary}".lower()
+
+def is_relevant(title, summary):
+    if len(title) < 12 or any(x in title for x in JUNK):
+        return False
     economic = [
         "اقتصاد", "اقتصادی", "تجارت", "بازرگانی", "صنعت", "صنایع", "معدن", "معادن",
         "فولاد", "مس", "آهن", "تولید", "کارخانه", "پیمانکاری", "سرمایه", "بانک", "بانکی",
         "بورس", "سهام", "ارز", "دلار", "طلا", "تورم", "بودجه", "تسهیلات", "مالیات",
         "مالیاتی", "اظهارنامه", "سامانه مؤدیان", "ارزش افزوده", "بیمه", "تأمین اجتماعی",
         "تامین اجتماعی", "حسابداری", "حسابرسی", "حقوق و دستمزد", "بازار", "قیمت", "صادرات", "واردات",
-        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد"
+        "سرمایه‌گذاری", "سرمایه گذاری", "هزینه", "درآمد", "کرمان", "سیرجان", "رفسنجان", "زرند",
+        "شهربابک", "سرچشمه", "بم", "جیرفت", "گل گهر", "گل‌گهر",
     ]
-    local_terms = ["کرمان", "سیرجان", "رفسنجان", "زرند", "شهربابک", "سرچشمه", "بم", "جیرفت", "کهنوج", "بردسیر", "بافت", "رابر", "راور", "کوهبنان", "پابدانا", "گل گهر", "گل‌گهر"]
-    junk = ["پادکست", "شماره ", "شمارهٔ", "استخدام مدیر دفتر", "استخدام نماینده", "فوتبال", "استقلال", "پرسپولیس", "سینما", "فیلم", "بازیگر", "موسیقی", "ورزش", "سلامت", "پزشکی", "حوادث", "جنایی"]
-    if len(title) < 12 or any(x in title for x in junk):
-        return False
-    has_economic_title = any(k in title_l for k in economic)
-    has_economic_text = any(k in text_l for k in economic)
-    has_local = any(k in text_l for k in local_terms)
-    return has_economic_title
+    text = f"{title} {summary}".lower()
+    return any(k.lower() in text for k in economic)
+
+
+def belongs_to_source(entry, source):
+    # Google News entries normally expose source metadata. Require the expected
+    # source/domain so that no unrelated publisher can enter the site feed.
+    source_meta = entry.get("source") or {}
+    source_text = clean_text(source_meta.get("title") or source_meta.get("url"))
+    raw = f"{source_text} {entry.get('link', '')}".lower()
+    domain = source["domain"].lower()
+    return domain in raw or source["name"].lower() in source_text.lower()
+
 
 def fetch_source(source):
     print(f"[SOURCE] {source['name']} -> {source['feed']}")
@@ -105,21 +109,28 @@ def fetch_source(source):
     if not parsed.entries:
         print("  [FAIL] no entries")
         return []
+
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     items, seen = [], set()
+
     for entry in parsed.entries:
         title = clean_text(entry.get("title"))
         summary = clean_text(entry.get("summary") or entry.get("description"))
         url = safe_url(entry.get("link"))
         published = parse_date(entry)
+
         if not title or not url or not published or published < cutoff:
             continue
-        if not is_relevant(title, summary, source.get("local", False)):
+        if not belongs_to_source(entry, source):
             continue
+        if not is_relevant(title, summary):
+            continue
+
         key = re.sub(r"\W+", " ", title.lower()).strip()
         if key in seen:
             continue
         seen.add(key)
+
         items.append({
             "title": title,
             "description": summary[:450],
@@ -127,14 +138,17 @@ def fetch_source(source):
             "source": source["name"],
             "date": published.isoformat(),
         })
+
     items.sort(key=lambda x: x["date"], reverse=True)
     print(f"  [OK] {len(items[:MAX_PER_SOURCE_FETCH])} relevant fresh items")
     return items[:MAX_PER_SOURCE_FETCH]
+
 
 def main():
     by_source = defaultdict(list)
     successful = 0
     failed = 0
+
     for source in SOURCES:
         try:
             items = fetch_source(source)
@@ -147,48 +161,49 @@ def main():
             failed += 1
             print(f"  [ERROR] {source['name']}: {type(exc).__name__}: {exc}")
 
-    seen_titles = set()
-    for source_name in list(by_source):
-        clean = []
-        for item in by_source[source_name]:
-            key = re.sub(r"\W+", " ", item["title"].lower()).strip()
-            if key not in seen_titles:
-                seen_titles.add(key)
-                clean.append(item)
-        by_source[source_name] = clean
-
-    ordered_sources = [s["name"] for s in SOURCES if by_source.get(s["name"])]
+    # Interleave the two approved sources so one publisher does not dominate.
     final_news = []
+    seen_titles = set()
     cursor = 0
-    while len(final_news) < MAX_NEWS and ordered_sources:
+    while len(final_news) < MAX_NEWS:
         added = False
-        for source_name in ordered_sources:
-            items = by_source[source_name]
-            if cursor < len(items) and len(final_news) < MAX_NEWS:
-                final_news.append(items[cursor])
-                added = True
+        for source in SOURCES:
+            items = by_source[source["name"]]
+            if cursor < len(items):
+                item = items[cursor]
+                key = re.sub(r"\W+", " ", item["title"].lower()).strip()
+                if key not in seen_titles:
+                    seen_titles.add(key)
+                    final_news.append(item)
+                    added = True
+                if len(final_news) >= MAX_NEWS:
+                    break
         if not added:
             break
         cursor += 1
 
     final_news.sort(key=lambda x: x["date"], reverse=True)
-
     final_news = final_news[:MAX_NEWS]
 
+    active_sources = [s["name"] for s in SOURCES if by_source[s["name"]]]
     output = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "language": "fa",
         "region": "Iran / Kerman",
-        "source_count": len(SOURCES),
+        "source_count": 2,
         "successful_sources": successful,
         "failed_sources": failed,
-        "active_sources": ordered_sources,
+        "active_sources": active_sources,
         "news_count": len(final_news),
         "news": final_news,
     }
-    Path(OUTPUT_FILE).write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
-    print("ACTIVE SOURCES:", ", ".join(ordered_sources))
+    Path(OUTPUT_FILE).write_text(
+        json.dumps(output, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print("ACTIVE SOURCES:", ", ".join(active_sources) or "none")
     print("FINAL NEWS:", len(final_news))
+
 
 if __name__ == "__main__":
     main()
