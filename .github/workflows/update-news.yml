@@ -29,29 +29,32 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install feedparser requests beautifulsoup4
 
+      - name: Apply site fixes
+        run: |
+          python scripts/apply_site_fixes.py
+
       - name: Run news updater
         run: |
           python scripts/update_news.py
 
       - name: Check generated files
         run: |
-          echo "Checking news files..."
+          echo "Checking generated files..."
           ls -lh news-data.json
           if [ -f news.html ]; then
             ls -lh news.html
           fi
 
-      - name: Commit updated news
+      - name: Commit updated site and news
         run: |
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add news-data.json news.html
+          git add index.html accounting-auditing-sirjan.html scripts/apply_site_fixes.py news-data.json news.html
 
           if git diff --cached --quiet; then
-            echo "No news changes to commit."
+            echo "No changes to commit."
           else
-            git commit -m "Auto update news"
+            git commit -m "Update site SEO, tax campaign and news"
             git push
           fi
