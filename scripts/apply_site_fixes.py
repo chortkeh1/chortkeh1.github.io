@@ -2,22 +2,7 @@ from pathlib import Path
 import re
 
 
-def update_homepage():
-    path = Path("index.html")
-    text = path.read_text(encoding="utf-8")
-
-    old_campaign = '''<section class="light" id="urgent-tax-campaign">
-<div class="wrap">
-<div class="card" style="border-right:6px solid #d4af37;">
-<h2>آخرین فرصت اظهارنامه مالیاتی ۱۴۰۵</h2>
-<p><strong>مهلت مهم:</strong> بر اساس بخشنامه شماره ۲۰۰/۱۴۰۵/۳۶، مهلت‌های مشمول تمدید برای اظهارنامه‌های مالیاتی تا پایان روز <strong>۳۱ شهریور ۱۴۰۵</strong> ادامه دارد. وضعیت پرونده هر مؤدی باید جداگانه بررسی شود.</p>
-<p><strong>خدمات چرتکه:</strong> بررسی اطلاعات مالی، آماده‌سازی اظهارنامه عملکرد، مشاوره مالیاتی، کنترل اسناد و دفاتر، ارزش افزوده، سامانه مؤدیان و سایر خدمات مالی و حسابداری.</p>
-<div class="actions"><a class="btn btn-gold" href="tax-return-kerman.html">خدمات اظهارنامه مالیاتی در کرمان</a><a class="btn btn-outline" href="tel:09131989006">تماس فوری 09131989006</a></div>
-</div>
-</div>
-</section>'''
-
-    new_campaign = '''<section class="light" id="urgent-tax-campaign">
+TAX_SECTION = '''<section class="light" id="urgent-tax-campaign">
 <div class="wrap">
 <div class="card" style="border-right:6px solid #d4af37;">
 <h2>آخرین فرصت ثبت اظهارنامه عملکرد اشخاص حقیقی و تبصره ماده ۱۰۰</h2>
@@ -28,18 +13,16 @@ def update_homepage():
 </div>
 </section>'''
 
-    if old_campaign in text:
-        text = text.replace(old_campaign, new_campaign, 1)
-    elif "بخشنامه شماره ۲۰۰/۱۴۰۵/۴۵" not in text:
-        raise RuntimeError("Homepage tax campaign block not found")
 
-    # Final cascade rule: the panorama is the actual header background, with no colored overlay.
-    clean_css = '''
+PANORAMA_CSS = '''
 <style id="chortkeh-clean-panorama-header">
 header {
     min-height: 0 !important;
     height: auto !important;
-    background: url('kerman_panorama_clean.png') center center / cover no-repeat !important;
+    background-image: url('kerman_panorama_clean.png') !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
     border-bottom: 2px solid #d4af37 !important;
 }
 .nav {
@@ -51,21 +34,32 @@ header {
     border-radius: 0 !important;
     backdrop-filter: none !important;
 }
-.nav nav a,
-.brand,
-.brand small {
+.nav nav a, .brand, .brand small {
     text-shadow: 0 1px 4px #000c !important;
-}
-@media(max-width:900px) {
-    .nav { min-height: 0 !important; padding: 5px 0 !important; }
-}
-@media(max-width:560px) {
-    .nav { min-height: 0 !important; padding: 4px 0 !important; }
 }
 </style>
 '''
-    text = re.sub(r'<style id="chortkeh-clean-panorama-header">.*?</style>\s*', '', text, flags=re.S)
-    text = text.replace('</head>', clean_css + '\n</head>', 1)
+
+
+def update_homepage():
+    path = Path("index.html")
+    text = path.read_text(encoding="utf-8")
+
+    # Replace the complete tax campaign by ID, regardless of the previous wording.
+    pattern = r'<section\s+class="light"\s+id="urgent-tax-campaign">.*?</section>'
+    if re.search(pattern, text, flags=re.S):
+        text = re.sub(pattern, TAX_SECTION, text, count=1, flags=re.S)
+    else:
+        # Add the campaign immediately before the first main section.
+        match = re.search(r'<main\b[^>]*>', text, flags=re.I)
+        if not match:
+            raise RuntimeError("Homepage main element not found")
+        pos = match.end()
+        text = text[:pos] + "\n" + TAX_SECTION + "\n" + text[pos:]
+
+    # Remove old injected panorama rules, then append one authoritative rule.
+    text = re.sub(r'<style\s+id="chortkeh-clean-panorama-header">.*?</style>\s*', '', text, flags=re.S)
+    text = text.replace('</head>', PANORAMA_CSS + '\n</head>', 1)
     path.write_text(text, encoding="utf-8")
 
 
@@ -85,15 +79,6 @@ def update_sirjan():
     )
 
     if 'id="sirjan-industrial-accounting"' not in text:
-        anchor = '''<section class="light">
-<div class="wrap">
-<div class="title">
-
-<h2>
-حسابداری شرکت‌های صنعتی و معدنی سیرجان
-</h2>'''
-        if anchor not in text:
-            raise RuntimeError("Sirjan SEO insertion point not found")
         extra = '''<section class="light" id="sirjan-industrial-accounting">
 <div class="wrap">
 <div class="title">
@@ -111,9 +96,15 @@ def update_sirjan():
 </div>
 </div>
 </section>
-
-''' + anchor
-        text = text.replace(anchor, extra, 1)
+'''
+        main_end = re.search(r'</main\s*>', text, flags=re.I)
+        if main_end:
+            text = text[:main_end.start()] + extra + "\n" + text[main_end.start():]
+        else:
+            body_end = re.search(r'</body\s*>', text, flags=re.I)
+            if not body_end:
+                raise RuntimeError("Sirjan body end not found")
+            text = text[:body_end.start()] + extra + "\n" + text[body_end.start():]
 
     path.write_text(text, encoding="utf-8")
 
