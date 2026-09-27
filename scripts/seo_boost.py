@@ -26,11 +26,11 @@ def inject(path: Path, city: str, description: str):
 
     section = f'''\n<section class="light" id="local-seo-2026">\n<div class="wrap">\n<div class="title">\n<h2>خدمات حسابداری و مالی در {city}</h2>\n<div class="line"></div>\n<p>{description}</p>\n</div>\n<div class="card">\n<p><strong>مؤسسه حسابداری و حسابرسی چرتکه</strong> خدمات مالی، حسابداری، حسابرسی، مالیاتی و بیمه‌ای را متناسب با نوع فعالیت مجموعه ارائه می‌کند.</p>\n<p>خدمات قابل ارائه شامل برون‌سپاری حسابداری، تهیه گزارش‌های مالی و مدیریتی، حقوق و دستمزد، اظهارنامه عملکرد، تبصره ماده ۱۰۰، سامانه مؤدیان، کنترل اسناد و مشاوره مالی است.</p>\n<div class="actions"><a class="btn btn-gold" href="tax-return-kerman.html">خدمات اظهارنامه و مالیات</a><a class="btn btn-outline" href="tel:09131989006">تماس با چرتکه</a></div>\n</div>\n</div>\n</section>\n'''
 
-    pos = re.search(r'</main\\s*>', text, flags=re.I)
+    pos = re.search(r'</main\s*>', text, flags=re.I)
     if pos:
         text = text[:pos.start()] + section + text[pos.start():]
     else:
-        pos = re.search(r'</body\\s*>', text, flags=re.I)
+        pos = re.search(r'</body\s*>', text, flags=re.I)
         if not pos:
             return False
         text = text[:pos.start()] + section + text[pos.start():]
