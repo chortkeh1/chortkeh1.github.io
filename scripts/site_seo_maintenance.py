@@ -17,10 +17,12 @@ CITY_SECTIONS = {
     "accounting-auditing-jiroft.html": ("جیرفت", "خدمات حسابداری، مالیاتی و بیمه‌ای در جیرفت برای شرکت‌ها و کسب‌وکارهای جنوب کرمان؛ شامل گزارشگری مالی، اظهارنامه، حقوق و دستمزد، کنترل اسناد و مشاوره مالی."),
     "accounting-auditing-bardsir-baft-rabar.html": ("بردسیر، بافت و رابر", "خدمات حسابداری و مالیاتی برای شرکت‌ها و کسب‌وکارهای بردسیر، بافت و رابر؛ با پوشش حسابداری، مالیات، بیمه، حقوق و دستمزد، حسابرسی و مشاوره مالی."),
     "accounting-auditing-ravar-kuhbanan-pabdana.html": ("راور، کوهبنان و پابدانا", "خدمات حسابداری و مالی برای شرکت‌ها و واحدهای صنعتی و معدنی راور، کوهبنان و پابدانا؛ شامل حسابداری صنعتی، مالیات، بیمه، حقوق و دستمزد و گزارش‌های مدیریتی."),
-    "accounting-auditing-kerman.html": ("شهر کرمان", "این صفحه به‌عنوان نشانی قدیمی خدمات شهر کرمان نگهداری می‌شود. صفحه اصلی سایت، مرجع اصلی خدمات حسابداری و حسابرسی چرتکه در شهر کرمان است."),
+    "accounting-auditing-kerman.html": ("شهر کرمان", "خدمات تخصصی حسابداری، حسابرسی، مالیاتی، بیمه و مشاوره مالی برای شرکت‌ها و کسب‌وکارهای شهر کرمان؛ شامل برون‌سپاری حسابداری، تهیه گزارش‌های مالی، حقوق و دستمزد، کنترل اسناد و استقرار سیستم‌های مالی."),
 }
 
 PAGE_LINKS = [
+    ("accounting-auditing-kerman.html", "خدمات حسابداری و حسابرسی در شهر کرمان"),
+
     ("accounting-auditing-kerman-province.html", "خدمات حسابداری و حسابرسی در استان کرمان"),
     ("accounting-auditing-sirjan.html", "خدمات حسابداری و مالی در سیرجان"),
     ("accounting-auditing-rafsanjan.html", "خدمات حسابداری و مالی در رفسنجان"),
@@ -37,7 +39,7 @@ PAGE_LINKS = [
 ]
 
 SITEMAP_PAGES = [
-    "index.html", "accounting-auditing-kerman-province.html", "accounting-auditing-sirjan.html",
+    "index.html", "accounting-auditing-kerman.html", "accounting-auditing-kerman-province.html", "accounting-auditing-sirjan.html",
     "accounting-auditing-rafsanjan.html", "accounting-auditing-zarand.html", "accounting-auditing-shahrbabak.html",
     "accounting-auditing-bardsir-baft-rabar.html", "accounting-auditing-ravar-kuhbanan-pabdana.html",
     "accounting-auditing-bam.html", "accounting-auditing-jiroft.html", "accounting-auditing-south-kerman.html",
@@ -80,11 +82,9 @@ def add_related_links(text, current):
 
 def fix_kerman_alias(text):
     original = text
-    text = re.sub(r'<meta\s+name=["\']robots["\'][^>]*>', '<meta name="robots" content="noindex, follow, max-image-preview:large">', text, count=1, flags=re.I)
-    text = re.sub(r'<link\s+rel=["\']canonical["\'][^>]*>', '<link rel="canonical" href="https://chortkeh1.github.io/">', text, count=1, flags=re.I)
-    text = re.sub(r'href=["\']accounting-auditing-kerman\.html["\']', 'href="index.html"', text, flags=re.I)
+    text = re.sub(r'<meta\s+name=["\']robots["\'][^>]*>', '<meta name="robots" content="index, follow, max-image-preview:large">', text, count=1, flags=re.I)
+    text = re.sub(r'<link\s+rel=["\']canonical["\'][^>]*>', '<link rel="canonical" href="https://chortkeh1.github.io/accounting-auditing-kerman.html">', text, count=1, flags=re.I)
     return text, text != original
-
 
 def add_home_articles(text):
     if 'id="seo-articles"' in text:
@@ -145,17 +145,7 @@ def update_page(filename, city=None, description=None):
 
 
 def normalize_kerman_links():
-    changed = []
-    for path in Path('.').glob('*.html'):
-        if path.name == 'accounting-auditing-kerman.html':
-            continue
-        text = path.read_text(encoding='utf-8')
-        new = re.sub(r'href=["\']accounting-auditing-kerman\.html["\']', 'href="index.html"', text, flags=re.I)
-        if new != text:
-            path.write_text(new, encoding='utf-8')
-            changed.append(path.name)
-    return changed
-
+    return []
 
 def update_sitemap(changed_files):
     path = Path('sitemap.xml')
