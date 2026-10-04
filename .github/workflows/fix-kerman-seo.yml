@@ -1,0 +1,78 @@
+name: Fix Kerman SEO
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-kerman-seo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix Kerman page and SEO maintenance rules
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          page = Path('accounting-auditing-kerman.html')
+          text = page.read_text(encoding='utf-8')
+          text = re.sub(r'<meta\s+name=["\']robots["\'][^>]*>', '<meta name="robots" content="index, follow, max-image-preview:large">', text, count=1, flags=re.I)
+          text = re.sub(r'<link\s+rel=["\']canonical["\'][^>]*>', '<link rel="canonical" href="https://chortkeh1.github.io/accounting-auditing-kerman.html">', text, count=1, flags=re.I)
+          page.write_text(text, encoding='utf-8')
+
+          script = Path('scripts/site_seo_maintenance.py')
+          s = script.read_text(encoding='utf-8')
+
+          old = '"accounting-auditing-kerman.html": ("شهر کرمان", "این صفحه به‌عنوان نشانی قدیمی خدمات شهر کرمان نگهداری می‌شود. صفحه اصلی سایت، مرجع اصلی خدمات حسابداری و حسابرسی چرتکه در شهر کرمان است."),'
+          new = '"accounting-auditing-kerman.html": ("شهر کرمان", "خدمات تخصصی حسابداری، حسابرسی، مالیاتی، بیمه و مشاوره مالی برای شرکت‌ها و کسب‌وکارهای شهر کرمان؛ شامل برون‌سپاری حسابداری، تهیه گزارش‌های مالی، حقوق و دستمزد، کنترل اسناد و استقرار سیستم‌های مالی."),'
+          s = s.replace(old, new)
+
+          marker = 'PAGE_LINKS = ['
+          link = '    ("accounting-auditing-kerman.html", "خدمات حسابداری و حسابرسی در شهر کرمان"),\n'
+          if marker in s and link not in s:
+              s = s.replace(marker, marker + '\n' + link, 1)
+
+          old_sitemap = 'SITEMAP_PAGES = [\n    "index.html", "accounting-auditing-kerman-province.html",'
+          new_sitemap = 'SITEMAP_PAGES = [\n    "index.html", "accounting-auditing-kerman.html", "accounting-auditing-kerman-province.html",'
+          s = s.replace(old_sitemap, new_sitemap, 1)
+
+          # Replace the alias function so the Kerman page remains indexable and self-canonical.
+          start = s.find('def fix_kerman_alias(text):')
+          end = s.find('\ndef add_home_articles', start)
+          if start != -1 and end != -1:
+              replacement = '''def fix_kerman_alias(text):\n    original = text\n    text = re.sub(r'<meta\\s+name=["\\\']robots["\\\'][^>]*>', '<meta name="robots" content="index, follow, max-image-preview:large">', text, count=1, flags=re.I)\n    text = re.sub(r'<link\\s+rel=["\\\']canonical["\\\'][^>]*>', '<link rel="canonical" href="https://chortkeh1.github.io/accounting-auditing-kerman.html">', text, count=1, flags=re.I)\n    return text, text != original\n\n'''
+              s = s[:start] + replacement + s[end+1:]
+
+          # Do not rewrite valid internal links to the Kerman landing page back to the homepage.
+          start = s.find('def normalize_kerman_links():')
+          end = s.find('\ndef update_sitemap', start)
+          if start != -1 and end != -1:
+              replacement = '''def normalize_kerman_links():\n    return []\n\n'''
+              s = s[:start] + replacement + s[end+1:]
+
+          script.write_text(s, encoding='utf-8')
+
+          # Keep the sitemap canonical and include the dedicated Kerman page.
+          sm = Path('sitemap.xml')
+          xml = sm.read_text(encoding='utf-8')
+          if 'https://chortkeh1.github.io/accounting-auditing-kerman.html' not in xml:
+              entry = '  <url><loc>https://chortkeh1.github.io/accounting-auditing-kerman.html</loc><lastmod>2026-10-04</lastmod></url>\n'
+              xml = xml.replace('  <url><loc>https://chortkeh1.github.io/accounting-auditing-kerman-province.html</loc>', entry + '  <url><loc>https://chortkeh1.github.io/accounting-auditing-kerman-province.html</loc>', 1)
+          sm.write_text(xml, encoding='utf-8')
+          PY
+
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add accounting-auditing-kerman.html scripts/site_seo_maintenance.py sitemap.xml
+          git commit -m "Fix Kerman page indexing and canonical SEO"
+          git push
