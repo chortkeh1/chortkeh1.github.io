@@ -40,6 +40,10 @@ jobs:
         run: |
           python scripts/add_internal_links.py
 
+      - name: Repair internal links layout
+        run: |
+          python scripts/repair_internal_links_layout.py
+
       - name: Run robust SEO maintenance
         run: |
           python scripts/site_seo_maintenance.py
@@ -69,11 +73,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add index.html accounting-auditing-*.html article-*.html scripts/site_seo_maintenance.py scripts/add_internal_links.py scripts/fix_sirjan_links.py scripts/update_news_safe.py scripts/fix_brand_color.py news-data.json news.html sitemap.xml
+          git add index.html accounting-auditing-*.html article-*.html scripts/site_seo_maintenance.py scripts/add_internal_links.py scripts/repair_internal_links_layout.py scripts/fix_sirjan_links.py scripts/update_news_safe.py scripts/fix_brand_color.py news-data.json news.html sitemap.xml
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Strengthen internal SEO linking"
+            git commit -m "Repair internal links layout"
             git push
           fi
