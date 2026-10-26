@@ -18,8 +18,7 @@
 
   const css = `
   #chortkeh-chat-launcher{position:fixed;z-index:99998;bottom:22px;right:22px;border:0;border-radius:999px;background:#0f5f5a;color:#fff;padding:14px 19px;box-shadow:0 8px 28px #0003;font:600 15px Tahoma,Arial;cursor:pointer}
-  #chortkeh-chat-panel{position:fixed;z-index:99999;bottom:82px;right:22px;width:min(370px,calc(100vw - 28px));height:min(560px,calc(100vh - 115px));display:none;flex-direction:column;background:#fff;border:1px solid #d8e4e1;border-radius:18px;box-shadow:0 12px 40px #0003;overflow:hidden;font:14px/1.8 Tahoma,Arial;color:#233}
-  #chortkeh-chat-panel *{box-sizing:border-box}
+ #chortkeh-chat-panel{position:fixed;z-index:99999;bottom:82px;right:22px;width:min(520px,calc(100vw - 28px));height:min(760px,calc(100vh - 105px));display:none;flex-direction:column;background:#fff;border:1px solid #d8e4e1;border-radius:18px;box-shadow:0 12px 40px #0003;overflow:hidden;font:14px/1.8 Tahoma,Arial;color:#233}
   #chortkeh-chat-head{background:#0f5f5a;color:#fff;padding:15px;display:flex;align-items:center;gap:10px}
   #chortkeh-chat-head .mark{background:#d4af37;color:#173d39;border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-weight:bold;font-size:20px}
   #chortkeh-chat-head .headcopy{flex:1}
