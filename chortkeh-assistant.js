@@ -1,7 +1,7 @@
 
 /*
  * دستیار پاسخگوی مؤسسه حسابداری و حسابرسی چرتکه
- * نسخه اصلاح‌شده رابط کاربری
+ * نسخه بازنویسی‌شده با لوگوی اصلی چرتکه
  */
 (() => {
   if (window.__chortkehAssistantLoaded) return;
@@ -14,12 +14,16 @@
     CHAT_ENDPOINT: ""
   };
 
+  // لوگوی چرتکه، جاسازی‌شده در همین فایل
+  const LOGO =
+    "data:image/jpeg;base64,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";
+
   const css = `
   #chortkeh-chat-launcher {
     position: fixed;
     z-index: 99998;
-    bottom: 22px;
     right: 22px;
+    bottom: 22px;
     border: 0;
     border-radius: 999px;
     background: #0f5f5a;
@@ -33,12 +37,14 @@
   #chortkeh-chat-panel {
     position: fixed;
     z-index: 99999;
-    bottom: 82px;
     right: 22px;
+    bottom: 82px;
     width: min(370px, calc(100vw - 28px));
-    height: min(560px, calc(100vh - 115px));
+    height: min(560px, calc(100dvh - 115px));
     display: none;
     flex-direction: column;
+    padding: 0 !important;
+    margin: 0 !important;
     background: #fff;
     border: 1px solid #d8e4e1;
     border-radius: 16px;
@@ -47,6 +53,7 @@
     font: 14px/1.7 Tahoma, Arial, sans-serif;
     color: #233;
     direction: rtl;
+    box-sizing: border-box;
   }
 
   #chortkeh-chat-panel *,
@@ -55,50 +62,55 @@
     box-sizing: border-box;
   }
 
-  /* هدر و عنوان */
+  #chortkeh-chat-panel > * {
+    margin-top: 0 !important;
+  }
+
   #chortkeh-chat-head {
-    flex: 0 0 auto;
+    flex: 0 0 58px;
     height: 58px;
     min-height: 58px;
-    background: #0f5f5a;
-    color: #fff;
+    margin: 0 !important;
     padding: 5px 12px;
     display: flex;
     align-items: center;
     gap: 9px;
     overflow: hidden;
+    background: #0f5f5a;
+    color: #fff;
   }
 
-  /* آواتار تصویری خانم */
   #chortkeh-chat-head .mark {
-    flex: 0 0 38px;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
     overflow: hidden;
-    background: #d4af37;
+    border-radius: 50%;
     border: 2px solid #e8d58b;
-    display: grid;
-    place-items: center;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  #chortkeh-chat-head .mark svg {
+  #chortkeh-chat-head .mark img {
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 
-  /* عنوان کمی بالاتر قرار می‌گیرد */
   #chortkeh-chat-head .headcopy {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
-    transform: translateY(-7px);
+    transform: translateY(-2px);
+    text-align: right;
   }
 
   #chortkeh-chat-head strong {
     display: block;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.5;
     white-space: nowrap;
   }
 
@@ -112,6 +124,7 @@
 
   #chortkeh-chat-close {
     flex: 0 0 auto;
+    align-self: center;
     border: 0;
     background: transparent;
     color: white;
@@ -119,10 +132,8 @@
     line-height: 1;
     padding: 3px 5px;
     cursor: pointer;
-    align-self: flex-start;
   }
 
-  /* بخش پیام‌ها بیشترین فضای ممکن را می‌گیرد */
   #chortkeh-chat-messages {
     flex: 1 1 0;
     min-height: 0;
@@ -153,13 +164,14 @@
     background: #dcefeb;
   }
 
-  /* دکمه‌های راهنما */
   #chortkeh-chat-quick {
     flex: 0 0 auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
     gap: 5px;
     padding: 6px 9px;
+    margin: 0 !important;
     background: #fff;
     border-top: 1px solid #e5ece9;
   }
@@ -175,17 +187,15 @@
     cursor: pointer;
   }
 
-  /* قسمت ارسال پیام کمی پایین‌تر تنظیم می‌شود */
   #chortkeh-chat-form {
     flex: 0 0 auto;
     display: flex;
     align-items: stretch;
     gap: 6px;
-    padding: 7px 9px 7px;
+    padding: 7px 9px;
+    margin: 0 !important;
     border-top: 1px solid #e5ece9;
     background: #fff;
-    position: relative;
-    top: 3px;
   }
 
   #chortkeh-chat-input {
@@ -218,6 +228,7 @@
 
   #chortkeh-chat-note {
     flex: 0 0 auto;
+    margin: 0 !important;
     font-size: 9px;
     line-height: 1.5;
     color: #687b76;
@@ -242,12 +253,12 @@
       right: 10px;
       bottom: 72px;
       width: calc(100vw - 20px);
-      height: min(560px, calc(100vh - 88px));
       height: min(560px, calc(100dvh - 88px));
       border-radius: 14px;
     }
 
     #chortkeh-chat-head {
+      flex-basis: 58px;
       height: 58px;
       min-height: 58px;
     }
@@ -259,12 +270,12 @@
 
   @media (max-height: 520px) {
     #chortkeh-chat-panel {
-      height: calc(100vh - 92px);
       height: calc(100dvh - 92px);
       bottom: 72px;
     }
 
     #chortkeh-chat-head {
+      flex-basis: 48px;
       height: 48px;
       min-height: 48px;
     }
@@ -272,6 +283,7 @@
   `;
 
   const style = document.createElement("style");
+  style.id = "chortkeh-assistant-styles";
   style.textContent = css;
   document.head.appendChild(style);
 
@@ -279,10 +291,7 @@
   launcher.id = "chortkeh-chat-launcher";
   launcher.type = "button";
   launcher.textContent = "💬 گفت‌وگو با چرتکه";
-  launcher.setAttribute(
-    "aria-label",
-    "باز کردن دستیار هوشمند چرتکه"
-  );
+  launcher.setAttribute("aria-label", "باز کردن دستیار هوشمند چرتکه");
 
   const panel = document.createElement("section");
   panel.id = "chortkeh-chat-panel";
@@ -291,63 +300,8 @@
 
   panel.innerHTML = `
     <div id="chortkeh-chat-head">
-      <div class="mark" role="img" aria-label="آواتار دستیار خانم">
-        <svg viewBox="0 0 100 100"
-             xmlns="http://www.w3.org/2000/svg"
-             aria-hidden="true">
-          <defs>
-            <clipPath id="chortkeh-avatar-clip">
-              <circle cx="50" cy="50" r="49"/>
-            </clipPath>
-            <linearGradient id="chortkeh-avatar-bg"
-                            x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#f7e8c1"/>
-              <stop offset="100%" stop-color="#d4af37"/>
-            </linearGradient>
-          </defs>
-          <g clip-path="url(#chortkeh-avatar-clip)">
-            <rect width="100" height="100"
-                  fill="url(#chortkeh-avatar-bg)"/>
-            <path d="M19 103 L22 79 Q26 68 39 65
-                     L61 65 Q76 68 80 80 L83 103"
-                  fill="#0f5f5a"/>
-            <path d="M35 61 L35 73 Q50 86 65 73
-                     L65 61" fill="#e8b18e"/>
-            <path d="M27 43 Q20 11 50 10
-                     Q80 11 74 48 L70 63
-                     Q64 78 50 79 Q35 77 29 61 Z"
-                  fill="#49332e"/>
-            <path d="M32 40 Q33 22 50 22
-                     Q68 22 69 43 L66 55
-                     Q62 67 50 69 Q38 67 34 55 Z"
-                  fill="#f0bd98"/>
-            <path d="M29 43 Q23 21 39 13
-                     Q56 2 71 18 Q81 29 73 49
-                     L68 37 Q61 31 58 24
-                     Q49 35 33 35 L32 52 Z"
-                  fill="#49332e"/>
-            <path d="M40 43 Q45 40 48 43"
-                  fill="none" stroke="#49332e"
-                  stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M54 43 Q59 40 63 43"
-                  fill="none" stroke="#49332e"
-                  stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="44" cy="47" r="2"
-                    fill="#302723"/>
-            <circle cx="59" cy="47" r="2"
-                    fill="#302723"/>
-            <path d="M48 54 Q51 57 54 54"
-                  fill="none" stroke="#bd806c"
-                  stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M43 61 Q50 66 58 61"
-                  fill="none" stroke="#a54e4c"
-                  stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M40 72 L50 82 L60 72"
-                  fill="#fff"/>
-            <path d="M40 72 L50 82 L60 72 L65 100 L35 100 Z"
-                  fill="#0f5f5a"/>
-          </g>
-        </svg>
+      <div class="mark">
+        <img src="${LOGO}" alt="لوگوی چرتکه">
       </div>
       <div class="headcopy">
         <strong>${CONFIG.title}</strong>
@@ -357,8 +311,7 @@
               type="button" aria-label="بستن">×</button>
     </div>
 
-    <div id="chortkeh-chat-messages"
-         aria-live="polite"></div>
+    <div id="chortkeh-chat-messages" aria-live="polite"></div>
 
     <div id="chortkeh-chat-quick">
       <button type="button" data-q="services">خدمات مؤسسه</button>
@@ -429,10 +382,7 @@
         "اسناد و مقررات معتبر همان سال باید بررسی شوند."
     },
     {
-      keys: [
-        "بیمه", "تامین اجتماعی", "تأمین اجتماعی",
-        "لیست بیمه", "حقوق"
-      ],
+      keys: ["بیمه", "تامین اجتماعی", "تأمین اجتماعی", "لیست بیمه", "حقوق"],
       answer:
         "در امور بیمه و تأمین اجتماعی می‌توانیم راهنمایی اولیه " +
         "درباره لیست بیمه، حقوق و دستمزد و مسائل کارفرمایی ارائه کنیم.\n\n" +
@@ -448,17 +398,14 @@
         "نوع فعالیت و نیاز اصلی شرکت را بفرمایید تا مسیر مناسب مشخص شود."
     },
     {
-      keys: ["آموزش", "دوره", "نرم افزار", "نرم‌افزار"],
+      keys: ["آموزش", "دوره", "نرم افزار", "نرم‌افزار", "انبارداری"],
       answer:
         "مؤسسه در حوزه آموزش حسابداری و راهنمایی درباره سیستم‌های " +
         "حسابداری، انبارداری و حضور و غیاب فعالیت دارد.\n\n" +
         "لطفاً سطح آموزش یا نوع نرم‌افزار موردنظر را بنویسید."
     },
     {
-      keys: [
-        "تماس", "تلفن", "مشاوره", "همکاری",
-        "درخواست", "پیشنهاد", "شکایت"
-      ],
+      keys: ["تماس", "تلفن", "مشاوره", "همکاری", "درخواست", "پیشنهاد", "شکایت"],
       answer:
         "برای پیگیری انسانی می‌توانید با شماره همراه مؤسسه " +
         CONFIG.phone + " تماس بگیرید.\n\n" +
