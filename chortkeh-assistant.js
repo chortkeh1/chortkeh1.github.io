@@ -11,7 +11,7 @@
     title: "دستیار هوشمند چرتکه",
     subtitle: "راهنمای خدمات حسابداری و مالی",
     phone: "09131989006",
-    CHAT_ENDPOINT: ""
+    CHAT_ENDPOINT: "https://chortkeh-assistant-api.xx116087.workers.dev/"
   };
 
   // لوگوی چرتکه، جاسازی‌شده در همین فایل
